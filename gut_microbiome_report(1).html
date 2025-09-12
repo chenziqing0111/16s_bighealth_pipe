@@ -1,0 +1,2306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16S肠道微生物检测报告</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #66BB6A;
+            --accent-color: #FFC107;
+            --danger-color: #F44336;
+            --warning-color: #FF9800;
+            --info-color: #2196F3;
+            --success-color: #4CAF50;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --bg-light: #F5F5F5;
+            --bg-section: #FFFFFF;
+            --border-color: #E0E0E0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #F5F7FA 0%, #C3CFE2 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 3rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 60%;
+            height: 200%;
+            background: rgba(255,255,255,0.05);
+            transform: rotate(45deg);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        /* Navigation */
+        .nav-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 260px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            z-index: 1000;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-sidebar.active {
+            transform: translateX(0);
+        }
+
+        .nav-toggle {
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            z-index: 1001;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .nav-toggle:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        .nav-sidebar-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .nav-item {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-light);
+            border-left-color: var(--primary-color);
+        }
+
+        .nav-item.active {
+            background: #E8F5E9;
+            border-left-color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .nav-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.nav-active {
+            margin-left: 260px;
+        }
+
+        /* Cards and Sections */
+        .report-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .report-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: scale(1.02);
+        }
+
+        .info-card-title {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-card-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-normal {
+            background: #E8F5E9;
+            color: var(--success-color);
+        }
+
+        .status-warning {
+            background: #FFF3E0;
+            color: var(--warning-color);
+        }
+
+        .status-danger {
+            background: #FFEBEE;
+            color: var(--danger-color);
+        }
+
+        .status-info {
+            background: #E3F2FD;
+            color: var(--info-color);
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1rem;
+        }
+
+        .data-table thead {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .data-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--bg-light);
+            transform: scale(1.01);
+        }
+
+        /* Progress Bars */
+        .progress-container {
+            margin: 1rem 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .progress {
+            height: 25px;
+            border-radius: 12px;
+            background: var(--bg-light);
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            transition: width 1s ease;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        /* Metric Cards */
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .metric-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .metric-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Bacteria Cards */
+        .bacteria-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .bacteria-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateX(5px);
+        }
+
+        .bacteria-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .bacteria-latin {
+            color: var(--text-secondary);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        .bacteria-value {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .bacteria-description {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            line-height: 1.4;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 2rem 0;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Risk Assessment */
+        .risk-meter {
+            position: relative;
+            height: 150px;
+            margin: 2rem 0;
+        }
+
+        .risk-level {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .risk-low {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+        }
+
+        .risk-medium {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        .risk-high {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+
+        /* Recommendations */
+        .recommendation-card {
+            background: #F0F7FF;
+            border-left: 4px solid var(--info-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .recommendation-title {
+            color: var(--info-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .recommendation-title i {
+            margin-right: 10px;
+        }
+
+        .recommendation-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendation-list li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .recommendation-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        /* Print Styles */
+        @media print {
+            .nav-sidebar,
+            .nav-toggle {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+            }
+
+            .report-section {
+                page-break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid var(--border-color);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .main-content.nav-active {
+                margin-left: 0;
+            }
+
+            .metric-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .data-table {
+                font-size: 0.85rem;
+            }
+
+            .nav-sidebar {
+                width: 100%;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--bg-light);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .fab:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        /* Score Circle */
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: white;
+            opacity: 0.9;
+        }
+
+        .score-good {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .score-warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .score-danger {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Toggle -->
+    <button class="nav-toggle" onclick="toggleNav()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Side Navigation -->
+    <nav class="nav-sidebar" id="navSidebar">
+        <div class="nav-sidebar-header">
+            <i class="fas fa-dna"></i> 检测报告导航
+        </div>
+        <div class="nav-item active" onclick="scrollToSection('basic-info')">
+            <i class="fas fa-user"></i> 基本信息
+        </div>
+        <div class="nav-item" onclick="scrollToSection('overview')">
+            <i class="fas fa-chart-pie"></i> 菌群得分总览
+        </div>
+        <div class="nav-item" onclick="scrollToSection('diversity')">
+            <i class="fas fa-project-diagram"></i> 菌群多样性
+        </div>
+        <div class="nav-item" onclick="scrollToSection('bacteria-analysis')">
+            <i class="fas fa-microscope"></i> 细菌分析
+        </div>
+        <div class="nav-item" onclick="scrollToSection('nutrition')">
+            <i class="fas fa-apple-alt"></i> 营养代谢
+        </div>
+        <div class="nav-item" onclick="scrollToSection('disease-risk')">
+            <i class="fas fa-heartbeat"></i> 疾病风险
+        </div>
+        <div class="nav-item" onclick="scrollToSection('immunity')">
+            <i class="fas fa-shield-alt"></i> 免疫力评估
+        </div>
+        <div class="nav-item" onclick="scrollToSection('recommendations')">
+            <i class="fas fa-clipboard-list"></i> 饮食建议
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <h1><i class="fas fa-dna"></i> 16S肠道微生物检测报告</h1>
+            <p class="header-subtitle">专业的肠道菌群健康分析与个性化健康管理方案</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Basic Information Section -->
+        <section class="report-section" id="basic-info">
+            <h2 class="section-title">
+                <i class="fas fa-user-circle"></i> 基本信息
+            </h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div class="info-card-title">姓名</div>
+                        <div class="info-card-value">xxx</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <div class="info-card-title">性别 / 年龄</div>
+                        <div class="info-card-value">男 / 67岁</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <div class="info-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <div class="info-card-title">标本类型</div>
+                        <div class="info-card-value">粪便</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                        <div class="info-card-title">采样时间</div>
+                        <div class="info-card-value">2024.08.15</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <div class="info-card-title">临床诊断</div>
+                        <div class="info-card-value">肠炎, 亚健康</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Overview Section -->
+        <section class="report-section" id="overview">
+            <h2 class="section-title">
+                <i class="fas fa-chart-pie"></i> 菌群得分总览
+            </h2>
+            
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="score-circle score-warning">
+                        <div class="score-value">65</div>
+                        <div class="score-label">综合得分</div>
+                    </div>
+                    <p class="text-center mt-3">
+                        <span class="status-badge status-warning">轻微失衡</span>
+                    </p>
+                </div>
+                <div class="col-md-8">
+                    <div class="metric-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon"><i class="fas fa-bacteria"></i></div>
+                            <div class="metric-value">正常</div>
+                            <div class="metric-label">菌群多样性</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon"><i class="fas fa-balance-scale"></i></div>
+                            <div class="metric-value">正常</div>
+                            <div class="metric-label">拟杆菌/厚壁菌</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon"><i class="fas fa-dna"></i></div>
+                            <div class="metric-value">拟杆菌型</div>
+                            <div class="metric-label">肠型</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon"><i class="fas fa-heart"></i></div>
+                            <div class="metric-value">偏低</div>
+                            <div class="metric-label">核心有益菌</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="metric-value">偏高</div>
+                            <div class="metric-label">条件致病菌</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon"><i class="fas fa-virus"></i></div>
+                            <div class="metric-value">偏高</div>
+                            <div class="metric-label">核心有害菌</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> <strong>评分说明：</strong>
+                菌群平衡对应的异常称之为肠道菌群失衡。0-40分为严重失衡，40-60分为中度失衡，60-80分为轻微失衡，80-90分为健康，90-100分为优秀。
+            </div>
+        </section>
+
+        <!-- Diversity Section -->
+        <section class="report-section" id="diversity">
+            <h2 class="section-title">
+                <i class="fas fa-project-diagram"></i> 肠道菌群多样性分析
+            </h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-card">
+                        <h4>多样性指数</h4>
+                        <div class="chart-wrapper">
+                            <canvas id="diversityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-card">
+                        <h4>B/F比值分析</h4>
+                        <div class="chart-wrapper">
+                            <canvas id="bfRatioChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>检测项目</th>
+                            <th>检测值</th>
+                            <th>参考范围</th>
+                            <th>结果</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>多样性指数</td>
+                            <td>480</td>
+                            <td>350-770</td>
+                            <td><span class="status-badge status-normal">正常</span></td>
+                        </tr>
+                        <tr>
+                            <td>B/F值</td>
+                            <td>3.3</td>
+                            <td>0.84-4.94</td>
+                            <td><span class="status-badge status-normal">正常</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Bacteria Analysis Section -->
+        <section class="report-section" id="bacteria-analysis">
+            <h2 class="section-title">
+                <i class="fas fa-microscope"></i> 细菌详细分析
+            </h2>
+
+            <!-- Beneficial Bacteria -->
+            <div class="mb-4">
+                <h3 class="text-success mb-3"><i class="fas fa-smile"></i> 核心有益菌</h3>
+                <div style="max-height: 600px; overflow-y: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>菌名</th>
+                                <th>检测结果</th>
+                                <th>参考范围</th>
+                                <th>状态</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>双歧杆菌属</strong><br><small class="text-muted">(Bifidobacterium)</small></td>
+                                <td>0.001 ↓</td>
+                                <td>0.183-14.6</td>
+                                <td><span class="status-badge status-warning">偏低</span></td>
+                                <td>对人体健康具有生物屏障、营养作用、抗肿瘤作用、增强免疫作用、改善胃肠道功能、抗衰老等生理功能。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>乳酸杆菌属</strong><br><small class="text-muted">(Lactobacillus)</small></td>
+                                <td>0.018</td>
+                                <td>0.008-0.03</td>
+                                <td><span class="status-badge status-normal">正常</span></td>
+                                <td>婴幼儿较多，益生菌，消化和代谢蛋白质和碳水化合物，合成B族维生素和维生素K，分解代谢胆汁盐，改善消化缓解过敏，增强免疫，抑制炎症，降低胆固醇，抗菌。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>普雷沃氏菌属</strong><br><small class="text-muted">(Prevotella)</small></td>
+                                <td>55.8432</td>
+                                <td>0.0143-66.1324</td>
+                                <td><span class="status-badge status-normal">正常</span></td>
+                                <td>健康的植物性饮食相关菌，在自闭症、多发性硬化中减少；丰度高促炎，加剧过敏、刺激肠道敏感加剧IBS症状，基础丰度高更容易减脂。改善方式：植物性饮食、低脂高纤维饮食、素食者。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>臭气杆菌属</strong><br><small class="text-muted">(Odoribacter)</small></td>
+                                <td>0.0535</td>
+                                <td>0.0132-0.6122</td>
+                                <td><span class="status-badge status-normal">正常</span></td>
+                                <td>调节血糖浓度和血压，参与丁酸的合成，也具有色氨酸代谢和水解明胶的能力，参与神经系统调节。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>巨单胞菌属</strong><br><small class="text-muted">(Megamonas)</small></td>
+                                <td>0 ↓</td>
+                                <td>0.0091-0.268</td>
+                                <td><span class="status-badge status-warning">偏低</span></td>
+                                <td>发酵各种碳水化合物、产乙酸、丙酸、乳酸，自闭症谱系障碍、注意缺陷、多动障碍(ADHD)急性脑卒中(AIS)较对照增高，减少与虚弱，炎症肠病，营养不良有关，饮食中豆类，玉米，马铃薯，鸡肉，牛肉会增加。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>丁酸弧菌属</strong><br><small class="text-muted">(Butyricimonas)</small></td>
+                                <td>0.2138</td>
+                                <td>0.0142-0.8649</td>
+                                <td><span class="status-badge status-normal">正常</span></td>
+                                <td>发酵代谢，可分解多种碳水化合物，代谢产生丁酸和异丁酸。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Akk菌属</strong><br><small class="text-muted">(Akkermansia)</small></td>
+                                <td>0.0879</td>
+                                <td>0.0099-0.0389</td>
+                                <td><span class="status-badge status-warning">偏高</span></td>
+                                <td>基石菌，可降解淀粉，黏蛋白降解菌，可控制体重，改善代谢和炎症，过多导致肠粘膜屏障破坏。改善方式：高多酚食品、茶多酚、白藜芦醇、浆果、樱桃、李子、黑巧克力、热带水果、膳食纤维、生酮饮食、鱼油、减少酒精摄入。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>粪杆菌属</strong><br><small class="text-muted">(Faecalibacterium)</small></td>
+                                <td>1.6234</td>
+                                <td>0.6365-10.97</td>
+                                <td><span class="status-badge status-normal">正常</span></td>
+                                <td>可以产生抗炎代谢物，在IBS、IBD、结直肠癌、糖尿病和虚弱的老年人中该菌属丰度较低。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>粪球菌属</strong><br><small class="text-muted">(Coprococcus)</small></td>
+                                <td>1.4975 ↑</td>
+                                <td>0.009-0.5689</td>
+                                <td><span class="status-badge status-warning">偏高</span></td>
+                                <td>Coprococcus的丰度过高或过低都可能与功能性便秘有关。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>毛螺菌属</strong><br><small class="text-muted">(Lachnospira)</small></td>
+                                <td>1.4526</td>
+                                <td>0.1795-4.9800</td>
+                                <td><span class="status-badge status-normal">正常</span></td>
+                                <td>一些菌株能够产生乳酸和醋酸，这些物质通过抑制粘液分泌导致便秘。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>别样杆菌属</strong><br><small class="text-muted">(Alistipes)</small></td>
+                                <td>0.0041 ↓</td>
+                                <td>0.0100-0.0289</td>
+                                <td><span class="status-badge status-warning">偏低</span></td>
+                                <td>高脂或动物性饮食中会富集，患有抑郁症的患者比例较高，与炎症有关，可以影响色氨酸的可用性，从而干扰肠道内的血清素系统。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>草酸杆菌属</strong><br><small class="text-muted">(Oxalobacter)</small></td>
+                                <td>0.0033 ↓</td>
+                                <td>0.0099-0.0176</td>
+                                <td><span class="status-badge status-warning">偏低</span></td>
+                                <td>共生存于人体肠道，产生有助于草酸盐降解的酶来改变生化途径，防止结石形成。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>副普雷沃氏菌属</strong><br><small class="text-muted">(Paraprevotella)</small></td>
+                                <td>0.0455</td>
+                                <td>0.0090-0.8619</td>
+                                <td><span class="status-badge status-normal">正常</span></td>
+                                <td>抑郁症患者的肠道菌群中Paraprevotella的丰度与抑郁症严重程度呈正相关。通过LPS刺激免疫反应和促炎症细胞因子的释放。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="alert alert-info mt-3">
+                    <strong>有益菌说明：</strong>有益菌指能够产生对人体有益的中间产物或直接对人体有益的菌，以乳酸菌、双歧杆菌、酵母菌为代表。有益菌涵盖了对人体肠道菌群稳定有益的多种菌属，包括双歧杆菌、乳杆菌、粪杆菌属等，并根据其重要性赋予不同权重。其中双歧杆菌可有效改善肠道状况，而特定的乳杆菌菌株可以改善精神健康，包括焦虑和情绪也能改善肠道健康。
+                </div>
+            </div>
+
+            <!-- Conditional Pathogenic Bacteria -->
+            <div class="mb-4">
+                <h3 class="text-warning mb-3"><i class="fas fa-exclamation-triangle"></i> 条件致病菌</h3>
+                <div style="max-height: 600px; overflow-y: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>菌名</th>
+                                <th>检测结果</th>
+                                <th>参考范围</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>韦荣氏菌属</strong><br><small class="text-muted">(Veillonella)</small></td>
+                                <td>0</td>
+                                <td>0-0.0223</td>
+                                <td>与抑郁症等精神疾病的发生有关。在患有抑郁症和认知障碍的人的微生物群中数量较高。能够产生多种毒素，如溶血素、链溶素、透明质酸酶等。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>克雷伯菌属</strong><br><small class="text-muted">(Klebsiella)</small></td>
+                                <td>0</td>
+                                <td>0-0.0112</td>
+                                <td>婴幼儿较多，益生菌，消化和代谢蛋白质和碳水化合物，合成B族维生素和维生素K，分解代谢胆汁盐，改善消化缓解过敏，增强免疫，抑制炎症，降低胆固醇，抗菌，丰度过高体重增加，也有机会病原体，过高会导致菌群失调。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>肠球菌属</strong><br><small class="text-muted">(Enterococcus)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>常见上呼吸道，口腔或肠道的常居菌，也分布在畜、禽养殖环境，饲料或肠道，抑菌调节肠道菌群，部分病原体引起菌血症，很多菌耐药，在肝癌，房颤患者中富集，锌缺会增加。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>埃格特菌属</strong><br><small class="text-muted">(Eggerthella)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>是引起溃疡性结肠炎、肝脏脓肿、败血症等疾病的病因之一，研究表明该菌有扩散到全身的趋势。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>恩特菌属</strong><br><small class="text-muted">(Enterocloster)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>增殖时可产生毒素和侵袭性酶，发生毒素型食物中毒，表现为全身无力、头痛、头晕、视力模糊、吞咽困难等症状。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>鲍氏梭菌</strong><br><small class="text-muted">(Clostridium bolteac)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>已被证明在患有胃肠道疾病的自闭症儿童的肠道中过多，是一种可能加剧胃肠道症状的微生物。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>殊异韦荣氏菌</strong><br><small class="text-muted">(Veillonella dispar)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>产生内毒素，会导致各种混合感染、肝炎、肥胖、口臭人群该菌丰度增高，也与化疗抗性相关。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>极小韦荣氏菌</strong><br><small class="text-muted">(Veillonella parvula)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>当免疫功能下降、菌群状态发生改变时，可引起牙周炎、颈淋巴结炎、吸入性肺炎等，偶也会引起输尿管感染。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>拟杆菌属</strong><br><small class="text-muted">(Bacteroides)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>当免疫功能下降、菌群状态发生改变时，可引起牙周炎、颈淋巴结炎、吸入性肺炎等，偶也会引起输尿管感染。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>消化链球菌属</strong><br><small class="text-muted">(Peptostreptococcus)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>该菌在机体免疫功能下降、菌群状态发生改变等情况下，可引起肺脓肿、脓胸、子宫内膜炎等。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>梭杆菌属</strong><br><small class="text-muted">(Fusobacterium)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>聚合梭杆菌可诱发促进结直肠癌，产生脂多糖，代谢生成苯酚，引发感染和并发症，胃肠到肿瘤患者富集。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>嗜血杆菌属</strong><br><small class="text-muted">(Haemophilus)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>病原菌，过多可导致菌群紊乱，可引发呼吸道感染，常见于呼吸道感染。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>普通拟杆菌</strong><br><small class="text-muted">(Bacteroides vulgatus)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>食物过敏与Bacteroides vulgatus相对丰度呈负相关。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>哈氏梭菌</strong><br><small class="text-muted">(Clostridium hathewayi)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>当机体免疫力低下时，可导致内源性感染和菌血症的发生。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>迟缓埃格特菌</strong><br><small class="text-muted">(Eggerthella lenta)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>当机体免疫功能降低或菌群状态发生改变时，可引起肝脓肿、子宫内膜炎和腹内感染等，也会导致菌血症的发生。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="alert alert-warning mt-3">
+                    <strong>条件致病菌说明：</strong>条件致病菌在肠道内广泛分布，正常条件下是肠道所必须的，但条件致病菌过多也会引发很多的健康问题。
+                </div>
+            </div>
+
+            <!-- Harmful Bacteria -->
+            <div class="mb-4">
+                <h3 class="text-danger mb-3"><i class="fas fa-virus"></i> 核心有害菌</h3>
+                <div style="max-height: 600px; overflow-y: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>菌名</th>
+                                <th>检测结果</th>
+                                <th>参考范围</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>志贺氏菌属</strong><br><small class="text-muted">(Shigella)</small></td>
+                                <td>0</td>
+                                <td>0-0.1431</td>
+                                <td>引发腹泻等疾病，有不同的血清型，人类是该菌唯一宿主，粪口途径传播，通常与卫生条件差和食品安全有关。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>沙门氏菌属</strong><br><small class="text-muted">(Salmonella)</small></td>
+                                <td>0.002</td>
+                                <td>-</td>
+                                <td>是引起食物中毒和肠道感染的常见病原菌之一。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>产气荚膜梭菌</strong><br><small class="text-muted">(Clostridium perfringens)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>产生毒素，导致肠道上皮细胞坏死和溃烂，从而引起肠道内气体的积聚和膨胀，进而导致腹胀的发生。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>金黄色葡萄球菌</strong><br><small class="text-muted">(Staphylococcus aureus)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>可抑制吞噬和单核细胞增殖，抑制免疫；产生的毒素可引起呕吐、腹泻等。是春夏季食物中毒常见病因。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>肠道沙门氏菌</strong><br><small class="text-muted">(Salmonella enterica)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>它是世界范围内人们发病和死亡的主要原因。进食后，引起肠热病、肠胃炎、败血症、无症状带菌者。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>幽门螺旋杆菌</strong><br><small class="text-muted">(Helicobacter pylori)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>是慢性胃炎、胃溃疡的主要病原体，与胃癌发生密切相关，是一级致癌因子。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>艰难梭菌</strong><br><small class="text-muted">(Clostridium difficile)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>过度生长和毒素产生时会导致腹胀和腹泻，可能导致严重疾病。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>肉毒梭菌</strong><br><small class="text-muted">(Clostridium botulinum)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>产生肉毒素，影响神经信号传递，轻则表现为部分部位肌肉麻痹，重则呼吸困难。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>空肠弯曲菌</strong><br><small class="text-muted">(Campylobacter jejuni)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>细菌性肠胃炎主要病原体，也是小儿急性腹泻的主要原因。其引起肠炎发病率高且症状严重。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>厌氧菌属</strong><br><small class="text-muted">(Anaerostipes)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>可造成机体盆腔、口腔、结肠等多器官或部位的感染，如阑尾炎、牙龈炎等等。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>肺炎链球菌</strong><br><small class="text-muted">(Streptococcus pneumoniae)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>是细菌性肺炎、脑膜炎、支气管炎的主要致病菌。该菌只在免疫力低下时感染。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>放线菌属</strong><br><small class="text-muted">(Actinomyces)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>当抵抗力低下，口腔卫生不良可引起放线菌病。引起化脓性炎症，也与抑郁症以及一些慢性炎症性疾病，如克罗恩病和抑郁症加重相关。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>霍乱弧菌</strong><br><small class="text-muted">(Vibrio cholerae)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>霍乱主要致病菌。会出现剧烈腹泻和呕吐，由于大量水分和电解质丧失而导致嗜睡，导致代谢性酸中毒，低碱血症。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>副溶血性弧菌</strong><br><small class="text-muted">(Vibrio parahaemolyticus)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>主要引起食物中毒，导致肠充血和腹泻。毒素可能会引起心脏相关疾病。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>小肠结肠炎耶氏菌</strong><br><small class="text-muted">(Yersinia enterocolitica)</small></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>小肠结肠炎致病菌，表现为发热、呕吐、腹痛和腹泻。也可能发展为肠道外感染，如关节炎等。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="alert alert-danger mt-3">
+                    <strong>有害菌说明：</strong>有害菌是至今为止科学研究中，有文献中明确指出的会导致人体各种疾病的菌种，此类菌数量一旦失控大量增长，就会引发多种疾病，或者影响免疫系统功能。有害菌包含了致病菌和条件致病菌，为便于统计本报告中的有害菌包括了以下的菌属：韦荣氏球菌属、葡萄球菌科、变形菌属、弓形菌属、弯曲菌属、螺杆菌属、厌氧螺菌属以及弧菌属等。有害菌和肠道内的其他共生菌共同构成菌群微生态，如果有害菌过多，通常我们可以通过服用益生菌或益生元的方式首先增加有益菌的比例，相应的有害菌比例就会降低。想要持久的改善菌群结构降低有害菌水平就需要改善生活方式，适当增加抗性淀粉等膳食纤维并规律饮食和睡眠，增加运动等。
+                </div>
+            </div>
+        </section>
+
+        <!-- Nutrition Metabolism Section -->
+        <section class="report-section" id="nutrition">
+            <h2 class="section-title">
+                <i class="fas fa-apple-alt"></i> 营养合成代谢能力
+            </h2>
+
+            <div class="mb-4">
+                <h4>6.1 维生素合成能力</h4>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>指标</th>
+                            <th>检测结果</th>
+                            <th>结果评估</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>维生素A</strong></td>
+                            <td>20</td>
+                            <td><span class="status-badge status-warning">偏低</span></td>
+                            <td>人类的必需营养素之一，包括视黄醇、视黄醛、视黄酸及多种维生素原A类胡萝卜素（最著名的是β-胡萝卜素）。维生素A对生长发育、免疫系统的维持和良好的视力都很重要，故又名为抗干眼病维生素。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>维生素B1</strong></td>
+                            <td>30</td>
+                            <td><span class="status-badge status-warning">偏低</span></td>
+                            <td>有保护神经系统的作用，还可以促进肠胃蠕动，提高食欲。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>维生素B2</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>又称核黄素。是合成两种辅酶——黄素单核苷酸（FMN）及黄素腺嘌呤二核苷酸（FAD）的必要成分。能量代谢、呼吸作用、抗体制造、生长发育都需要这两种辅酶。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>维生素B3</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>包括三个维生素异构体，分别是烟酸、烟酰胺和烟酰胺核糖。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>维生素B5</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>是一种水溶性维生素，化学式为C9H17NO5，因广泛存在于动植物中而得"泛酸"之名。由于所有的食物都含有维生素B5，所以几乎不存在缺乏问题。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>维生素B6</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>该维生素缺乏症很罕见，常见的症状包括嘴巴和眼睛的红疹和发炎、嗜睡以及影响手脚的感觉和运动神经的周围神经病变。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>维生素B7</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>也叫生物素。有利于头发和皮肤的健康，生物素常被称作"美容维生素"。足量摄入生物素有助于食物转化为葡萄糖，产生脂肪酸和氨基酸。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>维生素B12</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>在红细胞形成、细胞代谢、神经功能和DNA产生中起重要作用。老年人和消化道状况影响营养吸收的人容易患缺乏症，可能导致贫血、疲劳、肌无力、肠道问题、神经损伤和情绪紊乱。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>维生素C</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>可用于预防及治疗坏血病，参与组织修复和某些神经递质中的酶促生产。它是几种酶的功能中所必需的，并且对于免疫系统运作很重要。它还可用作抗氧化剂。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>叶酸</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>参与遗传物质和蛋白质的代谢；影响动物繁殖性能；影响动物胰腺的分泌；促进动物的生长；提高机体免疫力。叶酸缺乏的可能原因包括摄入量不足；需要量增加；肠道吸收障碍；维生素C缺乏；使用叶酸拮抗药；肝脏疾病等。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mb-4">
+                <h4>6.2 必需氨基酸</h4>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>指标</th>
+                            <th>检测结果</th>
+                            <th>结果评估</th>
+                            <th>指标</th>
+                            <th>检测结果</th>
+                            <th>结果评估</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>赖氨酸</strong></td>
+                            <td>44</td>
+                            <td><span class="status-badge status-warning">偏低</span></td>
+                            <td><strong>组氨酸</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>丝氨酸</strong></td>
+                            <td>53</td>
+                            <td><span class="status-badge status-warning">偏低</span></td>
+                            <td><strong>半胱氨酸</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>亮氨酸</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><strong>甘氨酸</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>色氨酸</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><strong>酪氨酸</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>苯丙氨酸</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><strong>异亮氨酸</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>精氨酸</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><strong>缬氨酸</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>谷氨酸</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><strong>甲硫氨酸</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>天冬氨酸</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><strong>丙氨酸</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="mb-3">维生素合成能力图表</h4>
+                    <div class="chart-card">
+                        <div class="chart-wrapper">
+                            <canvas id="vitaminChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h4 class="mb-3">必需氨基酸图表</h4>
+                    <div class="chart-card">
+                        <div class="chart-wrapper">
+                            <canvas id="aminoChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>6.3 天然色素</h4>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>指标</th>
+                            <th>检测结果</th>
+                            <th>结果评估</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>类胡萝卜素</strong></td>
+                            <td>23</td>
+                            <td><span class="status-badge status-normal">正常</span></td>
+                            <td>具有抗氧化、免疫调节、抗癌、延缓衰老等功效。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>类黄酮</strong></td>
+                            <td>5</td>
+                            <td><span class="status-badge status-warning">偏低</span></td>
+                            <td>具有抗氧化或抗发炎反应功效。也被认为可以抵抗或是减缓肿瘤的形成。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>花青素</strong></td>
+                            <td>15</td>
+                            <td><span class="status-badge status-normal">正常</span></td>
+                            <td>花青素属于生物类黄酮物质，而黄酮物质最主要的生理活性功能是自由基清除能力和抗氧化能力。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Disease Risk Section -->
+        <section class="report-section" id="disease-risk">
+            <h2 class="section-title">
+                <i class="fas fa-heartbeat"></i> 疾病风险评估
+            </h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="risk-level risk-high">
+                        <div>
+                            <h5><i class="fas fa-exclamation-circle"></i> 炎症性肠炎 (IBD)</h5>
+                            <p class="mb-0">风险等级：高风险 (82.4分)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="risk-level risk-low">
+                        <div>
+                            <h5><i class="fas fa-check-circle"></i> 肠易激综合症</h5>
+                            <p class="mb-0">风险等级：低风险 (2.3分)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>其他疾病风险详细数据</h4>
+                
+                <!-- 添加所有疾病的详细表格 -->
+                <div class="accordion" id="diseaseAccordion">
+                    <!-- 慢性便秘 -->
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <h5 class="mb-0">7.3 慢性便秘</h5>
+                            <p class="mb-0">排便次数减少，粪便干硬和排便困难。主要表现为每周排便少3次，排便困难，每次排便时间长，排除粪便干结且数量少。</p>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr><th>菌名</th><th>检测结果</th><th>参考范围</th><th>疾病影响</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>乳酸杆菌属 (Lactobacillus)</td><td>0</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>普氏粪杆菌 (Faecalibacterium prausnitzii)</td><td>0.002</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>梭菌属 (Clostridium)</td><td>1.5</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>殊异韦荣式菌 (Veillonella dispar)</td><td>0.6</td><td>-</td><td>有害</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 息肉 -->
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <h5 class="mb-0">7.4 息肉 - 风险等级：低风险 (2.3分)</h5>
+                            <p class="mb-0">肠道粘膜表面突出的一种赘生物。早期多无明显症状，少数患者可出现便血、大便习惯改变和形状改变，部分息肉有癌变风险。</p>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr><th>菌名</th><th>检测结果</th><th>参考范围</th><th>疾病影响</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>梭杆菌属 (Fusobacterium)</td><td>0</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>厌氧消化链球菌 (Peptostreptococcus anaerobius)</td><td>0.002</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>放线菌属 (Actinomyces)</td><td>1.5</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>多尔式菌属 (Dorea)</td><td>0.6</td><td>-</td><td>有害</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 结直肠癌 -->
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <h5 class="mb-0">7.5 结直肠癌 - 风险等级：低风险 (2.3分)</h5>
+                            <p class="mb-0">胃肠道中常见的恶性肿瘤。饮食习惯、肠道菌群、化学致癌物、基因变异、腺瘤、慢性溃疡性结肠炎等因素会增加结肠癌的风险。</p>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr><th>菌名</th><th>检测结果</th><th>参考范围</th><th>疾病影响</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>梭杆菌属 (Fusobacterium)</td><td>0</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>脆弱拟杆菌 (Bacteroides fragilis)</td><td>0.002</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>卟啉单胞菌属 (Porphyromonas)</td><td>1.5</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>具核梭杆菌 (Fusobacterium nucleatum)</td><td>0.6</td><td>-</td><td>有害</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="alert alert-info mt-2">
+                                <strong>预防建议：</strong>建议您保持多吃富含膳食纤维的蔬菜水果，使用易于消化、细软的半流食品（如小米粥、大米粥、玉米面粥等），减少脂肪和动物蛋白的摄入，忌食生冷辛辣等刺激性食物；另外，应忌烟酒，保持良好的心情。
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 肝病 -->
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <h5 class="mb-0">7.6 肝病 - 风险等级：低风险 (2.3分)</h5>
+                            <p class="mb-0">肝病包括肝功能异常、肝硬化、脂肪肝、肝癌导致的肝功能异常。普通成年人NAFLD患病率为17%~33%。</p>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr><th>菌名</th><th>检测结果</th><th>参考范围</th><th>疾病影响</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>瘤胃球菌属 (Ruminococcus)</td><td>0</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>Akk菌属 (Akkermansia)</td><td>0.002</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>肺炎克雷伯菌 (Klebsiella pneumoniae)</td><td>1.5</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>普通拟杆菌 (Bacteroides vulgatus)</td><td>-</td><td>-</td><td>有害</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="alert alert-info mt-2">
+                                <strong>预防建议：</strong>生活中，要改善目前的生活方式，调整饮食减少卡路里及碳水化合物的摄入量，多运动。
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 糖尿病 -->
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <h5 class="mb-0">7.7 糖尿病</h5>
+                            <p class="mb-0">糖尿病由多种病因引起的以慢性高血糖为特征的代谢紊乱，主要病征为"三多一少"，即多饮、多食、多尿、体重减轻。</p>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr><th>菌名</th><th>检测结果</th><th>参考范围</th><th>疾病影响</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>普雷沃氏菌属 (Prevotella)</td><td>0</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>肠道罗氏菌 (Roseburia intestinalis)</td><td>0.002</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>消化链球菌属 (Peptostreptococcus)</td><td>1.5</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>哈氏梭菌 (Clostridium hathewayi)</td><td>-</td><td>-</td><td>有害</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 代谢综合征 -->
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <h5 class="mb-0">7.8 代谢综合征</h5>
+                            <p class="mb-0">一般是指体内代谢紊乱的病理状态，是一种复杂的代谢紊乱症候群。临床表现主要有肥胖、血脂异常、糖尿病和高血压等。</p>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr><th>菌名</th><th>检测结果</th><th>参考范围</th><th>疾病影响</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>副干酪乳杆菌 (Lactobacillus paracasei)</td><td>0</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>双歧杆菌属 (Bifidobacterium)</td><td>0.002</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>狄氏副拟杆菌 (Parabacteroides distasonis)</td><td>1.5</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>梭杆菌属 (Fusobacterium)</td><td>-</td><td>-</td><td>有害</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 冠心病 -->
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <h5 class="mb-0">7.9 冠心病</h5>
+                            <p class="mb-0">即冠状动脉粥样硬化性心脏病，指冠状动脉发生粥样硬化引起管腔狭窄或闭塞，导致心肌缺血缺氧或坏死而引起的心脏病。</p>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr><th>菌名</th><th>检测结果</th><th>参考范围</th><th>疾病影响</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>普雷沃氏菌属 (Prevotella)</td><td>0</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>罗氏菌属 (Roseburia)</td><td>0.002</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>克雷伯菌属 (Klebsiella)</td><td>1.5</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>嗜血杆菌属 (Haemophilus)</td><td>-</td><td>-</td><td>有害</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 高血压 -->
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <h5 class="mb-0">7.10 高血压</h5>
+                            <p class="mb-0">血管压力过高（140/90 mmHg或更高）。它很常见，但如果不治疗，可能会很严重。</p>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr><th>菌名</th><th>检测结果</th><th>参考范围</th><th>疾病影响</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>丁酸弧菌属 (Butyricimonas)</td><td>0</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>假单胞菌属 (Pseudomonas)</td><td>0.002</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>脱硫弧菌属 (Desulfovibrio)</td><td>1.5</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>克雷伯菌属 (Klebsiella)</td><td>-</td><td>-</td><td>有害</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="alert alert-info mt-2">
+                                <strong>预防建议：</strong>要坚持运动，经常性的身体活动可预防和控制高血压，如健走、游泳、太极拳、家务劳动等，活动量一般应达到中等强度；注意低盐、低脂、低热量饮食，减少摄入富含油脂和高糖的食物，限量使用烹调油，多吃蔬菜和水果；在日常生活中应当保持一个良好乐观心态，定期监测血压，避免情绪过激。另外坚持吃药很重要，减少或避免高血压对身体器脏的危害。
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 抑郁 -->
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <h5 class="mb-0">7.11 抑郁</h5>
+                            <p class="mb-0">抑郁症以显著而持久的心境低落为主要临床特征。表现为心境低落与其处境不相称，情绪的消沉可以从闷闷不乐到悲痛欲绝。</p>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr><th>菌名</th><th>检测结果</th><th>参考范围</th><th>疾病影响</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>两歧双歧杆菌 (Bifidobacterium bifidum)</td><td>0</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>青春双歧杆菌 (Bifidobacterium adolescentis)</td><td>0.002</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>迟缓埃格特菌 (Eggerthella lenta)</td><td>1.5</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>埃氏拟杆菌 (Bacteroides eggerthii)</td><td>-</td><td>-</td><td>有害</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 阿尔茨海默病 -->
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <h5 class="mb-0">7.12 阿尔茨海默病</h5>
+                            <p class="mb-0">一种起病隐匿的进行性发展的神经系统退行性疾病，认知退化属于起病早期。临床上以记忆障碍、失语、失用、失认等为特征。</p>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr><th>菌名</th><th>检测结果</th><th>参考范围</th><th>疾病影响</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>臭杆菌属 (Odoribacter)</td><td>0</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>长双歧杆菌 (Bifidobacterium longum)</td><td>0.002</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>大肠杆菌 (Escherichia coli)</td><td>1.5</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>葡萄球菌属 (Staphylococcus)</td><td>-</td><td>-</td><td>有害</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="alert alert-info mt-2">
+                                <strong>预防建议：</strong>该病可能是一组异质性疾病，在多种因素（包括生物和社会心理因素）的作用下才发病。从目前研究来看，该病的可能因素和假说多达30余种，如家族史、女性、头部外伤、低教育水平、甲状腺病、母育龄过高或过低、病毒感染等。诊断检测包括：神经心理学测验，血液学检查，神经影像学检查，脑电图（EEG），脑脊液检测，基因检测。
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 痛风 -->
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <h5 class="mb-0">7.13 痛风</h5>
+                            <p class="mb-0">是由于血中尿酸含量过高（高尿酸血症）而导致尿酸盐结晶沉积在关节内的疾病。痛风发作时的典型症状是一个或多个关节突然出现剧烈疼痛。</p>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr><th>菌名</th><th>检测结果</th><th>参考范围</th><th>疾病影响</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>拟杆菌属</td><td>0</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>梭杆菌属</td><td>0.002</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>普雷沃菌属</td><td>1.5</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>考拉杆菌属</td><td>-</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>粪杆菌属</td><td>-</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>双歧杆菌属</td><td>-</td><td>-</td><td>有益</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="alert alert-info mt-2">
+                                <strong>预防建议：</strong>减少摄入红肉和贝类以及添加果糖的饮料，保持健康体重，若有其他疾病如高血压、糖尿病、心脏病和肾脏疾病也会提高该病发生的几率，所以要控制好上述的疾病。
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 湿疹 -->
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <h5 class="mb-0">7.14 湿疹</h5>
+                            <p class="mb-0">湿疹（又称特应性皮炎）通常是指上层皮肤的慢性发痒炎症。每年约有多达10%的成人和20%的儿童被诊断为特应性皮炎。</p>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr><th>菌名</th><th>检测结果</th><th>参考范围</th><th>疾病影响</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>拟杆菌属</td><td>0</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>韦荣球菌属</td><td>0.002</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>埃希氏菌属</td><td>1.5</td><td>-</td><td>有害</td></tr>
+                                    <tr><td>乳杆菌属</td><td>-</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>双歧杆菌属</td><td>-</td><td>-</td><td>有益</td></tr>
+                                    <tr><td>瘤胃球菌科</td><td>-</td><td>-</td><td>有益</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-card mt-4">
+                    <h5>疾病风险总览图</h5>
+                    <div class="chart-wrapper">
+                        <canvas id="diseaseRiskChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendation-card mt-4">
+                <div class="recommendation-title">
+                    <i class="fas fa-lightbulb"></i> 预防建议
+                </div>
+                <ul class="recommendation-list">
+                    <li>保持均衡营养、少食多餐，面对压力时放松心情</li>
+                    <li>适当运动可以缓解焦虑，调节免疫系统</li>
+                    <li>多吃富含膳食纤维的蔬菜水果</li>
+                    <li>减少脂肪和动物蛋白的摄入</li>
+                    <li>忌食生冷辛辣等刺激性食物</li>
+                    <li>忌烟酒，保持良好的心情</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Immunity Assessment Section -->
+        <section class="report-section" id="immunity">
+            <h2 class="section-title">
+                <i class="fas fa-shield-alt"></i> 免疫力评估
+            </h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-card">
+                        <div class="chart-wrapper">
+                            <canvas id="immunityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mt-4">
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>肠道抗炎力</span>
+                                <span>55/100</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 55%;">适中</div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>肠道免疫力</span>
+                                <span>43/100</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 43%;">适中</div>
+                            </div>
+                        </div>
+                        <div class="alert alert-warning mt-3">
+                            <i class="fas fa-user-clock"></i> <strong>生物年龄预测：</strong> 70岁
+                            <br>
+                            <small>您的肠道年龄略高于实际年龄，建议改善生活方式。</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <h4>9. 肠道生物年龄评估</h4>
+                <p>即"肠道年龄"，是评估肠道微生态健康状况的一种指标，它反映肠道内各种细菌的平衡程度，并以此来预测肠道的老化状态。生物和医学专家认为，肠道的年龄与人体的健康状态密切相关，拥有相对年轻的肠道可有助于延缓衰老。研究发现，在婴儿时期，以双歧杆菌为主的有益菌比例高达98%，青少年时期约为40%左右，到中年时期则下降至大约10%。长寿老人肠道中的双歧杆菌是普通老人的100倍，而普通健康老人又是患病老人的50倍。</p>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>菌名</th>
+                            <th>检测结果</th>
+                            <th>参考范围</th>
+                            <th>肠道年龄影响</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>芬戈尔德菌属</strong><br><small class="text-muted">(Finegoldia magna)</small></td>
+                            <td>0</td>
+                            <td>-</td>
+                            <td><span class="status-badge status-danger">负向</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>齿双歧杆菌</strong><br><small class="text-muted">(Bifidobacterium dentium)</small></td>
+                            <td>0.002</td>
+                            <td>-</td>
+                            <td><span class="status-badge status-danger">负向</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>普通拟杆菌</strong><br><small class="text-muted">(Bacteroides vulgatus)</small></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><span class="status-badge status-danger">负向</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>肠杆菌梭状芽孢杆菌</strong><br><small class="text-muted">(Clostridium clostridioforme)</small></td>
+                            <td>1.5</td>
+                            <td>-</td>
+                            <td><span class="status-badge status-danger">负向</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>普雷沃氏菌属</strong><br><small class="text-muted">(Prevotella copri)</small></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><span class="status-badge status-success">正向</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>伯克氏菌</strong><br><small class="text-muted">(Burkholderialse bacterium)</small></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><span class="status-badge status-success">正向</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>霍氏真杆菌</strong><br><small class="text-muted">(Eubacterium hallii)</small></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><span class="status-badge status-success">正向</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="alert alert-info mt-3">
+                    <strong>说明：</strong>肠道年龄的判断标准包括有益细菌的占比，有益细菌比例越高，肠道年龄就越年轻；而有害菌的数量增多，产生的毒素可加速肠道老化，导致肠道炎症、营养吸收差、长期便秘、大便异味和肠胀气等健康问题。
+                </div>
+            </div>
+        </section>
+
+        <!-- Dietary Recommendations Section -->
+        <section class="report-section" id="recommendations">
+            <h2 class="section-title">
+                <i class="fas fa-clipboard-list"></i> 个性化饮食建议
+            </h2>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="recommendation-card" style="background: #E8F5E9; border-color: #4CAF50;">
+                        <div class="recommendation-title" style="color: #4CAF50;">
+                            <i class="fas fa-check"></i> 推荐食物
+                        </div>
+                        <ul class="recommendation-list">
+                            <li>全麦食品</li>
+                            <li>新鲜水果和蔬菜</li>
+                            <li>豆科作物</li>
+                            <li>低脂白肉（鱼、鸡肉）</li>
+                            <li>无盐坚果</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="recommendation-card" style="background: #FFF3E0; border-color: #FF9800;">
+                        <div class="recommendation-title" style="color: #FF9800;">
+                            <i class="fas fa-exclamation"></i> 适量食物
+                        </div>
+                        <ul class="recommendation-list">
+                            <li>红肉</li>
+                            <li>乳制品</li>
+                            <li>加工食品</li>
+                            <li>含糖饮料</li>
+                            <li>高盐食物</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="recommendation-card" style="background: #FFEBEE; border-color: #F44336;">
+                        <div class="recommendation-title" style="color: #F44336;">
+                            <i class="fas fa-times"></i> 避免食物
+                        </div>
+                        <ul class="recommendation-list">
+                            <li>油炸食品</li>
+                            <li>过量酒精</li>
+                            <li>高糖甜点</li>
+                            <li>反式脂肪</li>
+                            <li>辛辣刺激食物</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>生活方式建议</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="bacteria-card">
+                            <h5><i class="fas fa-running text-primary"></i> 运动建议</h5>
+                            <ul>
+                                <li>每周至少150分钟中等强度运动</li>
+                                <li>推荐：健走、游泳、太极拳</li>
+                                <li>避免久坐，每小时起身活动</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="bacteria-card">
+                            <h5><i class="fas fa-bed text-info"></i> 作息建议</h5>
+                            <ul>
+                                <li>保持规律作息，每天7-8小时睡眠</li>
+                                <li>避免熬夜，晚上11点前入睡</li>
+                                <li>管理压力，练习冥想或深呼吸</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Appendix Section -->
+        <section class="report-section" id="appendix">
+            <h2 class="section-title">
+                <i class="fas fa-book"></i> 附录
+            </h2>
+            
+            <div class="mb-4">
+                <h4>附录一：微生物失衡的综合防治</h4>
+                <p>肠道微生态系统是机体最庞大和最重要的微生态系统，对宿主的健康与营养起着重要作用，是激活和维持肠道生理功能的关键因素。相关研究指出，人体肠道内有益菌的种类和数量，在一定程度上可以反映人体的健康状态。</p>
+                
+                <h5 class="mt-3">饮食调节的建议</h5>
+                <p>您的个性化建议基于您肠道中的微生物活动和您提供的信息，您的建议旨在平衡您的整体微生物群。您的食物清单突出显示了将被微生物转化为有益物质的食物，同时限制了将转化为有害代谢物的食物。您和您的微生物群是独一无二的，没有一个建议适用于所有人。相同的食物可能对一个人有益，对另一个人无害，对其他人有害。</p>
+                
+                <p>您的食物建议已分为4个等级，以帮助您实现最佳健康和幸福：</p>
+                <ol>
+                    <li><strong>超级食物</strong>：满足您对食物的需求，这些是您最有益的食物。</li>
+                    <li><strong>享受</strong>：用这些营养丰富的食物打下坚实的基础。</li>
+                    <li><strong>尽量减少</strong>：您仍然应该吃这些食物（但要适度）。</li>
+                    <li><strong>避免</strong>：这些食物是您的个人弱点。</li>
+                </ol>
+            </div>
+
+            <div class="mb-4">
+                <h4>附录二：肠道微生物各指标的解读</h4>
+                
+                <h5>肠道菌群评分</h5>
+                <p>肠道内寄居着种类繁多的微生物，这些微生物统称为肠道菌群。肠道菌群是一个复杂的生态系统，健康人肠道中有害菌通常不会过量繁殖，主要以有益菌和条件致病菌为主。按一定的比例组合，各菌间互相制约，互相依存，在质和量上形成一种生态平衡，一旦机体内外环境发生变化，特别是长期应用广谱抗生素，敏感肠菌被抑制，未被抑制的细菌趁机繁殖，从而引起菌群失衡，进而引发腹泻、消化不良等临床症状。</p>
+                
+                <h5>肠道菌群多样性</h5>
+                <p>肠道菌群多样性是指人体肠道中微生物种类的丰富性。当生活环境或者生活方式等不同时，人体中的肠道菌群也会不尽相同。菌群多样性越高说明人体肠道中存在细菌种类越丰富，人体肠道环境的抵抗力与恢复力也会越高，即肠道环境越稳定，越可以抵抗外界的刺激（如疾病等），或者受到刺激后也可以更快恢复。所以当肠道菌群多样性降低时，肠道的"免疫力"也会降低，包括许多疾病的发生：心血管疾病、脑卒中、糖尿病、癌症、肥胖、脂肪肝等都与肠道菌群多样性的降低有关。</p>
+                
+                <h5>肠型</h5>
+                <p>肠型是类似于人的血型的一种区分人体肠道微生物组成的指标，在长期的饮食和生活习惯影响下而形成。肠道里的菌群类型和数量，可以反映不同人的消化能力、免疫能力以及对药物的反应情况。根据对肠型分类起主要贡献的指示微生物种类的不同，可将人体肠型大致分为三种。</p>
+                
+                <h5>免疫力评估说明</h5>
+                <p>肠道是机体最大的免疫器官，在机体免疫稳态的维持中起着重要作用。肠道上皮不是静态的物理屏障，它与肠道菌群以及免疫系统存在强烈的相互作用，对抗原的特异性免疫应答、平衡耐受性和效应免疫功能产生深远影响。研究表明肠道菌群的组成能够影响免疫系统的发育并调节免疫介质，进而影响肠道黏膜稳态乃至机体的免疫反应。肠道菌群的紊乱会导致肠道屏障的破坏，并可能与某些疾病的易感性增加密切相关。</p>
+            </div>
+
+            <div class="mb-4">
+                <h4>附录三：检测方法和局限性</h4>
+                <p>16S rRNA测序是一种高效、经济的技术，广泛用于肠道微生物群的分类和多样性分析。它的主要优点是操作简便、可通过高通量平台快速获取大量数据。</p>
+                
+                <h5>检测方法</h5>
+                <ol>
+                    <li><strong>样本采集</strong>
+                        <ul>
+                            <li>样本来源：常见的样本包括粪便、肠组织等，其中粪便样本最为普遍。</li>
+                            <li>样本保存：采集后需要快速冷冻或使用保存试剂，避免样本中的微生物群落发生变化。</li>
+                        </ul>
+                    </li>
+                    <li><strong>DNA提取</strong>：从样本中提取总DNA，包括来自所有微生物的基因组DNA。提取方法需要确保获得高质量、完整的DNA，以保证后续分析的准确性。</li>
+                    <li><strong>16S rRNA基因扩增</strong>
+                        <ul>
+                            <li>扩增目标：16S rRNA基因是细菌和古菌特有的基因，包含高度保守和可变区。可变区（如V3、V4、V6等）提供了鉴定不同微生物种类的能力。</li>
+                            <li>引物选择：设计针对16S rRNA基因的引物，一般扩增其可变区，如V3-V4区。这种区域在细菌种属水平上有较好的区分能力。</li>
+                            <li>PCR扩增：使用聚合酶链式反应（PCR）扩增16S rRNA基因的可变区。</li>
+                        </ul>
+                    </li>
+                    <li><strong>高通量测序</strong>
+                        <ul>
+                            <li>测序平台：常用的高通量测序平台Illumina MiSeq，短时间内产生大量的测序数据。</li>
+                            <li>数据量：每个样本可生成成千上万条序列，这些序列可以用于后续微生物群落的分析。</li>
+                        </ul>
+                    </li>
+                    <li><strong>生物信息学分析</strong>
+                        <ul>
+                            <li>序列质控：包括去除低质量序列、短序列和引物序列。</li>
+                            <li>序列聚类：通过聚类或分类方法将相似的序列分组成操作分类单元（Operational Taxonomic Units, OTUs），通常基于97%的序列相似性水平。</li>
+                            <li>分类注释：将OTUs与数据库（如SILVA、Greengenes、RDP）中的已知16S rRNA序列比对，进行物种注释。</li>
+                        </ul>
+                    </li>
+                </ol>
+                
+                <h5>局限性</h5>
+                <p>虽然16S rRNA基因测序在肠道微生物研究中非常常用，但它也有一些局限性：</p>
+                <ol>
+                    <li><strong>分辨率有限</strong>：物种级别分辨率低。16S rRNA基因的某些区域（如V3-V4区）在种属水平上具有区分能力，但无法区分到更细的种级或亚种级。不同物种可能拥有高度相似的16S rRNA序列，因此16S rRNA测序通常只能识别到属或科的水平，不能精确到物种。</li>
+                    <li><strong>功能推测有限</strong>：只能推测微生物功能。16S rRNA测序只能告诉我们样本中微生物的分类组成，不能直接推断其功能。例如，某些物种的存在并不一定意味着它们在某种特定的代谢功能中活跃。功能预测工具（如PICRUSt）虽然能推测微生物群的功能，但这种推测基于参考基因组，准确性有限。</li>
+                    <li><strong>无法检测非细菌微生物</strong>：只针对细菌和古菌。16S rRNA测序主要针对细菌和古菌，无法检测肠道中的其他微生物，如真菌、病毒和原生动物。如果研究目标是完整的微生物群落（包括真菌和病毒），则需要使用其他方法，如ITS测序（针对真菌）或病毒的宏基因组测序。</li>
+                    <li><strong>相对定量而非绝对定量</strong>：无法提供绝对丰度信息。16S rRNA测序提供的是相对丰度数据，即每个微生物群相对于总群落的比例。然而，这种相对丰度并不能反映微生物的绝对数量变化。绝对定量通常需要使用定量PCR（qPCR）或其他定量方法。</li>
+                </ol>
+            </div>
+
+            <div class="mb-4">
+                <h4>附录四：参考文献</h4>
+                <ol style="font-size: 0.9rem;">
+                    <li>Palm, Noah W, et al. "Immunoglobulin A coating identifies colitogenic bacteria in inflammatory bowel disease." Cell 158.5(2014): 1000-1010.</li>
+                    <li>Compare, D, et al. "Gut-liver axis: the impact of gut microbiota on alcoholic fatty liver disease." Nutrition, Metabolism and Cardiovascular Diseases 22.6(2012): 471-476.</li>
+                    <li>Strain-specific gut microbial signatures in type 2 diabetes identified in a cross-cohort analysis of 8,117 metagenomes 06-25, doi: 10.1038/s41591-024-03067-7</li>
+                    <li>Hartstra, Annick V, et al. "Insights into the role of the microbiome in obesity and type 2 diabetes." Diabetes care 38.1 (2015): 159-165</li>
+                    <li>Mardinoglu, Adil, Jan Boren, and Ulf Smith. "Confounding Effects of Metformin on the Human Gut Microbiome in Type 2 Diabetes."</li>
+                    <li>Yutao Chen, Hongchao Wang, Wenwei Lu, Tong Wu, Weiwei Yuan, Jinlin Zhu, Yuan Kun Lee, Jianxin Zhao, Hao Zhang & Wei Chen (2022) Human gut microbiome aging clocks based on taxonomic and functional signatures through multi-view learning, Gut Microbes, 14:1, DOI: 10.1080/19490976.2021.2025016.</li>
+                    <li>Galkin F, Mamoshina P, Aliper A, et al. Human Gut Microbiome Aging Clock Based on Taxonomic Profiling and Deep Learning. iScience. 2020;23(6):101199. doi:10.1016/j.isci.2020.101199</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <div class="report-section">
+            <div class="text-center text-muted">
+                <p>
+                    <i class="fas fa-info-circle"></i> 
+                    本报告基于16S rRNA测序技术，仅供参考。如有健康问题，请咨询专业医生。
+                </p>
+                <p>检测日期：2024年8月15日 | 报告生成日期：2024年9月</p>
+                <p>检测人员：_______________ | 检测日期：_______________ | 核实人员：_______________</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Action Button -->
+    <div class="fab" onclick="window.print()">
+        <i class="fas fa-print"></i>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Navigation Toggle
+        function toggleNav() {
+            const sidebar = document.getElementById('navSidebar');
+            const mainContent = document.getElementById('mainContent');
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('nav-active');
+        }
+
+        // Scroll to Section
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // Update active nav item
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                event.target.classList.add('active');
+            }
+        }
+
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Diversity Chart
+            const diversityCtx = document.getElementById('diversityChart');
+            if (diversityCtx) {
+                new Chart(diversityCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['检测值', '剩余范围'],
+                        datasets: [{
+                            data: [480, 290],
+                            backgroundColor: [
+                                'rgba(46, 125, 50, 0.8)',
+                                'rgba(229, 229, 229, 0.3)'
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        height: 300,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // B/F Ratio Chart
+            const bfRatioCtx = document.getElementById('bfRatioChart');
+            if (bfRatioCtx) {
+                new Chart(bfRatioCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['拟杆菌门', '厚壁菌门'],
+                        datasets: [{
+                            label: '相对丰度',
+                            data: [76.7, 23.3],
+                            backgroundColor: [
+                                'rgba(102, 187, 106, 0.8)',
+                                'rgba(255, 193, 7, 0.8)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        height: 300,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Vitamin Chart
+            const vitaminCtx = document.getElementById('vitaminChart');
+            if (vitaminCtx) {
+                new Chart(vitaminCtx.getContext('2d'), {
+                    type: 'radar',
+                    data: {
+                        labels: ['维生素A', '维生素B1', '维生素B2', '维生素B6', '维生素B12', '维生素C', '叶酸'],
+                        datasets: [{
+                            label: '合成能力',
+                            data: [20, 30, 60, 75, 80, 55, 45],
+                            backgroundColor: 'rgba(46, 125, 50, 0.2)',
+                            borderColor: 'rgba(46, 125, 50, 1)',
+                            pointBackgroundColor: 'rgba(46, 125, 50, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(46, 125, 50, 1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        height: 300,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Amino Acid Chart
+            const aminoCtx = document.getElementById('aminoChart');
+            if (aminoCtx) {
+                new Chart(aminoCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['赖氨酸', '丝氨酸', '亮氨酸', '色氨酸', '苯丙氨酸', '异亮氨酸', '缬氨酸', '甲硫氨酸'],
+                        datasets: [{
+                            label: '合成水平',
+                            data: [44, 53, 65, 60, 70, 55, 58, 48],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.6)',
+                                'rgba(255, 99, 132, 0.6)',
+                                'rgba(102, 187, 106, 0.6)',
+                                'rgba(102, 187, 106, 0.6)',
+                                'rgba(102, 187, 106, 0.6)',
+                                'rgba(102, 187, 106, 0.6)',
+                                'rgba(102, 187, 106, 0.6)',
+                                'rgba(255, 206, 86, 0.6)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(102, 187, 106, 1)',
+                                'rgba(102, 187, 106, 1)',
+                                'rgba(102, 187, 106, 1)',
+                                'rgba(102, 187, 106, 1)',
+                                'rgba(102, 187, 106, 1)',
+                                'rgba(255, 206, 86, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        height: 300,
+                        indexAxis: 'y',
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        label += context.parsed.x + '%';
+                                        if (context.parsed.x < 50) {
+                                            label += ' (偏低)';
+                                        } else if (context.parsed.x > 80) {
+                                            label += ' (偏高)';
+                                        } else {
+                                            label += ' (正常)';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Disease Risk Chart
+            const diseaseRiskCtx = document.getElementById('diseaseRiskChart');
+            if (diseaseRiskCtx) {
+                new Chart(diseaseRiskCtx.getContext('2d'), {
+                    type: 'polarArea',
+                    data: {
+                        labels: ['糖尿病', '高血压', '抑郁症', '息肉', '结直肠癌', '肝病'],
+                        datasets: [{
+                            data: [35, 45, 55, 23, 23, 30],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.6)',
+                                'rgba(54, 162, 235, 0.6)',
+                                'rgba(255, 206, 86, 0.6)',
+                                'rgba(75, 192, 192, 0.6)',
+                                'rgba(153, 102, 255, 0.6)',
+                                'rgba(255, 159, 64, 0.6)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        height: 300,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Immunity Chart
+            const immunityCtx = document.getElementById('immunityChart');
+            if (immunityCtx) {
+                new Chart(immunityCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['基线', '当前', '目标'],
+                        datasets: [{
+                            label: '抗炎力',
+                            data: [60, 55, 70],
+                            borderColor: 'rgba(46, 125, 50, 1)',
+                            backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                            tension: 0.4
+                        }, {
+                            label: '免疫力',
+                            data: [60, 43, 70],
+                            borderColor: 'rgba(33, 150, 243, 1)',
+                            backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        height: 300,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Smooth scroll behavior for all internal links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // Add animation on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.report-section').forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
