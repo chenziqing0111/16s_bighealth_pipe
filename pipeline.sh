@@ -300,13 +300,19 @@ except:
                 >> "$sample_log" 2>&1 &
         fi
         
+        # 6. 功能预测
+        python3 "$SCRIPT_DIR/scripts/analysis/6_functional_prediction.py" \
+            --input "$sample_dir/sample_asv.tsv" \
+            --output "$sample_dir/functional_prediction" \
+            >> "$sample_log" 2>&1 &
+        
         # 等待所有分析完成
         wait
     }
     
     # 检查分析结果
     local success=true
-    for module in diversity enterotype bacteria_scores disease_risk age_prediction; do
+    for module in diversity enterotype bacteria_scores disease_risk age_prediction functional_prediction; do
         if [ ! -f "$sample_dir/$module/"*.json ]; then
             warn "  模块 $module 未生成结果"
             success=false
@@ -323,7 +329,6 @@ except:
             local report_cmd="python3 $SCRIPT_DIR/scripts/report/generate_report.py"
             report_cmd="$report_cmd --sample_id $sample_id"
             report_cmd="$report_cmd --results $sample_dir"
-            report_cmd="$report_cmd --template $SCRIPT_DIR/scripts/report/templates"
             report_cmd="$report_cmd --output $output_base/reports/${sample_id}_report.html"
             
             if [ -n "$metadata_file" ] && [ -f "$metadata_file" ]; then
@@ -450,7 +455,7 @@ main() {
         log "检测到文件输入，检查格式..."
         
         # 检查是否是ASV表
-        if head -1 "$INPUT" | grep -q -E "ASV|OTU|Feature"; then
+        if head -1 "$INPUT" | grep -q -E "ASV|OTU|Feature|Taxon|Confidence"; then
             ASV_TABLE="$INPUT"
             info "✓ 识别为ASV表"
         else

@@ -213,12 +213,42 @@ class ReportGenerator:
         
         # 4. 加载并渲染模板
         print("  渲染HTML模板...")
-        template_path = self.script_dir / 'report_template.html'
-        with open(template_path, 'r', encoding='utf-8') as f:
-            template = Template(f.read())
-        
+        from jinja2 import Environment, FileSystemLoader, Undefined
+
+        # 创建一个安全的Undefined类
+        class SilentUndefined(Undefined):
+            def _fail_with_undefined_error(self, *args, **kwargs):
+                return ''
+            __add__ = __radd__ = __mul__ = __rmul__ = __div__ = __rdiv__ = \
+            __truediv__ = __rtruediv__ = __floordiv__ = __rfloordiv__ = \
+            __mod__ = __rmod__ = __pos__ = __neg__ = __call__ = \
+            __getitem__ = __lt__ = __le__ = __gt__ = __ge__ = \
+            __int__ = __float__ = __complex__ = __pow__ = __rpow__ = \
+            _fail_with_undefined_error
+
+        env = Environment(
+            loader=FileSystemLoader(str(self.script_dir)),
+            undefined=SilentUndefined
+        )
+
+        # 添加必要的过滤器
+        env.filters['nl2br'] = lambda x: x.replace('\n', '<br>\n') if x else x
+        env.filters['default'] = lambda v, d: d if v is None else v
+        env.filters['tojson'] = json.dumps
+        env.filters['safe'] = lambda x: x
+
+        # 添加安全的 round 过滤器
+        def safe_round(value, precision=0):
+            try:
+                return round(float(value), precision) if value is not None else 0
+            except:
+                return 0
+
+        env.filters['round'] = safe_round
+
+        template = env.get_template('report_template.html')
         html = template.render(**template_data)
-        
+                        
         # 5. 内联CSS和JS（便于单文件分发）
         html = self._inline_resources(html)
         
