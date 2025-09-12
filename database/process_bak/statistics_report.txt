@@ -1,0 +1,114 @@
+14种疾病菌群关联数据统计报告
+==================================================
+
+IBD (炎症性肠病)
+  证据数: 346
+  文献数: 25
+  有益菌: Faecalibacterium prausnitzii, Bifidobacterium, Faecalibacterium, Bacteroides fragilis, Clostridium...
+  有害菌: Bifidobacterium, Enterococcus, Ruminococcus gnavus, Escherichia coli, Lactobacillus...
+------------------------------
+IBS (肠易激综合征)
+  证据数: 56
+  文献数: 9
+  有益菌: Bifidobacterium, Ruminococcus torques, Lactobacillus, Faecalibacterium, Bacteroides intestinalis...
+  有害菌: Enterobacteriaceae, Lactobacillus, Eubacterium rectale, Ruminococcus bromii, Pseudomonas aeruginosa...
+------------------------------
+Constipation (便秘)
+  证据数: 50
+  文献数: 4
+  有益菌: Prevotella, Prevotellaceae, Acidaminococcus, Allisonella, Bacteroidetes...
+  有害菌: Firmicutes, Bifidobacterium, Streptococcus, Ruminococcus bromii, Anaerotruncus...
+------------------------------
+CRC (结直肠癌/息肉)
+  证据数: 367
+  文献数: 16
+  有益菌: Coprobacillus, Enterococcus, Bacillus, Lachnospiraceae, Bacteroides...
+  有害菌: Fusobacterium, Porphyromonas, Actinobacteria, Bacteroidetes, Proteobacteria...
+------------------------------
+Celiac (乳糜泻)
+  证据数: 6
+  文献数: 1
+  有益菌: Bifidobacterium longum, Enterococcaceae, Firmicutes, Peptostreptococcaceae...
+  有害菌: Bifidobacterium breve, faecium...
+------------------------------
+Diabetes (糖尿病)
+  证据数: 100
+  文献数: 14
+  有益菌: Roseburia, Eubacterium, Bacteroides, Acidaminococcus, Prevotella...
+  有害菌: Prevotella, Escherichia, Lactobacillus, Collinsella, Bacteroides...
+------------------------------
+Obesity (肥胖/代谢综合征)
+  证据数: 81
+  文献数: 10
+  有益菌: Bacteroides, Faecalibacterium, Bacteroidaceae, Parabacteroides, Oscillospiraceae...
+  有害菌: Prevotellaceae, Faecalibacterium prausnitzii, Enterobacteriaceae, Escherichia/Shigella sp., Sutterella...
+------------------------------
+NAFLD (非酒精性脂肪肝)
+  证据数: 110
+  文献数: 10
+  有益菌: Bifidobacterium, Faecalibacterium prausnitzii, Lacticaseibacillus rhamnosus, LimosiLactobacillus fermentum, Akkermansia muciniphila...
+  有害菌: Enterobacteriaceae, Blautia, Escherichia/Shigella sp., Lachnospiraceae, Phascolarctobacterium...
+------------------------------
+CVD (心血管疾病)
+  证据数: 10
+  文献数: 2
+  有益菌: Bacteroidales Incertae Sedis, Enterobacteriaceae incertae sedis, Lachnospiraceae, Oscillospiraceae...
+  有害菌: Erysipelotrichaceae incertae sedis, Actinobacteria incertae sedis, Granulicatella, Haemophilus, Klebsiella...
+------------------------------
+Depression (抑郁症)
+  证据数: 27
+  文献数: 3
+  有益菌: Lachnospiraceae, Bacteroidetes, Agathobacter, Bifidobacterium, Blautia...
+  有害菌: Bacteroidales, Clostridium XI, Firmicutes, Klebsiella, Prevotella...
+------------------------------
+Autism (自闭症)
+  证据数: 42
+  文献数: 2
+  有益菌: Abiotrophia, Bacteroides ovatus, Faecalibacterium...
+  有害菌: Bifidobacterium, Lactobacillus, Megasphaera, Mitsuokella, Anaeroplasma...
+------------------------------
+Parkinson (帕金森病)
+  证据数: 52
+  文献数: 6
+  有益菌: Faecalibacterium, Prevotella, Bacteroides fragilis, Blautia coccoides, Clostridium leptum...
+  有害菌: Bifidobacterium, Enterococcus, Lactobacillus, Atopobium, Oscillospiraceae...
+------------------------------
+Eczema (湿疹/特应性皮炎)
+  证据数: 92
+  文献数: 7
+  有益菌: Bifidobacterium, Bacteroides, Bacteroidetes, Proteobacteria, Faecalibacterium prausnitzii A2-165...
+  有害菌: Faecalibacterium prausnitzii, Faecalibacterium, Parabacteroides, Faecalibacterium cf. prausnitzii KLE1255, Faecalibacterium prausnitzii L2-6...
+------------------------------
+RA (类风湿性关节炎)
+  证据数: 306
+  文献数: 35
+  有益菌: Faecalibacterium prausnitzii, Bifidobacterium, Firmicutes, Lachnospira eligens, Ruminococcus...
+  有害菌: Lactobacillus, Escherichia coli, Bacteroidetes, Bacteroides, Enterobacteriaceae...
+------------------------------
+
+总计: 1645 条证据
+
+
+
+==================================================
+处理完成！文件已保存到: database
+- disease_associations_full.json (完整版)
+- disease_associations.json (简化版)
+- disease_db_code.py (Python代码)
+- statistics_report.txt (统计报告)
+
+=== 14种疾病统计摘要 ===
+✓ IBD          (炎症性肠病     ):  346条证据
+✓ IBS          (肠易激综合征    ):   56条证据
+✓ Constipation (便秘        ):   50条证据
+✓ CRC          (结直肠癌/息肉   ):  367条证据
+✓ Celiac       (乳糜泻       ):    6条证据
+✓ Diabetes     (糖尿病       ):  100条证据
+✓ Obesity      (肥胖/代谢综合征  ):   81条证据
+✓ NAFLD        (非酒精性脂肪肝   ):  110条证据
+✓ CVD          (心血管疾病     ):   10条证据
+✓ Depression   (抑郁症       ):   27条证据
+✓ Autism       (自闭症       ):   42条证据
+✓ Parkinson    (帕金森病      ):   52条证据
+✓ Eczema       (湿疹/特应性皮炎  ):   92条证据
+✓ RA           (类风湿性关节炎   ):  306条证据

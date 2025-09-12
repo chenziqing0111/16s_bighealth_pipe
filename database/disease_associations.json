@@ -1,0 +1,581 @@
+{
+  "IBD": {
+    "name_cn": "炎症性肠病",
+    "beneficial": [
+      "Faecalibacterium prausnitzii",
+      "Bifidobacterium",
+      "Faecalibacterium",
+      "Bacteroides fragilis",
+      "Clostridium",
+      "Firmicutes",
+      "Blautia coccoides",
+      "Clostridium leptum",
+      "Helicobacteraceae",
+      "Akkermansia muciniphila",
+      "Eubacteriales",
+      "Bacteroidetes",
+      "Desulfovibrio",
+      "Odoribacter",
+      "Prevotella"
+    ],
+    "harmful": [
+      "Bifidobacterium",
+      "Enterococcus",
+      "Ruminococcus gnavus",
+      "Escherichia coli",
+      "Lactobacillus",
+      "Escherichia",
+      "Bacteroidetes",
+      "Bacteroides",
+      "Prevotella",
+      "Clostridium",
+      "Enterococcus sp.",
+      "LimosiLactobacillus fermentum",
+      "Clostridioides difficile",
+      "Shigella flexneri",
+      "Listeria sp."
+    ],
+    "weight": 2.0,
+    "evidence_count": 346,
+    "pmid_count": 25,
+    "matched_conditions": [
+      "Colitis,Ulcerative; No Inflammation",
+      "Crohn Disease(ileum and colon)",
+      "Remission Colitis,Ulcerative",
+      "Active Crohn's Disease",
+      "Crohn Disease; Disease Transmission,Infectious"
+    ]
+  },
+  "IBS": {
+    "name_cn": "肠易激综合征",
+    "beneficial": [
+      "Bifidobacterium",
+      "Ruminococcus torques",
+      "Lactobacillus",
+      "Faecalibacterium",
+      "Bacteroides intestinalis",
+      "Clostridium cocleatum",
+      "Collinsella aerofaciens",
+      "Clostridium",
+      "Anaerovorax",
+      "Eubacterium",
+      "Acinetobacter",
+      "Chryseobacterium",
+      "Citrobacter",
+      "Enhydrobacter",
+      "Flavobacterium"
+    ],
+    "harmful": [
+      "Enterobacteriaceae",
+      "Lactobacillus",
+      "Eubacterium rectale",
+      "Ruminococcus bromii",
+      "Pseudomonas aeruginosa",
+      "Bacteroidetes",
+      "Dorea",
+      "Gammaproteobacteria",
+      "Haemophilus parainfluenzae",
+      "Veillonella",
+      "Aeromonas",
+      "Escherichia/Shigella sp.",
+      "Faecalibacterium prausnitzii A2-165",
+      "Clostridium sensu stricto 1",
+      "Granulicatella"
+    ],
+    "weight": 1.5,
+    "evidence_count": 56,
+    "pmid_count": 9,
+    "matched_conditions": [
+      "Irritable Bowel Syndrome; Constipationt",
+      "Constipated-Irritable Bowel Syndrome",
+      "Diarrhea-Predominant Irritable Bowel Syndrome",
+      "Irritable Bowel Syndrome; Diarrhea",
+      "Irritable bowel syndrome mixed type"
+    ]
+  },
+  "Constipation": {
+    "name_cn": "便秘",
+    "beneficial": [
+      "Prevotella",
+      "Prevotellaceae",
+      "Acidaminococcus",
+      "Allisonella",
+      "Bacteroidetes",
+      "Clostridium septicum",
+      "Enterobacteriaceae bacterium",
+      "Erysipelotrichaceae bacterium",
+      "Eubacterium ruminantium",
+      "Gelria",
+      "Klebsiella",
+      "Lachnospiraceae bacterium",
+      "Megamonas",
+      "Megasphaera",
+      "Paraprevotella"
+    ],
+    "harmful": [
+      "Firmicutes",
+      "Bifidobacterium",
+      "Streptococcus",
+      "Ruminococcus bromii",
+      "Anaerotruncus",
+      "Clostridium",
+      "Oscillospiraceae",
+      "Lachnospiraceae",
+      "Faecalibacterium",
+      "Blautia",
+      "Coprococcus",
+      "Ruminococcus",
+      "Lactobacillus",
+      "Aerococcus",
+      "Anaerostipes"
+    ],
+    "weight": 1.2,
+    "evidence_count": 50,
+    "pmid_count": 4,
+    "matched_conditions": [
+      "Constipation",
+      "Irritable Bowel Syndrome; Constipationt"
+    ]
+  },
+  "CRC": {
+    "name_cn": "结直肠癌/息肉",
+    "beneficial": [
+      "Coprobacillus",
+      "Enterococcus",
+      "Bacillus",
+      "Lachnospiraceae",
+      "Bacteroides",
+      "Gammaproteobacteria",
+      "Solibacillus",
+      "Coprococcus",
+      "Erysipelotrichia",
+      "Enterobacterales",
+      "Bifidobacteriaceae",
+      "Brevundimonas",
+      "Firmicutes",
+      "Acinetobacter",
+      "Pseudomonas"
+    ],
+    "harmful": [
+      "Fusobacterium",
+      "Porphyromonas",
+      "Actinobacteria",
+      "Bacteroidetes",
+      "Proteobacteria",
+      "Ruminococcus",
+      "Cyanobacteria",
+      "Lactobacillus",
+      "Lactococcus",
+      "Pseudomonas",
+      "Firmicutes",
+      "Anaerostipes",
+      "Fusobacteria",
+      "Peptostreptococcus",
+      "Parvimonas"
+    ],
+    "weight": 2.0,
+    "evidence_count": 367,
+    "pmid_count": 16,
+    "matched_conditions": [
+      "Colorectal conventional adenoma",
+      "Colorectal Neoplasms",
+      "Probiotics; Colorectal Neoplasms",
+      "Polyposis Syndrome, Hereditary Mixed, 1",
+      "Colorectal hyperplastic polyp"
+    ]
+  },
+  "Celiac": {
+    "name_cn": "乳糜泻",
+    "beneficial": [
+      "Bifidobacterium longum",
+      "Enterococcaceae",
+      "Firmicutes",
+      "Peptostreptococcaceae"
+    ],
+    "harmful": [
+      "Bifidobacterium breve",
+      "faecium"
+    ],
+    "weight": 1.0,
+    "evidence_count": 6,
+    "pmid_count": 1,
+    "matched_conditions": [
+      "Celiac Disease"
+    ]
+  },
+  "Diabetes": {
+    "name_cn": "糖尿病",
+    "beneficial": [
+      "Roseburia",
+      "Eubacterium",
+      "Bacteroides",
+      "Acidaminococcus",
+      "Prevotella",
+      "Lactobacillus",
+      "Staphylococcus",
+      "Lachnospira",
+      "Erysipelotrichaceae",
+      "Bifidobacterium",
+      "Phocaeicola vulgatus",
+      "Clostridia",
+      "Firmicutes",
+      "Megamonas",
+      "Bifidobacterium longum"
+    ],
+    "harmful": [
+      "Prevotella",
+      "Escherichia",
+      "Lactobacillus",
+      "Collinsella",
+      "Bacteroides",
+      "Bifidobacterium longum",
+      "Dialister invisus",
+      "Gemella sanguinis",
+      "Clostridium leptum",
+      "Bacilli",
+      "Bacteroidetes",
+      "Betaproteobacteria",
+      "Dorea",
+      "Enterococcus faecalis",
+      "Prevotellaceae"
+    ],
+    "weight": 1.5,
+    "evidence_count": 100,
+    "pmid_count": 14,
+    "matched_conditions": [
+      "Diabetes Mellitus,Type 1",
+      "Diabetes Mellitus, Type 2; Uyghur",
+      "Sudan; Diabetes Mellitus, Type 1",
+      "Prediabetic State",
+      "Diabetes Mellitus,Type 2"
+    ]
+  },
+  "Obesity": {
+    "name_cn": "肥胖/代谢综合征",
+    "beneficial": [
+      "Bacteroides",
+      "Faecalibacterium",
+      "Bacteroidaceae",
+      "Parabacteroides",
+      "Oscillospiraceae",
+      "Alistipes",
+      "Lachnospiraceae",
+      "Lachnospiraceae incertae sedis",
+      "Oscillibacter",
+      "Porphyromonadaceae",
+      "Rikenellaceae",
+      "Akkermansia muciniphila",
+      "Candida sp.",
+      "Faecalibacterium prausnitzii",
+      "Saccharomyces sp."
+    ],
+    "harmful": [
+      "Prevotellaceae",
+      "Faecalibacterium prausnitzii",
+      "Enterobacteriaceae",
+      "Escherichia/Shigella sp.",
+      "Sutterella",
+      "Bifidobacterium",
+      "Blautia",
+      "Clostridia",
+      "Collinsella",
+      "Lactobacillus",
+      "Bacteroidetes",
+      "Dialister",
+      "Prevotella",
+      "Sutterellaceae",
+      "Veillonellaceae"
+    ],
+    "weight": 1.5,
+    "evidence_count": 81,
+    "pmid_count": 10,
+    "matched_conditions": [
+      "Cardiovascular Diseases; Metabolic Syndrome",
+      "Pediatric Obesity",
+      "Gastric Bypass",
+      "Diabetes Mellitus, Type 2; Overweight",
+      "Obesity"
+    ]
+  },
+  "NAFLD": {
+    "name_cn": "非酒精性脂肪肝",
+    "beneficial": [
+      "Bifidobacterium",
+      "Faecalibacterium prausnitzii",
+      "Lacticaseibacillus rhamnosus",
+      "LimosiLactobacillus fermentum",
+      "Akkermansia muciniphila",
+      "Bacteroides fragilis",
+      "Enterococcus faecalis",
+      "Peptostreptococcaceae",
+      "Solobacterium",
+      "Lactobacillus acidophilus",
+      "LimosiLactobacillus reuteri",
+      "Clostridium subcluster XIVa",
+      "Lactobacillus",
+      "Fusobacterium",
+      "Streptococcus"
+    ],
+    "harmful": [
+      "Enterobacteriaceae",
+      "Blautia",
+      "Escherichia/Shigella sp.",
+      "Lachnospiraceae",
+      "Phascolarctobacterium",
+      "Clostridium",
+      "Coprococcus",
+      "Dorea",
+      "Mitsuokella",
+      "Odoribacter",
+      "Peptococcaceae",
+      "Peptococcus",
+      "Porphyromonas",
+      "Proteus",
+      "Slackia"
+    ],
+    "weight": 2.0,
+    "evidence_count": 110,
+    "pmid_count": 10,
+    "matched_conditions": [
+      "Hepatitis B,Chronic",
+      "Hepatitis B virus related decompensated Cirrhosis",
+      "Decompensated hepatitis B virus cirrhosis",
+      "Non-alcoholic Fatty Liver Disease",
+      "Liver Cirrhosis"
+    ]
+  },
+  "CVD": {
+    "name_cn": "心血管疾病",
+    "beneficial": [
+      "Bacteroidales Incertae Sedis",
+      "Enterobacteriaceae incertae sedis",
+      "Lachnospiraceae",
+      "Oscillospiraceae"
+    ],
+    "harmful": [
+      "Erysipelotrichaceae incertae sedis",
+      "Actinobacteria incertae sedis",
+      "Granulicatella",
+      "Haemophilus",
+      "Klebsiella",
+      "Streptococcus"
+    ],
+    "weight": 1.0,
+    "evidence_count": 10,
+    "pmid_count": 2,
+    "matched_conditions": [
+      "Angina, Unstable",
+      "Cardiovascular Diseases; Metabolic Syndrome"
+    ]
+  },
+  "Depression": {
+    "name_cn": "抑郁症",
+    "beneficial": [
+      "Lachnospiraceae",
+      "Bacteroidetes",
+      "Agathobacter",
+      "Bifidobacterium",
+      "Blautia",
+      "Butyricicoccus",
+      "Coprococcus 3",
+      "Coriobacteriales",
+      "Dorea",
+      "Faecalibacterium",
+      "Fusicatenibacter",
+      "Lachnospiraceae ND3007 group",
+      "Roseburia",
+      "Ruminococcaceae UCG-013",
+      "Ruminococcus 1"
+    ],
+    "harmful": [
+      "Bacteroidales",
+      "Clostridium XI",
+      "Firmicutes",
+      "Klebsiella",
+      "Prevotella",
+      "Streptococcus",
+      "Anaeroglobus",
+      "Escherichia/Shigella sp.",
+      "Lachnoclostridium",
+      "Lachnospiraceae UCG-006",
+      "Parabacteroides"
+    ],
+    "weight": 1.2,
+    "evidence_count": 27,
+    "pmid_count": 3,
+    "matched_conditions": [
+      "Depressive Disorder, Major",
+      "Depression"
+    ]
+  },
+  "Autism": {
+    "name_cn": "自闭症",
+    "beneficial": [
+      "Abiotrophia",
+      "Bacteroides ovatus",
+      "Faecalibacterium"
+    ],
+    "harmful": [
+      "Bifidobacterium",
+      "Lactobacillus",
+      "Megasphaera",
+      "Mitsuokella",
+      "Anaeroplasma",
+      "Clostridium",
+      "Epulopiscium",
+      "Hydrogenophilus",
+      "Mesorhizobium",
+      "Promicromonosporaceae",
+      "Salinicoccus",
+      "Solirubrobacterales",
+      "Sphingobium xenophagum",
+      "Acinetobacter",
+      "Enterobacteriaceae"
+    ],
+    "weight": 1.2,
+    "evidence_count": 42,
+    "pmid_count": 2,
+    "matched_conditions": [
+      "Mother of Autism Spectrum Disorder Children",
+      "Autism Spectrum Disorder"
+    ]
+  },
+  "Parkinson": {
+    "name_cn": "帕金森病",
+    "beneficial": [
+      "Faecalibacterium",
+      "Prevotella",
+      "Bacteroides fragilis",
+      "Blautia coccoides",
+      "Clostridium leptum",
+      "Clostridium perfringens",
+      "Enterobacteriaceae",
+      "Pseudomonas",
+      "Staphylococcus",
+      "Bacteroides",
+      "Blautia glucerasea",
+      "Candidatus Stoquefichus massiliensis",
+      "Coprococcus eutactus",
+      "Dorea",
+      "Dorea longicatena"
+    ],
+    "harmful": [
+      "Bifidobacterium",
+      "Enterococcus",
+      "Lactobacillus",
+      "Atopobium",
+      "Oscillospiraceae",
+      "Blautia",
+      "Christensenella",
+      "Christensenella hongkongensis",
+      "Christensenella minuta",
+      "LimosiLactobacillus mucosae",
+      "Oscillospira",
+      "Papillibacter cinnamivorans",
+      "Ruminococcus bromii",
+      "Barnesiellaceae",
+      "Enterococcaceae"
+    ],
+    "weight": 1.5,
+    "evidence_count": 52,
+    "pmid_count": 6,
+    "matched_conditions": [
+      "Parkinson Disease",
+      "Parkinson Disease; Cholinergic Antagonists"
+    ]
+  },
+  "Eczema": {
+    "name_cn": "湿疹/特应性皮炎",
+    "beneficial": [
+      "Bifidobacterium",
+      "Bacteroides",
+      "Bacteroidetes",
+      "Proteobacteria",
+      "Faecalibacterium prausnitzii A2-165",
+      "Akkermansia",
+      "Bifidobacterium sp.",
+      "Clostridium",
+      "Acidaminococcus",
+      "Allisonella",
+      "Anaeroglobus",
+      "Anaerotruncus",
+      "Bacteroides fragilis",
+      "Bifidobacterium bifidum",
+      "Bifidobacterium longum"
+    ],
+    "harmful": [
+      "Faecalibacterium prausnitzii",
+      "Faecalibacterium",
+      "Parabacteroides",
+      "Faecalibacterium cf. prausnitzii KLE1255",
+      "Faecalibacterium prausnitzii L2-6",
+      "Faecalibacterium prausnitzii M21/2",
+      "Faecalibacterium prausnitzii SL3/3",
+      "Akkermansia",
+      "Akkermansia muciniphila",
+      "Anaerostipes",
+      "Bacteroides clarus",
+      "Bacteroides plebeius CAG:211",
+      "Bilophila",
+      "Clostridium XlVa",
+      "Clostridium XlVb"
+    ],
+    "weight": 1.5,
+    "evidence_count": 92,
+    "pmid_count": 7,
+    "matched_conditions": [
+      "Ige Responsiveness, Atopic [Supplementary Concept]",
+      "Atopic children(12 years)",
+      "Eczema",
+      "Dermatitis, Atopic",
+      "Atopic children(5 years)"
+    ]
+  },
+  "RA": {
+    "name_cn": "类风湿性关节炎",
+    "beneficial": [
+      "Faecalibacterium prausnitzii",
+      "Bifidobacterium",
+      "Firmicutes",
+      "Lachnospira eligens",
+      "Ruminococcus",
+      "Eubacteriales",
+      "Akkermansia muciniphila",
+      "Roseburia",
+      "Alistipes",
+      "Megasphaera",
+      "Eubacterium rectale",
+      "Prevotella",
+      "Ruminococcus flavefaciens",
+      "Bacteroidaceae",
+      "Bacteroides fragilis"
+    ],
+    "harmful": [
+      "Lactobacillus",
+      "Escherichia coli",
+      "Bacteroidetes",
+      "Bacteroides",
+      "Enterobacteriaceae",
+      "Ruminococcus gnavus",
+      "Actinobacteria",
+      "Bifidobacterium",
+      "Campylobacter",
+      "Prevotella",
+      "Lachnospiraceae",
+      "Proteobacteria",
+      "Spirochaetes",
+      "Haemophilus",
+      "Helicobacter"
+    ],
+    "weight": 2.0,
+    "evidence_count": 306,
+    "pmid_count": 35,
+    "matched_conditions": [
+      "Colitis,Ulcerative; No Inflammation",
+      "Remission Colitis,Ulcerative",
+      "Acute viral gastroenteritis with complication",
+      "Wheat bran arabinoxylan oligosaccharides; Health",
+      "Liver Transplantation; Hepatitis B Cirrhosis"
+    ]
+  }
+}
