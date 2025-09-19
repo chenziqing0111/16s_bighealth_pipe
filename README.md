@@ -61,7 +61,7 @@
 │   └── 📂 process_bak/            # 数据库生成脚本
 │
 ├── 📄 pipeline.sh                  # 主控制脚本
-├── 📄 requirements.txt            # Python依赖
+├── 📄 environment.yml             # conda环境依赖
 ├── 📄 README.md                   # 本文档
 └── 📄 quick_start.md              # 快速开始指南
 └── 📄 report_mockdata.html        # 模拟数据生成的报告，初版
@@ -319,6 +319,7 @@ python scripts/analysis/1_basic_analysis.py --help
 
 ---
 **最后更新**: 2025年9月
+
 
 
 
