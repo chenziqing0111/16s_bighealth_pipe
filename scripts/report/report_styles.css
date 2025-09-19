@@ -520,6 +520,52 @@ body {
         margin-bottom: 1rem;
     }
 }
+/* 附录部分的额外样式 */
+#appendix .accordion-button {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+#appendix .accordion-button:not(.collapsed) {
+    background-color: #e7f1ff;
+    color: #0c63e4;
+}
+
+#appendix .table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+#appendix .card {
+    border: 1px solid #dee2e6;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+#appendix .card-header {
+    font-weight: 600;
+}
+
+#appendix .alert {
+    border-left: 4px solid #ffc107;
+}
+
+/* 滚动条样式 */
+#appendix .card-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+#appendix .card-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#appendix .card-body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+#appendix .card-body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
 
 /* ============ 打印样式 ============ */
 @media print {

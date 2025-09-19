@@ -235,6 +235,307 @@
             </div>
         </section>
 
+        <!-- 附录部分 - 添加到其他section后面，footer之前 -->
+<section class="report-section" id="appendix">
+    <h2 class="section-title">
+        <i class="fas fa-book"></i> 附录
+    </h2>
+    
+    <!-- 检测方法说明 -->
+    <div class="mb-4">
+        <h4 class="mb-3">一、检测方法说明</h4>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">16S rRNA 基因测序技术</h5>
+                <p class="card-text">
+                    本检测采用高通量16S rRNA基因测序技术，通过对肠道微生物中16S rRNA基因的V3-V4区进行扩增和测序，
+                    能够准确识别和定量分析肠道中的细菌组成。该技术具有高精度、高通量、成本效益高等特点。
+                </p>
+                <ul>
+                    <li><strong>测序平台：</strong>Illumina MiSeq/NovaSeq</li>
+                    <li><strong>测序深度：</strong>≥30,000 reads/样本</li>
+                    <li><strong>质量控制：</strong>Q30 ≥ 80%</li>
+                    <li><strong>数据库：</strong>SILVA 138、Greengenes2</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 指标说明 -->
+    <div class="mb-4">
+        <h4 class="mb-3">二、主要指标说明</h4>
+        <div class="accordion" id="indicatorAccordion">
+            <!-- 多样性指标 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingDiversity">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDiversity">
+                        <strong>多样性指标</strong>
+                    </button>
+                </h2>
+                <div id="collapseDiversity" class="accordion-collapse collapse show" data-bs-parent="#indicatorAccordion">
+                    <div class="accordion-body">
+                        <ul>
+                            <li><strong>Shannon指数：</strong>综合考虑物种丰富度和均匀度，值越高表示多样性越高。正常范围：2.5-4.5</li>
+                            <li><strong>Simpson指数：</strong>反映优势物种的集中程度，值越接近1表示多样性越高。正常范围：0.9-0.99</li>
+                            <li><strong>Chao1指数：</strong>估算物种总数，值越高表示物种越丰富。正常范围：200-800</li>
+                            <li><strong>观察到的ASVs：</strong>实际检测到的不同微生物序列数量</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- B/F比值 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingBF">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBF">
+                        <strong>B/F比值（拟杆菌门/厚壁菌门）</strong>
+                    </button>
+                </h2>
+                <div id="collapseBF" class="accordion-collapse collapse" data-bs-parent="#indicatorAccordion">
+                    <div class="accordion-body">
+                        <p>B/F比值是评估肠道菌群平衡的重要指标：</p>
+                        <ul>
+                            <li><strong>正常范围：</strong>0.84-4.94</li>
+                            <li><strong>偏低（&lt;0.84）：</strong>可能与肥胖、代谢综合征相关</li>
+                            <li><strong>偏高（&gt;4.94）：</strong>可能与营养不良、炎症性肠病相关</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 肠型分类 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingEnterotype">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEnterotype">
+                        <strong>肠型分类</strong>
+                    </button>
+                </h2>
+                <div id="collapseEnterotype" class="accordion-collapse collapse" data-bs-parent="#indicatorAccordion">
+                    <div class="accordion-body">
+                        <p>基于优势菌群，人类肠道微生物可分为三种肠型：</p>
+                        <ul>
+                            <li><strong>肠型I（拟杆菌型）：</strong>以拟杆菌属为主，常见于高蛋白、高脂肪饮食者</li>
+                            <li><strong>肠型II（普氏菌型）：</strong>以普氏菌属为主，常见于高碳水化合物、高纤维饮食者</li>
+                            <li><strong>肠型III（瘤胃球菌型）：</strong>以瘤胃球菌属为主，介于前两者之间</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 参考范围表 -->
+    <div class="mb-4">
+        <h4 class="mb-3">三、核心菌群参考范围</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>菌属名称</th>
+                        <th>中文名</th>
+                        <th>参考范围 (%)</th>
+                        <th>临床意义</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 有益菌 -->
+                    <tr class="table-success">
+                        <td colspan="4" class="text-center"><strong>核心有益菌</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Bifidobacterium</td>
+                        <td>双歧杆菌属</td>
+                        <td>0.18-14.6</td>
+                        <td>增强免疫、合成维生素、改善便秘</td>
+                    </tr>
+                    <tr>
+                        <td>Lactobacillus</td>
+                        <td>乳杆菌属</td>
+                        <td>0.008-0.03</td>
+                        <td>维持肠道pH、抑制有害菌</td>
+                    </tr>
+                    <tr>
+                        <td>Faecalibacterium</td>
+                        <td>普拉梭菌属</td>
+                        <td>0.64-10.97</td>
+                        <td>产生丁酸、抗炎、维持肠道屏障</td>
+                    </tr>
+                    <tr>
+                        <td>Akkermansia</td>
+                        <td>嗜黏蛋白阿克曼氏菌</td>
+                        <td>0.01-3.89</td>
+                        <td>改善代谢、控制体重</td>
+                    </tr>
+                    <tr>
+                        <td>Roseburia</td>
+                        <td>罗氏菌属</td>
+                        <td>0.1-5.0</td>
+                        <td>产生丁酸、改善肠道健康</td>
+                    </tr>
+                    
+                    <!-- 条件致病菌 -->
+                    <tr class="table-warning">
+                        <td colspan="4" class="text-center"><strong>条件致病菌（阈值）</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Escherichia</td>
+                        <td>埃希氏菌属</td>
+                        <td>&lt; 0.5</td>
+                        <td>过高可能引起肠道感染</td>
+                    </tr>
+                    <tr>
+                        <td>Streptococcus</td>
+                        <td>链球菌属</td>
+                        <td>&lt; 2.0</td>
+                        <td>过高可能引起炎症</td>
+                    </tr>
+                    <tr>
+                        <td>Klebsiella</td>
+                        <td>克雷伯氏菌属</td>
+                        <td>&lt; 0.11</td>
+                        <td>过高可能引起感染</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- 疾病关联说明 -->
+    <div class="mb-4">
+        <h4 class="mb-3">四、疾病风险评估说明</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-danger text-white">
+                        高风险（70-100分）
+                    </div>
+                    <div class="card-body">
+                        <p>菌群失衡程度严重，与该疾病相关的风险菌显著升高或保护菌显著降低。建议：</p>
+                        <ul>
+                            <li>及时就医进行详细检查</li>
+                            <li>调整饮食结构</li>
+                            <li>考虑益生菌干预</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-warning">
+                        中风险（40-70分）
+                    </div>
+                    <div class="card-body">
+                        <p>菌群存在一定程度失衡，需要关注。建议：</p>
+                        <ul>
+                            <li>定期监测菌群变化</li>
+                            <li>增加膳食纤维摄入</li>
+                            <li>保持健康生活方式</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 功能预测说明 -->
+    <div class="mb-4">
+        <h4 class="mb-3">五、功能预测分析</h4>
+        <div class="card">
+            <div class="card-body">
+                <h5>基于PICRUSt2的代谢功能预测</h5>
+                <p>通过16S序列预测微生物群落的功能潜力：</p>
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>维生素合成</h6>
+                        <ul>
+                            <li>维生素B族（B1, B2, B6, B9, B12）</li>
+                            <li>维生素K</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>短链脂肪酸产生</h6>
+                        <ul>
+                            <li>乙酸</li>
+                            <li>丙酸</li>
+                            <li>丁酸</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>代谢通路</h6>
+                        <ul>
+                            <li>碳水化合物代谢</li>
+                            <li>氨基酸代谢</li>
+                            <li>脂质代谢</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 参考文献 -->
+    <div class="mb-4">
+        <h4 class="mb-3">六、参考文献</h4>
+        <div class="card">
+            <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+                <ol style="font-size: 0.9rem;">
+                    <li>Arumugam M, et al. Enterotypes of the human gut microbiome. Nature. 2011;473(7346):174-180.</li>
+                    <li>Human Microbiome Project Consortium. Structure, function and diversity of the healthy human microbiome. Nature. 2012;486(7402):207-214.</li>
+                    <li>Qin J, et al. A human gut microbial gene catalogue established by metagenomic sequencing. Nature. 2010;464(7285):59-65.</li>
+                    <li>Le Chatelier E, et al. Richness of human gut microbiome correlates with metabolic markers. Nature. 2013;500(7464):541-546.</li>
+                    <li>Falony G, et al. Population-level analysis of gut microbiome variation. Science. 2016;352(6285):560-564.</li>
+                    <li>Zhernakova A, et al. Population-based metagenomics analysis reveals markers for gut microbiome composition and diversity. Science. 2016;352(6285):565-569.</li>
+                    <li>Rothschild D, et al. Environment dominates over host genetics in shaping human gut microbiota. Nature. 2018;555(7695):210-215.</li>
+                    <li>Galkin F, et al. Human Gut Microbiome Aging Clock Based on Taxonomic Profiling and Deep Learning. iScience. 2020;23(6):101199.</li>
+                    <li>Chen Y, et al. Human gut microbiome aging clocks based on taxonomic and functional signatures through multi-view learning. Gut Microbes. 2022;14(1):2025016.</li>
+                    <li>Douglas GM, et al. PICRUSt2 for prediction of metagenome functions. Nat Biotechnol. 2020;38(6):685-688.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 免责声明 -->
+    <div class="mb-4">
+        <h4 class="mb-3">七、免责声明</h4>
+        <div class="alert alert-warning">
+            <h5 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> 重要提示</h5>
+            <p>
+                1. 本检测报告基于16S rRNA基因测序技术分析，仅供健康管理参考，不能作为临床诊断依据。<br>
+                2. 肠道微生物组成受多种因素影响，包括饮食、药物、生活方式等，检测结果反映采样时的状态。<br>
+                3. 如有健康问题，请及时咨询专业医生，不要仅凭此报告自行用药或改变治疗方案。<br>
+                4. 本报告的解释权归检测机构所有。
+            </p>
+        </div>
+    </div>
+    
+    <!-- 联系信息 -->
+    <div class="mb-4">
+        <h4 class="mb-3">八、联系我们</h4>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>技术支持</h6>
+                        <p>
+                            <i class="fas fa-envelope"></i> support@microbiome-lab.com<br>
+                            <i class="fas fa-phone"></i> 400-XXX-XXXX<br>
+                            <i class="fas fa-clock"></i> 周一至周五 9:00-18:00
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>报告解读咨询</h6>
+                        <p>
+                            <i class="fas fa-user-md"></i> 专业营养师/医生在线咨询<br>
+                            <i class="fas fa-calendar"></i> 需提前预约<br>
+                            <i class="fas fa-globe"></i> www.microbiome-lab.com
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
         <!-- 页脚 -->
         <footer class="report-section">
             <div class="text-center text-muted">

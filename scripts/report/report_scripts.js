@@ -266,29 +266,49 @@ function renderNutritionMetabolism() {
     }
 }
 
+// 渲染疾病风险 - 最终简化版
 // 渲染疾病风险
-// 渲染疾病风险 - 修改这个函数
 function renderDiseaseRisk() {
-    // 同时支持旧格式和新格式
-    const disease = reportData.disease?.risk_assessment || {};
-    const detailedAnalysis = reportData.disease?.detailed_analysis || {};
+    // 使用实际的 disease_risks 字段
+    const diseaseData = reportData.disease || {};
+    const diseaseRisks = diseaseData.disease_risks || {};
+    
     const diseaseCards = document.getElementById('diseaseRiskCards');
     
-    if (diseaseCards) {
-        let cardsHtml = '';
-        
-        // 优先使用 detailed_analysis（新格式）
-        const dataToRender = Object.keys(detailedAnalysis).length > 0 ? detailedAnalysis : disease;
-        
-        Object.entries(dataToRender).forEach(([key, info]) => {
-            // 兼容新旧格式
-            const name = info.disease_name || info.name || key;
-            const riskScore = info.risk_score || info.score || 0;
-            const riskLevel = info.risk_level || info.level || '未知';
-            const description = info.description || '';
+    if (!diseaseCards) {
+        console.error('未找到 diseaseRiskCards 元素');
+        return;
+    }
+    
+    let cardsHtml = '';
+    
+    // 疾病中文名映射
+    const diseaseNameMap = {
+        'IBD': '炎症性肠病',
+        'IBS': '肠易激综合征',
+        'Diabetes': '糖尿病',
+        'Obesity': '肥胖/代谢综合征',
+        'CVD': '心血管疾病',
+        'CRC': '结直肠癌',
+        'Depression': '抑郁症',
+        'Gout': '痛风',
+        'Eczema': '湿疹',
+        'Liver': '肝脏疾病',
+        'Hypertension': '高血压',
+        'Alzheimer': '阿尔茨海默病',
+        'Constipation': '便秘',
+        'Polyps': '息肉'
+    };
+    
+    // 检查是否有数据
+    if (Object.keys(diseaseRisks).length > 0) {
+        Object.entries(diseaseRisks).forEach(([key, info]) => {
+            const displayName = diseaseNameMap[key] || key;
+            const riskScore = info.risk_score || 0;
+            const riskLevel = info.risk_level || '未知';
             const keyFindings = info.key_findings || [];
-            const suggestions = info.suggestions || [];
             
+            // 根据风险等级设置样式
             let color, icon, bgClass;
             if (riskLevel.includes('低')) {
                 color = '#4CAF50';
@@ -304,13 +324,13 @@ function renderDiseaseRisk() {
                 bgClass = 'bg-danger';
             }
             
-            // 生成更详细的卡片
+            // 生成疾病卡片
             cardsHtml += `
                 <div class="col-md-6 mb-3">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-header ${bgClass} text-white">
                             <h5 class="mb-0">
-                                <i class="fas ${icon}"></i> ${name}
+                                <i class="fas ${icon}"></i> ${displayName}
                             </h5>
                         </div>
                         <div class="card-body">
@@ -318,22 +338,17 @@ function renderDiseaseRisk() {
                                 <h2 class="mb-0" style="color: ${color};">${riskScore.toFixed(1)}分</h2>
                                 <span class="badge ${bgClass} p-2">${riskLevel}</span>
                             </div>
-                            ${description ? `<p class="text-muted small">${description}</p>` : ''}
                             
                             ${keyFindings.length > 0 ? `
-                                <div class="mb-2">
-                                    <strong>关键发现：</strong>
-                                    <ul class="small mb-0">
-                                        ${keyFindings.map(f => `<li>${f}</li>`).join('')}
-                                    </ul>
-                                </div>
-                            ` : ''}
-                            
-                            ${suggestions.length > 0 ? `
-                                <div class="mt-2">
-                                    <strong>建议：</strong>
-                                    <ul class="small mb-0">
-                                        ${suggestions.slice(0, 3).map(s => `<li>${s}</li>`).join('')}
+                                <div class="mt-3">
+                                    <strong class="d-block mb-2">关键发现：</strong>
+                                    <ul class="small mb-0 list-unstyled">
+                                        ${keyFindings.map(f => `
+                                            <li class="mb-1">
+                                                <i class="fas fa-circle text-muted" style="font-size: 6px;"></i> 
+                                                ${f}
+                                            </li>
+                                        `).join('')}
                                     </ul>
                                 </div>
                             ` : ''}
@@ -342,26 +357,25 @@ function renderDiseaseRisk() {
                 </div>
             `;
         });
-        
-        // 如果没有数据，显示提示
-        if (cardsHtml === '') {
-            cardsHtml = `
-                <div class="col-12">
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i> 暂无疾病风险评估数据
-                    </div>
-                </div>
-            `;
-        }
-        
-        diseaseCards.innerHTML = cardsHtml;
     }
+    
+    // 如果没有数据，显示提示
+    if (cardsHtml === '') {
+        cardsHtml = `
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> 暂无疾病风险评估数据
+                </div>
+            </div>
+        `;
+    }
+    
+    diseaseCards.innerHTML = cardsHtml;
 }
 
-// 确保在页面加载时调用
+// 确保在页面加载时调用 - 必须保留！
 document.addEventListener('DOMContentLoaded', function() {
     console.log('开始渲染报告...');
-    console.log('疾病数据:', reportData.disease);
     
     // 渲染各个部分
     renderOverview();
@@ -371,6 +385,8 @@ document.addEventListener('DOMContentLoaded', function() {
     renderDiseaseRisk();  // 确保这个被调用
     renderImmunity();
     renderRecommendations();
+    
+    console.log('报告渲染完成');
 });
 
 // 渲染免疫力评估
