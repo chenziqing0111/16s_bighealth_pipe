@@ -3,7 +3,6 @@
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 [![QIIME2](https://img.shields.io/badge/QIIME2-2023.9-green.svg)](https://qiime2.org/)
 [![PICRUSt2](https://img.shields.io/badge/PICRUSt2-2.5.2-orange.svg)](https://github.com/picrust/picrust2)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 一个完整的肠道微生物组分析流程，从FASTQ原始数据到可视化HTML报告，提供健康评估、疾病风险预测和个性化建议。
 
@@ -318,4 +317,5 @@ python scripts/analysis/1_basic_analysis.py --help
 
 ---
 **最后更新**: 2025年9月
+
 
