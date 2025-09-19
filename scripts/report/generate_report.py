@@ -1,379 +1,257 @@
 #!/usr/bin/env python3
 """
 肠道微生物检测报告生成器
-主脚本：加载分析结果、调用AI解读、生成HTML报告
+集成中文注释，生成增强版HTML报告
 """
 
 import json
-import argparse
-from pathlib import Path
-from datetime import datetime
-from jinja2 import Template
 import pandas as pd
-from ai_interpreter import AIInterpreter
+from pathlib import Path
+import argparse
+from datetime import datetime
+import sys
 
 class ReportGenerator:
-    def __init__(self, api_key=None):
-        """初始化报告生成器"""
-        self.api_key = api_key
-        self.ai_interpreter = AIInterpreter(api_key) if api_key else None
-        self.script_dir = Path(__file__).parent
+    def __init__(self, template_dir='scripts/report_generation'):
+        """
+        初始化报告生成器
         
-    def load_all_results(self, results_dir):
-        """加载所有分析模块的结果"""
-        results_path = Path(results_dir)
-        results = {}
+        Args:
+            template_dir: 模板文件目录
+        """
+        self.template_dir = Path(template_dir)
+        self.report_date = datetime.now().strftime('%Y-%m-%d')
         
-        # 加载各模块的JSON结果
-        modules = {
-            'diversity': 'diversity/basic_analysis.json',
-            'enterotype': 'enterotype/enterotype_analysis.json', 
-            'bacteria': 'bacteria_scores/bacteria_evaluation.json',
-            'disease_risk': 'disease_risk/disease_risk_assessment.json',
-            'age': 'age_prediction/age_prediction.json'
+    def load_sample_data(self, sample_dir):
+        """加载样本的所有分析数据"""
+        sample_path = Path(sample_dir)
+        data = {
+            'sample_id': sample_path.name,
+            'report_date': self.report_date
         }
         
-        for key, path in modules.items():
-            file_path = results_path / path
+        # 加载各个分析模块的结果
+        files_to_load = {
+            'basic': 'basic_stats/basic_analysis.json',
+            'diversity': 'diversity/alpha_diversity.json',
+            'composition': 'composition/composition_analysis.json',
+            'enterotype': 'enterotype/enterotype_analysis.json',
+            'bacteria': 'bacteria_scores/bacteria_evaluation.json',
+            'disease': 'disease_risk/disease_risk_assessment.json',
+            'age': 'age_prediction/age_prediction.json',
+            'functional': 'functional/functional_prediction.json',
+            'cn_annotations': 'cn_annotations.json'  # 中文注释（如果存在）
+        }
+        
+        for key, filepath in files_to_load.items():
+            file_path = sample_path / filepath
             if file_path.exists():
                 with open(file_path, 'r', encoding='utf-8') as f:
-                    results[key] = json.load(f)
+                    data[key] = json.load(f)
             else:
-                print(f"警告: 未找到 {key} 结果文件: {file_path}")
-                results[key] = {}
+                if key != 'cn_annotations':  # 中文注释是可选的
+                    print(f"警告: 未找到 {filepath}")
+                data[key] = {}
         
-        # 加载样本基本信息（从diversity中提取）
-        results['sample_info'] = self._extract_sample_info(results)
-        
-        return results
+        return data
     
-    def _extract_sample_info(self, results):
-        """提取样本基本信息"""
-        info = {
-            'total_reads': results.get('diversity', {}).get('basic_stats', {}).get('total_reads', 0),
-            'total_asvs': results.get('diversity', {}).get('basic_stats', {}).get('total_asvs', 0),
-            'analysis_date': datetime.now().strftime('%Y-%m-%d')
-        }
-        return info
+    def load_template(self):
+        """加载HTML模板"""
+        template_file = self.template_dir / 'report_template.html'
+        if not template_file.exists():
+            raise FileNotFoundError(f"模板文件不存在: {template_file}")
+        
+        with open(template_file, 'r', encoding='utf-8') as f:
+            template = f.read()
+        
+        return template
     
-    def check_ai_requirements(self, results):
-        """判断需要AI解读的内容"""
-        ai_needed = []
-        
-        # 1. 总是需要综合评价
-        ai_needed.append('overall_assessment')
-        
-        # 2. 检查是否有异常指标需要解读
-        if self._has_abnormal_bacteria(results):
-            ai_needed.append('abnormal_explanation')
-        
-        # 3. 检查是否有高风险疾病需要解读
-        if self._has_high_risk_diseases(results):
-            ai_needed.append('disease_interpretation')
-        
-        # 4. 总是生成个性化建议
-        ai_needed.append('personalized_advice')
-        
-        return ai_needed
+    def load_styles(self):
+        """加载CSS样式"""
+        styles_file = self.template_dir / 'report_styles.css'
+        if styles_file.exists():
+            with open(styles_file, 'r', encoding='utf-8') as f:
+                return f.read()
+        return ""
     
-    def _has_abnormal_bacteria(self, results):
-        """检查是否有异常细菌"""
-        bacteria = results.get('bacteria', {})
-        
-        # 检查有益菌是否偏低
-        beneficial = bacteria.get('beneficial_bacteria', {}).get('bacteria', {})
-        for name, data in beneficial.items():
-            if data.get('status') in ['偏低', '偏高']:
-                return True
-        
-        # 检查有害菌是否超标
-        harmful = bacteria.get('harmful_bacteria', {}).get('bacteria', {})
-        for name, data in harmful.items():
-            if data.get('status') == '超标':
-                return True
-                
-        return False
+    def load_scripts(self):
+        """加载JavaScript脚本"""
+        scripts_file = self.template_dir / 'report_scripts.js'
+        if scripts_file.exists():
+            with open(scripts_file, 'r', encoding='utf-8') as f:
+                return f.read()
+        return ""
     
-    def _has_high_risk_diseases(self, results):
-        """检查是否有高风险疾病"""
-        diseases = results.get('disease_risk', {}).get('disease_risks', {})
-        for disease, data in diseases.items():
-            if data.get('risk_score', 0) > 70:
-                return True
-        return False
-    
-    def prepare_ai_context(self, results):
-        """准备AI解读所需的上下文数据"""
-        context = {
-            # 多样性数据
-            'diversity_score': results.get('diversity', {}).get('alpha_diversity', {}).get('shannon', 0),
-            'diversity_status': results.get('diversity', {}).get('alpha_diversity', {}).get('status', '未知'),
-            'observed_asvs': results.get('diversity', {}).get('alpha_diversity', {}).get('observed_asvs', 0),
+    def process_data(self, data):
+        """处理数据，准备模板变量"""
+        # 提取关键数据
+        template_vars = {
+            'sample_id': data['sample_id'],
+            'report_date': data['report_date'],
             
-            # B/F比值
-            'bf_ratio': results.get('diversity', {}).get('bf_ratio', {}).get('value', 0),
-            'bf_status': results.get('diversity', {}).get('bf_ratio', {}).get('status', '未知'),
+            # 综合评分
+            'overall_score': data.get('bacteria', {}).get('overall_health', {}).get('score', 0),
+            'health_grade': data.get('bacteria', {}).get('overall_health', {}).get('grade', '未评估'),
             
-            # 肠型
-            'enterotype': results.get('enterotype', {}).get('enterotype', {}).get('type', '未知'),
+            # 各项评分
+            'beneficial_score': data.get('bacteria', {}).get('beneficial_bacteria', {}).get('overall_score', 0),
+            'harmful_score': data.get('bacteria', {}).get('harmful_bacteria', {}).get('harm_score', 0),
+            'diversity_score': data.get('diversity', {}).get('alpha_diversity', {}).get('shannon', 0),
             
-            # 细菌评分
-            'beneficial_score': results.get('bacteria', {}).get('beneficial_bacteria', {}).get('overall_score', 0),
-            'harm_score': results.get('bacteria', {}).get('harmful_bacteria', {}).get('harm_score', 0),
-            
-            # 异常细菌
-            'abnormal_bacteria': self._get_abnormal_bacteria(results),
-            
-            # 高风险疾病
-            'high_risk_diseases': self._get_high_risk_diseases(results),
-            
-            # 年龄相关
-            'biological_age': results.get('age', {}).get('age_prediction', {}).get('biological_age', 0),
-            'age_status': results.get('age', {}).get('age_status', {}).get('status', '未知')
+            # 将完整数据转换为JSON传递给JavaScript
+            'report_data_json': json.dumps(data, ensure_ascii=False)
         }
         
-        return context
+        return template_vars
     
-    def _get_abnormal_bacteria(self, results):
-        """获取异常细菌列表"""
-        abnormal = []
+    def generate_html(self, sample_data, embed_resources=True):
+        """
+        生成HTML报告
         
-        bacteria = results.get('bacteria', {})
+        Args:
+            sample_data: 样本数据
+            embed_resources: 是否嵌入CSS和JS（True为单文件，False为外部引用）
         
-        # 有益菌异常
-        beneficial = bacteria.get('beneficial_bacteria', {}).get('bacteria', {})
-        for name, data in beneficial.items():
-            if data.get('status') in ['偏低', '偏高']:
-                abnormal.append({
-                    'name': name,
-                    'type': '有益菌',
-                    'status': data.get('status'),
-                    'value': data.get('abundance')
-                })
+        Returns:
+            HTML内容
+        """
+        # 加载模板
+        template = self.load_template()
         
-        # 有害菌异常
-        harmful = bacteria.get('harmful_bacteria', {}).get('bacteria', {})
-        for name, data in harmful.items():
-            if data.get('status') == '超标':
-                abnormal.append({
-                    'name': name,
-                    'type': '有害菌',
-                    'status': '超标',
-                    'value': data.get('abundance')
-                })
+        # 处理数据
+        template_vars = self.process_data(sample_data)
         
-        return abnormal[:5]  # 最多返回5个
-    
-    def _get_high_risk_diseases(self, results):
-        """获取高风险疾病列表"""
-        high_risk = []
-        
-        diseases = results.get('disease_risk', {}).get('disease_risks', {})
-        for disease, data in diseases.items():
-            if data.get('risk_score', 0) > 70:
-                high_risk.append({
-                    'name': disease,
-                    'score': data.get('risk_score'),
-                    'level': data.get('risk_level')
-                })
-        
-        return sorted(high_risk, key=lambda x: x['score'], reverse=True)[:3]  # 最多返回3个
-    
-    def generate_report(self, sample_id, results_dir, output_path, metadata=None):
-        """生成完整报告"""
-        print(f"开始生成报告: {sample_id}")
-        
-        # 1. 加载分析结果
-        print("  加载分析结果...")
-        results = self.load_all_results(results_dir)
-        
-        # 2. 判断需要AI解读的内容
-        ai_texts = {}
-        if self.ai_interpreter:
-            print("  检查AI解读需求...")
-            ai_needed = self.check_ai_requirements(results)
+        # 如果需要嵌入资源
+        if embed_resources:
+            styles = self.load_styles()
+            scripts = self.load_scripts()
             
-            if ai_needed:
-                print(f"  需要AI解读: {', '.join(ai_needed)}")
-                context = self.prepare_ai_context(results)
-                ai_texts = self.ai_interpreter.generate_interpretations(context, ai_needed)
-        else:
-            print("  未配置AI解读，使用默认文本")
-            ai_texts = self._get_default_texts()
+            # 替换外部引用为嵌入式
+            template = template.replace(
+                '<link rel="stylesheet" href="report_styles.css">',
+                f'<style>\n{styles}\n</style>'
+            )
+            template = template.replace(
+                '<script src="report_scripts.js"></script>',
+                f'<script>\n{scripts}\n</script>'
+            )
         
-        # 3. 准备模板数据
-        template_data = {
-            'sample_id': sample_id,
-            'metadata': metadata or {},
-            'results': results,
-            'ai_texts': ai_texts,
-            'report_date': datetime.now().strftime('%Y年%m月%d日'),
-            'charts_data': self._prepare_charts_data(results)
-        }
+        # 替换模板变量
+        for key, value in template_vars.items():
+            if isinstance(value, (int, float)):
+                template = template.replace(f'{{{{{key}}}}}', str(round(value, 2)))
+            else:
+                template = template.replace(f'{{{{{key}}}}}', str(value))
         
-        # 4. 加载并渲染模板
-        print("  渲染HTML模板...")
-        from jinja2 import Environment, FileSystemLoader, Undefined
-
-        # 创建一个安全的Undefined类
-        class SilentUndefined(Undefined):
-            def _fail_with_undefined_error(self, *args, **kwargs):
-                return ''
-            __add__ = __radd__ = __mul__ = __rmul__ = __div__ = __rdiv__ = \
-            __truediv__ = __rtruediv__ = __floordiv__ = __rfloordiv__ = \
-            __mod__ = __rmod__ = __pos__ = __neg__ = __call__ = \
-            __getitem__ = __lt__ = __le__ = __gt__ = __ge__ = \
-            __int__ = __float__ = __complex__ = __pow__ = __rpow__ = \
-            _fail_with_undefined_error
-
-        env = Environment(
-            loader=FileSystemLoader(str(self.script_dir)),
-            undefined=SilentUndefined
-        )
-
-        # 添加必要的过滤器
-        env.filters['nl2br'] = lambda x: x.replace('\n', '<br>\n') if x else x
-        env.filters['default'] = lambda v, d: d if v is None else v
-        env.filters['tojson'] = json.dumps
-        env.filters['safe'] = lambda x: x
-
-        # 添加安全的 round 过滤器
-        def safe_round(value, precision=0):
-            try:
-                return round(float(value), precision) if value is not None else 0
-            except:
-                return 0
-
-        env.filters['round'] = safe_round
-
-        template = env.get_template('report_template.html')
-        html = template.render(**template_data)
-                        
-        # 5. 内联CSS和JS（便于单文件分发）
-        html = self._inline_resources(html)
-        
-        # 6. 保存报告
+        return template
+    
+    def save_report(self, html_content, output_path):
+        """保存HTML报告"""
         output = Path(output_path)
         output.parent.mkdir(parents=True, exist_ok=True)
-        with open(output, 'w', encoding='utf-8') as f:
-            f.write(html)
         
-        print(f"  报告已生成: {output}")
+        with open(output, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+        
+        print(f"✓ 报告已生成: {output}")
         return str(output)
     
-    def _get_default_texts(self):
-        """获取默认文本（无AI时使用）"""
-        return {
-            'overall_assessment': """
-                根据检测结果，您的肠道微生物群落整体处于相对平衡状态。
-                建议继续保持良好的饮食习惯，适当增加膳食纤维的摄入，
-                有助于维持肠道微生物的多样性和稳定性。
-            """,
-            'personalized_advice': """
-                1. 饮食建议：增加全谷物、蔬菜和水果的摄入
-                2. 生活方式：保持规律作息，适度运动
-                3. 补充建议：可适当补充益生菌和益生元
-            """,
-            'abnormal_explanation': """
-                检测发现部分细菌指标异常，这可能与近期饮食结构、
-                生活压力或用药史有关。建议调整饮食，必要时咨询医生。
-            """,
-            'disease_interpretation': """
-                基于当前的菌群状态，某些疾病风险指标偏高。
-                这仅作为健康参考，不能作为临床诊断依据。
-                建议定期体检，关注相关健康指标。
-            """
-        }
+    def generate_report(self, sample_dir, output_path, embed_resources=True):
+        """
+        完整的报告生成流程
+        
+        Args:
+            sample_dir: 样本数据目录
+            output_path: 输出文件路径
+            embed_resources: 是否生成单文件报告
+        
+        Returns:
+            生成的报告路径
+        """
+        # 加载数据
+        sample_data = self.load_sample_data(sample_dir)
+        
+        # 生成HTML
+        html_content = self.generate_html(sample_data, embed_resources)
+        
+        # 保存报告
+        report_path = self.save_report(html_content, output_path)
+        
+        # 生成摘要
+        self.generate_summary(sample_data, output_path)
+        
+        return report_path
     
-    def _prepare_charts_data(self, results):
-        """准备图表数据"""
-        charts = {}
-        
-        # 多样性数据
-        diversity = results.get('diversity', {}).get('alpha_diversity', {})
-        charts['diversity'] = {
-            'shannon': diversity.get('shannon', 0),
-            'simpson': diversity.get('simpson', 0),
-            'chao1': diversity.get('chao1', 0),
-            'observed_asvs': diversity.get('observed_asvs', 0)
+    def generate_summary(self, sample_data, report_path):
+        """生成报告摘要JSON"""
+        summary = {
+            'sample_id': sample_data['sample_id'],
+            'report_date': sample_data['report_date'],
+            'report_file': Path(report_path).name,
+            'overall_score': sample_data.get('bacteria', {}).get('overall_health', {}).get('score', 0),
+            'health_grade': sample_data.get('bacteria', {}).get('overall_health', {}).get('grade', '未评估'),
+            'diversity': {
+                'shannon': sample_data.get('diversity', {}).get('alpha_diversity', {}).get('shannon', 0),
+                'observed_asvs': sample_data.get('diversity', {}).get('alpha_diversity', {}).get('observed_asvs', 0)
+            },
+            'bacteria_scores': {
+                'beneficial': sample_data.get('bacteria', {}).get('beneficial_bacteria', {}).get('overall_score', 0),
+                'harmful': sample_data.get('bacteria', {}).get('harmful_bacteria', {}).get('harm_score', 0)
+            },
+            'high_risk_diseases': [],
+            'has_cn_annotations': bool(sample_data.get('cn_annotations'))
         }
         
-        # B/F比值
-        bf = results.get('diversity', {}).get('bf_ratio', {})
-        charts['bf_ratio'] = {
-            'value': bf.get('value', 0),
-            'bacteroidetes': bf.get('bacteroidetes', 0),
-            'firmicutes': bf.get('firmicutes', 0)
-        }
+        # 提取高风险疾病
+        disease_risks = sample_data.get('disease', {}).get('risk_assessment', {})
+        high_risk = [name for name, info in disease_risks.items() 
+                    if info.get('risk_level') == '高风险']
+        summary['high_risk_diseases'] = high_risk
         
-        # 物种组成（Top 10）
-        composition = results.get('diversity', {}).get('composition', {})
-        if 'genus' in composition:
-            charts['genus_composition'] = {
-                'labels': composition['genus'].get('taxa', [])[:10],
-                'values': composition['genus'].get('abundance', [])[:10]
-            }
+        # 保存摘要
+        summary_path = Path(report_path).with_suffix('.summary.json')
+        with open(summary_path, 'w', encoding='utf-8') as f:
+            json.dump(summary, f, ensure_ascii=False, indent=2)
         
-        # 疾病风险
-        disease_risks = results.get('disease_risk', {}).get('disease_risks', {})
-        charts['disease_risks'] = [
-            {'name': name, 'score': data.get('risk_score', 0)}
-            for name, data in disease_risks.items()
-        ]
-        
-        return charts
-    
-    def _inline_resources(self, html):
-        """内联CSS和JS资源"""
-        # 读取CSS
-        css_path = self.script_dir / 'report_styles.css'
-        if css_path.exists():
-            with open(css_path, 'r', encoding='utf-8') as f:
-                css_content = f.read()
-            html = html.replace(
-                '<link rel="stylesheet" href="report_styles.css">',
-                f'<style>{css_content}</style>'
-            )
-        
-        # 读取JS
-        js_path = self.script_dir / 'report_scripts.js'
-        if js_path.exists():
-            with open(js_path, 'r', encoding='utf-8') as f:
-                js_content = f.read()
-            html = html.replace(
-                '<script src="report_scripts.js"></script>',
-                f'<script>{js_content}</script>'
-            )
-        
-        return html
+        print(f"✓ 摘要已生成: {summary_path}")
+        return summary
 
 def main():
     parser = argparse.ArgumentParser(description='生成肠道微生物检测报告')
-    parser.add_argument('--sample_id', '-s', required=True, help='样本ID')
-    parser.add_argument('--results', '-r', required=True, help='分析结果目录')
-    parser.add_argument('--output', '-o', required=True, help='输出HTML文件路径')
-    parser.add_argument('--metadata', '-m', help='样本元数据文件')
-    parser.add_argument('--api_key', help='DeepSeek API密钥')
+    parser.add_argument('--sample-dir', '-s', required=True,
+                       help='样本分析结果目录')
+    parser.add_argument('--output', '-o', required=True,
+                       help='输出HTML文件路径')
+    parser.add_argument('--template-dir', '-t', default='scripts/report_generation',
+                       help='模板文件目录')
+    parser.add_argument('--no-embed', action='store_true',
+                       help='不嵌入CSS/JS，使用外部文件引用')
+    parser.add_argument('--verbose', '-v', action='store_true',
+                       help='显示详细信息')
     
     args = parser.parse_args()
     
-    # 加载元数据
-    metadata = None
-    if args.metadata and Path(args.metadata).exists():
-        metadata = pd.read_csv(args.metadata, sep='\t')
-        # 提取当前样本的元数据
-        sample_meta = metadata[metadata.iloc[:, 0] == args.sample_id]
-        if not sample_meta.empty:
-            metadata = sample_meta.iloc[0].to_dict()
-    
-    # 生成报告
-    generator = ReportGenerator(api_key=args.api_key)
-    generator.generate_report(
-        sample_id=args.sample_id,
-        results_dir=args.results,
-        output_path=args.output,
-        metadata=metadata
-    )
+    try:
+        # 创建报告生成器
+        generator = ReportGenerator(template_dir=args.template_dir)
+        
+        # 生成报告
+        embed = not args.no_embed
+        report_path = generator.generate_report(
+            args.sample_dir,
+            args.output,
+            embed_resources=embed
+        )
+        
+        if args.verbose:
+            print(f"\n报告生成成功！")
+            print(f"样本: {Path(args.sample_dir).name}")
+            print(f"报告: {report_path}")
+            print(f"类型: {'单文件' if embed else '多文件'}")
+        
+    except Exception as e:
+        print(f"错误: {e}", file=sys.stderr)
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()

@@ -3,328 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>肠道微生物检测报告 - {{ sample_id }}</title>
-    <link rel="stylesheet" href="report_styles.css">
+    <title>肠道微生物检测报告 - {{sample_id}}</title>
+    
+    <!-- 外部资源 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="report_styles.css">
 </head>
 <body>
-    <!-- ============ 头部信息 ============ -->
-    <header class="report-header">
-        <div class="header-content">
-            <h1>🧬 肠道微生物检测报告</h1>
-            <div class="header-info">
-                <span>样本编号：{{ sample_id }}</span>
-                <span>检测日期：{{ report_date }}</span>
-            </div>
+    <!-- 导航切换按钮 -->
+    <button class="nav-toggle" onclick="toggleNav()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- 侧边导航栏 -->
+    <nav class="nav-sidebar" id="navSidebar">
+        <div class="nav-sidebar-header">
+            <i class="fas fa-dna"></i> 检测报告导航
+        </div>
+        <div class="nav-item active" onclick="scrollToSection('basic-info')">
+            <i class="fas fa-user"></i> 基本信息
+        </div>
+        <div class="nav-item" onclick="scrollToSection('overview')">
+            <i class="fas fa-chart-pie"></i> 菌群得分总览
+        </div>
+        <div class="nav-item" onclick="scrollToSection('diversity')">
+            <i class="fas fa-project-diagram"></i> 菌群多样性
+        </div>
+        <div class="nav-item" onclick="scrollToSection('bacteria-analysis')">
+            <i class="fas fa-microscope"></i> 细菌分析
+        </div>
+        <div class="nav-item" onclick="scrollToSection('nutrition')">
+            <i class="fas fa-apple-alt"></i> 营养代谢
+        </div>
+        <div class="nav-item" onclick="scrollToSection('disease-risk')">
+            <i class="fas fa-heartbeat"></i> 疾病风险
+        </div>
+        <div class="nav-item" onclick="scrollToSection('immunity')">
+            <i class="fas fa-shield-alt"></i> 免疫力评估
+        </div>
+        <div class="nav-item" onclick="scrollToSection('recommendations')">
+            <i class="fas fa-clipboard-list"></i> 饮食建议
+        </div>
+    </nav>
+
+    <!-- 头部 -->
+    <header class="header">
+        <div class="container header-content">
+            <h1><i class="fas fa-dna"></i> 16S肠道微生物检测报告</h1>
+            <p class="header-subtitle">专业的肠道菌群健康分析与个性化健康管理方案</p>
         </div>
     </header>
 
-    <!-- ============ 导航栏 ============ -->
-    <nav class="report-nav">
-        <ul>
-            <li><a href="#overview">总览</a></li>
-            <li><a href="#diversity">多样性分析</a></li>
-            <li><a href="#composition">物种组成</a></li>
-            <li><a href="#bacteria">细菌评估</a></li>
-            <li><a href="#disease">疾病风险</a></li>
-            <li><a href="#age">年龄预测</a></li>
-            <li><a href="#advice">健康建议</a></li>
-        </ul>
-    </nav>
-
-    <!-- ============ 主体内容 ============ -->
-    <main class="report-content">
-        
-        <!-- 总览部分 -->
-        <section id="overview" class="report-section">
-            <h2>📊 检测总览</h2>
-            
-            <!-- 基本统计 -->
-            <div class="info-grid">
-                <div class="info-card">
-                    <div class="info-label">总reads数</div>
-                    <div class="info-value">{{ results.sample_info.total_reads | default(0) }}</div>
-                </div>
-                <div class="info-card">
-                    <div class="info-label">总ASVs数</div>
-                    <div class="info-value">{{ results.sample_info.total_asvs | default(0) }}</div>
-                </div>
-                <div class="info-card">
-                    <div class="info-label">肠型</div>
-                    <div class="info-value">{{ results.enterotype.enterotype.type | default('未知') }}</div>
-                </div>
-                <div class="info-card">
-                    <div class="info-label">健康评分</div>
-                    <div class="info-value">{{ results.bacteria.overall_health.score | default(0) }}</div>
-                </div>
-            </div>
-            
-            <!-- AI综合评价 -->
-            <div class="ai-assessment">
-                <h3>综合评价</h3>
-                <p>{{ ai_texts.overall_assessment | default('暂无综合评价') }}</p>
-            </div>
-        </section>
-
-        <!-- 多样性分析 -->
-        <section id="diversity" class="report-section">
-            <h2>🌈 菌群多样性分析</h2>
-            
-            <div class="chart-grid">
-                <!-- Alpha多样性指标 -->
-                <div class="metric-table">
-                    <h3>Alpha多样性指标</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>指标</th>
-                                <th>数值</th>
-                                <th>状态</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Shannon指数</td>
-                                <td>{{ results.diversity.alpha_diversity.shannon | round(3) }}</td>
-                                <td class="status-{{ results.diversity.alpha_diversity.status | lower }}">
-                                    {{ results.diversity.alpha_diversity.status }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Simpson指数</td>
-                                <td>{{ results.diversity.alpha_diversity.simpson | round(3) }}</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>Chao1估计</td>
-                                <td>{{ results.diversity.alpha_diversity.chao1 | round(1) }}</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>观察到的ASVs</td>
-                                <td>{{ results.diversity.alpha_diversity.observed_asvs }}</td>
-                                <td>-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- 多样性雷达图 -->
-                <div class="chart-container">
-                    <h3>多样性雷达图</h3>
-                    <canvas id="diversityRadar"></canvas>
-                </div>
-            </div>
-            
-            <!-- B/F比值 -->
-            <div class="bf-ratio-section">
-                <h3>拟杆菌门/厚壁菌门比值</h3>
-                <div class="bf-display">
-                    <div class="bf-value">
-                        <span class="value">{{ results.diversity.bf_ratio.value | round(2) }}</span>
-                        <span class="label">B/F比值</span>
-                    </div>
-                    <div class="bf-status status-{{ results.diversity.bf_ratio.status | lower }}">
-                        {{ results.diversity.bf_ratio.status }}
+    <!-- 主内容区 -->
+    <main class="main-content" id="mainContent">
+        <!-- 基本信息 -->
+        <section class="report-section" id="basic-info">
+            <h2 class="section-title">
+                <i class="fas fa-user-circle"></i> 基本信息
+            </h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="info-card gradient-purple">
+                        <div class="info-card-title">样本编号</div>
+                        <div class="info-card-value">{{sample_id}}</div>
                     </div>
                 </div>
-                <p class="bf-note">正常范围：0.84-4.94</p>
-            </div>
-        </section>
-
-        <!-- 物种组成 -->
-        <section id="composition" class="report-section">
-            <h2>🦠 物种组成分析</h2>
-            
-            <!-- 属水平Top10 -->
-            <div class="composition-chart">
-                <h3>属水平组成（Top 10）</h3>
-                <canvas id="genusComposition"></canvas>
-            </div>
-            
-            <!-- 肠型分析 -->
-            <div class="enterotype-info">
-                <h3>肠型分析</h3>
-                <div class="enterotype-card">
-                    <div class="enterotype-type">{{ results.enterotype.enterotype.type }}</div>
-                    <div class="enterotype-desc">{{ results.enterotype.enterotype.description }}</div>
-                    <div class="key-genera">
-                        <h4>关键属丰度：</h4>
-                        {% for genus, abundance in results.enterotype.enterotype.key_genera_abundance.items() %}
-                        <span class="genus-badge">{{ genus }}: {{ abundance }}%</span>
-                        {% endfor %}
+                <div class="col-md-4">
+                    <div class="info-card gradient-pink">
+                        <div class="info-card-title">检测日期</div>
+                        <div class="info-card-value">{{report_date}}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card gradient-blue">
+                        <div class="info-card-title">样本类型</div>
+                        <div class="info-card-value">粪便</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 细菌评估 -->
-        <section id="bacteria" class="report-section">
-            <h2>⚖️ 细菌健康评估</h2>
-            
-            <!-- 整体健康评分 -->
-            <div class="health-score">
-                <div class="score-circle score-{{ results.bacteria.overall_health.score | int // 20 }}">
-                    <span class="score-value">{{ results.bacteria.overall_health.score | round(1) }}</span>
-                    <span class="score-label">健康评分</span>
+        <!-- 菌群得分总览 -->
+        <section class="report-section" id="overview">
+            <h2 class="section-title">
+                <i class="fas fa-chart-pie"></i> 菌群得分总览
+            </h2>
+            <div class="score-container">
+                <div class="score-circle" id="overallScoreCircle">
+                    <div class="score-value">{{overall_score}}</div>
+                    <div class="score-label">综合得分</div>
                 </div>
-                <div class="score-grade">{{ results.bacteria.overall_health.grade }}</div>
+                <div class="score-status">
+                    <span class="status-badge" id="overallGrade">{{health_grade}}</span>
+                </div>
             </div>
             
-            <!-- 有益菌列表 -->
-            <div class="bacteria-list">
-                <h3>🟢 核心有益菌</h3>
-                <div class="bacteria-grid" id="beneficialBacteria"></div>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-smile"></i></div>
+                        <div class="metric-value">{{beneficial_score}}</div>
+                        <div class="metric-label">有益菌评分</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="metric-value">{{harmful_score}}</div>
+                        <div class="metric-label">有害菌控制</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-balance-scale"></i></div>
+                        <div class="metric-value">{{diversity_score}}</div>
+                        <div class="metric-label">多样性指数</div>
+                    </div>
+                </div>
             </div>
+        </section>
+
+        <!-- 菌群多样性 -->
+        <section class="report-section" id="diversity">
+            <h2 class="section-title">
+                <i class="fas fa-project-diagram"></i> 菌群多样性
+            </h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>α多样性指标</h4>
+                    <div id="diversityMetrics"></div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <canvas id="diversityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 细菌分析 -->
+        <section class="report-section" id="bacteria-analysis">
+            <h2 class="section-title">
+                <i class="fas fa-microscope"></i> 细菌分析
+            </h2>
             
-            <!-- 有害菌列表 -->
-            <div class="bacteria-list">
-                <h3>🔴 核心有害菌</h3>
-                <div class="bacteria-grid" id="harmfulBacteria"></div>
-            </div>
+            <h4>有益菌评估</h4>
+            <div class="row" id="beneficialBacteriaCards"></div>
             
-            <!-- 异常解释（如果有） -->
-            {% if ai_texts.abnormal_explanation %}
-            <div class="ai-explanation">
-                <h3>异常指标解读</h3>
-                <p>{{ ai_texts.abnormal_explanation }}</p>
+            <h4 class="mt-4">有害菌监测</h4>
+            <div class="table-responsive">
+                <table class="table table-striped" id="harmfulBacteriaTable">
+                    <thead>
+                        <tr>
+                            <th>细菌名称</th>
+                            <th>检出丰度</th>
+                            <th>参考范围</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
-            {% endif %}
+        </section>
+
+        <!-- 营养代谢 -->
+        <section class="report-section" id="nutrition">
+            <h2 class="section-title">
+                <i class="fas fa-apple-alt"></i> 营养代谢
+            </h2>
+            
+            <h4>维生素合成能力</h4>
+            <div class="row" id="vitaminSynthesis"></div>
+            
+            <h4 class="mt-4">短链脂肪酸产生</h4>
+            <div class="row" id="scfaProduction"></div>
+            
+            <h4 class="mt-4">主要代谢通路</h4>
+            <div class="table-responsive">
+                <table class="table table-striped" id="pathwaysTable">
+                    <thead>
+                        <tr>
+                            <th>通路名称</th>
+                            <th>类别</th>
+                            <th>丰度</th>
+                            <th>重要性</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </section>
 
         <!-- 疾病风险 -->
-        <section id="disease" class="report-section">
-            <h2>⚠️ 疾病风险评估</h2>
-            
-            <!-- 整体风险状态 -->
-            <div class="risk-overview">
-                <div class="risk-status">
-                    健康状态：{{ results.disease_risk.overall_risk.health_status }}
-                </div>
-                <div class="risk-score">
-                    平均风险分：{{ results.disease_risk.overall_risk.average_risk_score | round(1) }}
-                </div>
-            </div>
-            
-            <!-- 疾病风险图表 -->
-            <div class="chart-container">
-                <h3>各疾病风险评分</h3>
-                <canvas id="diseaseRiskChart"></canvas>
-            </div>
-            
-            <!-- 高风险疾病解读 -->
-            {% if ai_texts.disease_interpretation %}
-            <div class="ai-explanation">
-                <h3>风险解读</h3>
-                <p>{{ ai_texts.disease_interpretation }}</p>
-            </div>
-            {% endif %}
-            
-            <!-- 预防建议 -->
-            {% if results.disease_risk.prevention_advice %}
-            <div class="prevention-advice">
-                <h3>预防建议</h3>
-                {% for disease, advice in results.disease_risk.prevention_advice.items() %}
-                <div class="advice-card">
-                    <h4>{{ disease }}</h4>
-                    <ul>
-                        <li>饮食：{{ advice.diet }}</li>
-                        <li>生活方式：{{ advice.lifestyle }}</li>
-                        <li>补充剂：{{ advice.supplements }}</li>
-                    </ul>
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
+        <section class="report-section" id="disease-risk">
+            <h2 class="section-title">
+                <i class="fas fa-heartbeat"></i> 疾病风险评估
+            </h2>
+            <div class="row" id="diseaseRiskCards"></div>
         </section>
 
-        <!-- 生物年龄 -->
-        <section id="age" class="report-section">
-            <h2>⏰ 生物年龄预测</h2>
-            
-            <div class="age-display">
-                <div class="bio-age">
-                    <span class="age-value">{{ results.age.age_prediction.biological_age | round(0) }}</span>
-                    <span class="age-label">生物年龄（岁）</span>
+        <!-- 免疫力评估 -->
+        <section class="report-section" id="immunity">
+            <h2 class="section-title">
+                <i class="fas fa-shield-alt"></i> 免疫力评估
+            </h2>
+            <div class="immunity-display">
+                <div class="immunity-score-circle">
+                    <i class="fas fa-shield-alt fa-3x"></i>
+                    <h3 id="immunityScore">--</h3>
+                    <p id="immunityLevel">评估中</p>
                 </div>
-                
-                {% if results.age.age_status %}
-                <div class="age-status">
-                    <div class="status-type">{{ results.age.age_status.status }}</div>
-                    <div class="status-desc">{{ results.age.age_status.description }}</div>
-                </div>
-                {% endif %}
             </div>
-            
-            <!-- 衰老速度 -->
-            {% if results.age.aging_rate %}
-            <div class="aging-rate">
-                <h3>衰老速度评估</h3>
-                <div class="rate-level">{{ results.age.aging_rate.rate_level }}</div>
-                <div class="rate-desc">{{ results.age.aging_rate.description }}</div>
-            </div>
-            {% endif %}
+            <div id="immunityFactors"></div>
         </section>
 
-        <!-- 个性化建议 -->
-        <section id="advice" class="report-section">
-            <h2>💡 个性化健康建议</h2>
+        <!-- 饮食建议 -->
+        <section class="report-section" id="recommendations">
+            <h2 class="section-title">
+                <i class="fas fa-clipboard-list"></i> 个性化饮食建议
+            </h2>
+            <div class="row" id="dietRecommendations"></div>
             
-            <!-- AI个性化建议 -->
-            <div class="personalized-advice">
-                {{ ai_texts.personalized_advice | default('暂无个性化建议') | nl2br }}
+            <div class="lifestyle-recommendations mt-4">
+                <h5>生活方式建议</h5>
+                <div id="lifestyleAdvice"></div>
             </div>
-            
-            <!-- 肠型相关建议 -->
-            {% if results.enterotype.enterotype_features %}
-            <div class="enterotype-advice">
-                <h3>基于肠型的建议</h3>
-                <ul>
-                    <li><strong>饮食：</strong>{{ results.enterotype.enterotype_features.diet_recommendation }}</li>
-                    <li><strong>健康：</strong>{{ results.enterotype.enterotype_features.health_implications }}</li>
-                </ul>
-                <div class="food-recommendations">
-                    <div class="food-good">
-                        <h4>✅ 推荐食物</h4>
-                        <ul>
-                        {% for food in results.enterotype.enterotype_features.beneficial_foods %}
-                            <li>{{ food }}</li>
-                        {% endfor %}
-                        </ul>
-                    </div>
-                    <div class="food-avoid">
-                        <h4>❌ 避免食物</h4>
-                        <ul>
-                        {% for food in results.enterotype.enterotype_features.avoid_foods %}
-                            <li>{{ food }}</li>
-                        {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
         </section>
 
+        <!-- 页脚 -->
+        <footer class="report-section">
+            <div class="text-center text-muted">
+                <p>
+                    <i class="fas fa-info-circle"></i> 
+                    本报告基于16S rRNA测序技术，仅供参考。如有健康问题，请咨询专业医生。
+                </p>
+                <p>报告生成日期：{{report_date}}</p>
+            </div>
+        </footer>
     </main>
 
-    <!-- ============ 页脚 ============ -->
-    <footer class="report-footer">
-        <p>本报告基于16S rRNA测序技术，仅供参考。如有健康问题，请咨询专业医生。</p>
-        <p>报告生成日期：{{ report_date }}</p>
-    </footer>
+    <!-- 浮动打印按钮 -->
+    <button class="fab" onclick="window.print()">
+        <i class="fas fa-print"></i>
+    </button>
 
-    <!-- ============ JavaScript ============ -->
-    <script src="report_scripts.js"></script>
+    <!-- 数据传递 -->
     <script>
-        // 传入图表数据
-        const chartsData = {{ charts_data | tojson | safe }};
-        const bacteriaData = {{ results.bacteria | tojson | safe }};
-        
-        // 渲染所有图表和组件
-        document.addEventListener('DOMContentLoaded', function() {
-            renderAllCharts(chartsData);
-            renderBacteriaCards(bacteriaData);
-        });
+        // 将Python生成的数据传递给JavaScript
+        const reportData = {{report_data_json}};
     </script>
+    
+    <!-- 自定义脚本 -->
+    <script src="report_scripts.js"></script>
 </body>
 </html>

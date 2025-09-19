@@ -1,0 +1,356 @@
+{
+    "Bifidobacterium": {
+      "cn_name": "双歧杆菌属",
+      "description": "重要的肠道益生菌，是人体肠道正常菌群的重要成员",
+      "category": "beneficial",
+      "functions": [
+        "合成维生素B族（B1、B2、B6、B12）",
+        "产生乳酸维持肠道酸性环境",
+        "抑制有害菌生长",
+        "增强肠道屏障功能",
+        "调节免疫系统"
+      ],
+      "normal_range": [0.183, 14.6],
+      "health_impact": "缺乏可能导致便秘、免疫力下降、肠道菌群失调",
+      "food_sources": ["酸奶", "发酵乳制品", "益生菌补充剂"]
+    },
+    "Lactobacillus": {
+      "cn_name": "乳杆菌属",
+      "description": "广泛存在的益生菌，乳酸发酵的主要细菌",
+      "category": "beneficial",
+      "functions": [
+        "乳酸发酵",
+        "产生抗菌物质（细菌素）",
+        "维持阴道和肠道pH平衡",
+        "促进营养物质吸收",
+        "降低胆固醇"
+      ],
+      "normal_range": [0.008, 0.03],
+      "health_impact": "维持肠道健康，预防腹泻，增强免疫",
+      "food_sources": ["泡菜", "酸菜", "味噌", "酸奶"]
+    },
+    "Faecalibacterium": {
+      "cn_name": "普拉梭菌属",
+      "description": "重要的产丁酸菌，肠道健康的关键指标",
+      "category": "beneficial",
+      "functions": [
+        "产生丁酸（主要的短链脂肪酸）",
+        "抗炎作用",
+        "维持肠道屏障完整性",
+        "为肠道上皮细胞提供能量",
+        "调节肠道免疫"
+      ],
+      "normal_range": [0.636, 10.97],
+      "health_impact": "缺乏与炎症性肠病、克罗恩病相关",
+      "food_sources": ["全谷物", "抗性淀粉", "菊粉"]
+    },
+    "Akkermansia": {
+      "cn_name": "嗜黏蛋白阿克曼氏菌属",
+      "description": "黏蛋白降解菌，与代谢健康密切相关",
+      "category": "beneficial",
+      "functions": [
+        "降解肠道黏蛋白",
+        "改善代谢综合征",
+        "调节血糖和血脂",
+        "增强肠道屏障",
+        "抗肥胖作用"
+      ],
+      "normal_range": [0.01, 3.89],
+      "health_impact": "丰度低与肥胖、糖尿病、代谢综合征相关",
+      "food_sources": ["石榴", "葡萄", "绿茶多酚", "蔓越莓"]
+    },
+    "Prevotella": {
+      "cn_name": "普雷沃氏菌属",
+      "description": "纤维降解优势菌，素食者肠道常见",
+      "category": "beneficial",
+      "functions": [
+        "降解植物纤维和多糖",
+        "产生短链脂肪酸",
+        "合成维生素B1",
+        "参与蛋白质代谢"
+      ],
+      "normal_range": [0.014, 66.13],
+      "health_impact": "与高纤维饮食相关，可改善葡萄糖代谢",
+      "food_sources": ["全谷物", "豆类", "蔬菜", "水果"]
+    },
+    "Roseburia": {
+      "cn_name": "罗氏菌属",
+      "description": "重要的产丁酸菌，肠道健康标志",
+      "category": "beneficial",
+      "functions": [
+        "产生丁酸",
+        "抗炎作用",
+        "改善肠道通透性",
+        "调节肠道运动"
+      ],
+      "normal_range": [0.1, 5.0],
+      "health_impact": "缺乏与肠易激综合征、炎症性肠病相关",
+      "food_sources": ["抗性淀粉", "全麦", "燕麦"]
+    },
+    "Coprococcus": {
+      "cn_name": "粪球菌属",
+      "description": "产丁酸菌，与心理健康相关",
+      "category": "beneficial",
+      "functions": [
+        "产生丁酸",
+        "可能产生多巴胺代谢物",
+        "与抑郁症负相关"
+      ],
+      "normal_range": [0.009, 0.57],
+      "health_impact": "缺乏可能与抑郁症相关",
+      "food_sources": ["益生元食物", "发酵食品"]
+    },
+    "Butyricimonas": {
+      "cn_name": "产丁酸单胞菌属",
+      "description": "产丁酸菌，参与脂质代谢",
+      "category": "beneficial",
+      "functions": [
+        "产生丁酸",
+        "参与脂质代谢",
+        "抗炎作用"
+      ],
+      "normal_range": [0.014, 0.86],
+      "health_impact": "有助于维持肠道健康",
+      "food_sources": ["高纤维食物"]
+    },
+    "Odoribacter": {
+      "cn_name": "臭杆菌属",
+      "description": "产短链脂肪酸菌",
+      "category": "beneficial",
+      "functions": [
+        "产生短链脂肪酸",
+        "参与氨基酸代谢"
+      ],
+      "normal_range": [0.013, 0.61],
+      "health_impact": "维持肠道微环境平衡",
+      "food_sources": ["发酵食品"]
+    },
+    "Alistipes": {
+      "cn_name": "另枝菌属",
+      "description": "肠道常见菌，功能多样",
+      "category": "beneficial",
+      "functions": [
+        "产生短链脂肪酸",
+        "参与胆汁酸代谢",
+        "可能的抗炎作用"
+      ],
+      "normal_range": [0.01, 2.89],
+      "health_impact": "与保护肠道健康相关",
+      "food_sources": ["高纤维食物", "发酵食品"]
+    },
+    "Escherichia": {
+      "cn_name": "埃希氏菌属",
+      "description": "条件致病菌，包括大肠杆菌",
+      "category": "conditional",
+      "functions": [
+        "合成维生素K",
+        "竞争性抑制致病菌",
+        "过度增殖可能致病"
+      ],
+      "normal_range": [0, 0.5],
+      "health_impact": "正常水平有益，过高可能引起肠道感染、腹泻",
+      "risk_factors": ["抗生素使用", "免疫力低下"]
+    },
+    "Shigella": {
+      "cn_name": "志贺氏菌属",
+      "description": "肠道致病菌，引起细菌性痢疾",
+      "category": "harmful",
+      "functions": [
+        "产生志贺毒素",
+        "侵袭肠道上皮细胞"
+      ],
+      "normal_range": [0, 0.14],
+      "health_impact": "可引起腹泻、痢疾、发热",
+      "risk_factors": ["卫生条件差", "污染食物或水"]
+    },
+    "Salmonella": {
+      "cn_name": "沙门氏菌属",
+      "description": "食源性致病菌",
+      "category": "harmful",
+      "functions": [
+        "引起食物中毒",
+        "产生内毒素"
+      ],
+      "normal_range": [0, 0.01],
+      "health_impact": "引起急性胃肠炎、伤寒",
+      "risk_factors": ["生食或未充分加热的肉蛋"]
+    },
+    "Clostridium_difficile": {
+      "cn_name": "艰难梭菌",
+      "description": "产芽孢厌氧菌，抗生素相关腹泻主因",
+      "category": "harmful",
+      "functions": [
+        "产生毒素A和B",
+        "引起伪膜性结肠炎"
+      ],
+      "normal_range": [0, 0.001],
+      "health_impact": "引起抗生素相关性腹泻、结肠炎",
+      "risk_factors": ["长期使用抗生素", "住院", "老年"]
+    },
+    "Clostridium": {
+      "cn_name": "梭菌属",
+      "description": "厌氧产芽孢菌，包含多种致病菌",
+      "category": "conditional",
+      "functions": [
+        "部分种产生丁酸（有益）",
+        "部分种产生毒素（有害）",
+        "参与蛋白质腐败"
+      ],
+      "normal_range": [0, 5.0],
+      "health_impact": "取决于具体菌种，可能有益或有害",
+      "risk_factors": ["蛋白质摄入过多"]
+    },
+    "Staphylococcus": {
+      "cn_name": "葡萄球菌属",
+      "description": "条件致病菌，皮肤常见菌",
+      "category": "conditional",
+      "functions": [
+        "部分种为正常菌群",
+        "金黄色葡萄球菌可致病"
+      ],
+      "normal_range": [0, 0.1],
+      "health_impact": "过度增殖可引起感染",
+      "risk_factors": ["免疫力低下", "皮肤破损"]
+    },
+    "Klebsiella": {
+      "cn_name": "克雷伯氏菌属",
+      "description": "条件致病菌，可产生多重耐药性",
+      "category": "harmful",
+      "functions": [
+        "正常情况下参与维生素合成",
+        "致病时引起肺炎、尿路感染"
+      ],
+      "normal_range": [0, 0.11],
+      "health_impact": "院内感染常见病原体",
+      "risk_factors": ["住院", "使用导管", "免疫抑制"]
+    },
+    "Enterococcus": {
+      "cn_name": "肠球菌属",
+      "description": "肠道正常菌群，可成为条件致病菌",
+      "category": "conditional",
+      "functions": [
+        "参与碳水化合物发酵",
+        "可能引起尿路感染、心内膜炎"
+      ],
+      "normal_range": [0, 0.5],
+      "health_impact": "正常水平无害，过高可能致病",
+      "risk_factors": ["长期抗生素治疗", "免疫缺陷"]
+    },
+    "Fusobacterium": {
+      "cn_name": "梭杆菌属",
+      "description": "厌氧菌，与结肠癌相关",
+      "category": "harmful",
+      "functions": [
+        "产生丁酸（少量）",
+        "与结肠癌发生相关",
+        "引起口腔感染"
+      ],
+      "normal_range": [0, 0.1],
+      "health_impact": "高水平与结直肠癌风险相关",
+      "risk_factors": ["口腔卫生差", "吸烟"]
+    },
+    "Campylobacter": {
+      "cn_name": "弯曲杆菌属",
+      "description": "食源性致病菌",
+      "category": "harmful",
+      "functions": [
+        "引起细菌性腹泻",
+        "可能触发格林-巴利综合征"
+      ],
+      "normal_range": [0, 0.01],
+      "health_impact": "引起急性肠胃炎",
+      "risk_factors": ["未煮熟的禽肉", "生奶"]
+    },
+    "Helicobacter": {
+      "cn_name": "螺杆菌属",
+      "description": "胃部致病菌，幽门螺杆菌最常见",
+      "category": "harmful",
+      "functions": [
+        "产生尿素酶",
+        "引起胃炎、溃疡",
+        "胃癌风险因子"
+      ],
+      "normal_range": [0, 0.01],
+      "health_impact": "引起慢性胃炎、消化性溃疡、胃癌",
+      "risk_factors": ["家族感染", "不洁饮食"]
+    },
+    "Bacteroides": {
+      "cn_name": "拟杆菌属",
+      "description": "肠道优势菌群，重要的多糖降解菌",
+      "category": "commensal",
+      "functions": [
+        "降解复杂多糖",
+        "产生短链脂肪酸",
+        "维持肠道屏障",
+        "调节免疫系统",
+        "胆汁酸代谢"
+      ],
+      "normal_range": [10.0, 30.0],
+      "health_impact": "维持肠道生态平衡，过多可能与肥胖相关",
+      "food_sources": ["高纤维食物", "全谷物"]
+    },
+    "Streptococcus": {
+      "cn_name": "链球菌属",
+      "description": "口腔和肠道常见菌",
+      "category": "conditional",
+      "functions": [
+        "乳酸发酵",
+        "部分种参与龋齿形成",
+        "部分种可引起咽炎"
+      ],
+      "normal_range": [0, 2.0],
+      "health_impact": "多数无害，某些种可致病",
+      "risk_factors": ["口腔卫生差", "免疫力低下"]
+    },
+    "Veillonella": {
+      "cn_name": "韦荣氏菌属",
+      "description": "乳酸利用菌",
+      "category": "commensal",
+      "functions": [
+        "利用乳酸产生丙酸",
+        "与运动表现相关"
+      ],
+      "normal_range": [0, 0.22],
+      "health_impact": "可能提高运动耐力",
+      "food_sources": ["发酵食品"]
+    },
+    "Ruminococcus": {
+      "cn_name": "瘤胃球菌属",
+      "description": "纤维素降解菌",
+      "category": "beneficial",
+      "functions": [
+        "降解纤维素",
+        "产生短链脂肪酸",
+        "抗性淀粉发酵"
+      ],
+      "normal_range": [0.1, 5.0],
+      "health_impact": "促进纤维消化，维持肠道健康",
+      "food_sources": ["高纤维食物", "抗性淀粉"]
+    },
+    "Eubacterium": {
+      "cn_name": "真杆菌属",
+      "description": "产丁酸菌群",
+      "category": "beneficial",
+      "functions": [
+        "产生丁酸",
+        "胆固醇代谢",
+        "抗炎作用"
+      ],
+      "normal_range": [0.5, 8.0],
+      "health_impact": "维持肠道健康，降低炎症",
+      "food_sources": ["益生元", "全谷物"]
+    },
+    "Blautia": {
+      "cn_name": "布劳特氏菌属",
+      "description": "产短链脂肪酸菌",
+      "category": "beneficial",
+      "functions": [
+        "产生短链脂肪酸",
+        "调节血糖",
+        "抗炎作用"
+      ],
+      "normal_range": [0.1, 10.0],
+      "health_impact": "改善代谢健康",
+      "food_sources": ["膳食纤维", "益生元"]
+    }
+  }

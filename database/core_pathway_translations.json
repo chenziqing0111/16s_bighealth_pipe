@@ -1,0 +1,338 @@
+{
+    "1CMET2-PWY": {
+      "cn_name": "一碳代谢通路II",
+      "category": "维生素代谢",
+      "description": "叶酸依赖的一碳单位转移，参与DNA合成和甲基化",
+      "importance": "high",
+      "related_nutrients": ["叶酸", "维生素B12", "维生素B6"],
+      "health_impact": "影响DNA合成、氨基酸代谢、神经递质合成"
+    },
+    "3-HYDROXYPHENYLACETATE-DEGRADATION-PWY": {
+      "cn_name": "3-羟基苯乙酸降解通路",
+      "category": "芳香族化合物代谢",
+      "description": "降解芳香族化合物",
+      "importance": "low",
+      "related_nutrients": [],
+      "health_impact": "参与肠道代谢产物清除"
+    },
+    "ALL-CHORISMATE-PWY": {
+      "cn_name": "分支酸超级通路",
+      "category": "氨基酸代谢",
+      "description": "芳香族氨基酸生物合成的前体",
+      "importance": "medium",
+      "related_nutrients": ["色氨酸", "酪氨酸", "苯丙氨酸"],
+      "health_impact": "影响神经递质合成"
+    },
+    "ANAEROFRUCAT-PWY": {
+      "cn_name": "果糖厌氧降解通路",
+      "category": "糖代谢",
+      "description": "厌氧条件下果糖发酵产能",
+      "importance": "medium",
+      "related_nutrients": ["果糖"],
+      "health_impact": "影响能量代谢和短链脂肪酸产生"
+    },
+    "ANAGLYCOLYSIS-PWY": {
+      "cn_name": "厌氧糖酵解通路",
+      "category": "能量代谢",
+      "description": "厌氧条件下葡萄糖分解产能，产生乳酸",
+      "importance": "high",
+      "related_nutrients": ["葡萄糖"],
+      "health_impact": "主要能量来源，影响肠道pH值"
+    },
+    "ARG+POLYAMINE-SYN": {
+      "cn_name": "精氨酸和多胺合成通路",
+      "category": "氨基酸代谢",
+      "description": "合成精氨酸和多胺类物质",
+      "importance": "high",
+      "related_nutrients": ["精氨酸", "鸟氨酸"],
+      "health_impact": "影响细胞生长、伤口愈合、免疫功能"
+    },
+    "ARGDEG-PWY": {
+      "cn_name": "精氨酸降解通路",
+      "category": "氨基酸代谢",
+      "description": "分解精氨酸产生能量",
+      "importance": "medium",
+      "related_nutrients": ["精氨酸"],
+      "health_impact": "调节精氨酸水平，产生一氧化氮"
+    },
+    "ARGORNPROST-PWY": {
+      "cn_name": "精氨酸、鸟氨酸和脯氨酸互转通路",
+      "category": "氨基酸代谢",
+      "description": "三种氨基酸的相互转化",
+      "importance": "medium",
+      "related_nutrients": ["精氨酸", "鸟氨酸", "脯氨酸"],
+      "health_impact": "维持氨基酸平衡"
+    },
+    "ARGSYN-PWY": {
+      "cn_name": "精氨酸生物合成通路",
+      "category": "氨基酸代谢",
+      "description": "从谷氨酸合成精氨酸",
+      "importance": "high",
+      "related_nutrients": ["精氨酸", "谷氨酸"],
+      "health_impact": "提供精氨酸，支持蛋白质合成和免疫功能"
+    },
+    "FOLATE-SYN": {
+      "cn_name": "叶酸生物合成通路",
+      "category": "维生素代谢",
+      "description": "合成叶酸（维生素B9）",
+      "importance": "high",
+      "related_nutrients": ["叶酸"],
+      "health_impact": "预防贫血，支持DNA合成，预防神经管缺陷"
+    },
+    "THIAMINE-SYN": {
+      "cn_name": "硫胺素生物合成通路",
+      "category": "维生素代谢",
+      "description": "合成维生素B1",
+      "importance": "high",
+      "related_nutrients": ["维生素B1"],
+      "health_impact": "支持能量代谢，预防脚气病"
+    },
+    "RIBOFLAVIN-SYN": {
+      "cn_name": "核黄素生物合成通路",
+      "category": "维生素代谢",
+      "description": "合成维生素B2",
+      "importance": "high",
+      "related_nutrients": ["维生素B2"],
+      "health_impact": "参与能量代谢，维持皮肤和黏膜健康"
+    },
+    "PYRIDOXAL-SYN": {
+      "cn_name": "吡哆醛生物合成通路",
+      "category": "维生素代谢",
+      "description": "合成维生素B6",
+      "importance": "high",
+      "related_nutrients": ["维生素B6"],
+      "health_impact": "支持蛋白质代谢，神经递质合成"
+    },
+    "COBALAMIN-SYN": {
+      "cn_name": "钴胺素生物合成通路",
+      "category": "维生素代谢",
+      "description": "合成维生素B12",
+      "importance": "high",
+      "related_nutrients": ["维生素B12"],
+      "health_impact": "预防恶性贫血，维持神经系统健康"
+    },
+    "MENAQUINONE-SYN": {
+      "cn_name": "甲基萘醌生物合成通路",
+      "category": "维生素代谢",
+      "description": "合成维生素K2",
+      "importance": "high",
+      "related_nutrients": ["维生素K2"],
+      "health_impact": "支持骨骼健康，调节钙代谢"
+    },
+    "PWY-5676": {
+      "cn_name": "乙酸生成通路",
+      "category": "短链脂肪酸代谢",
+      "description": "产生乙酸（醋酸）",
+      "importance": "high",
+      "related_nutrients": ["膳食纤维"],
+      "health_impact": "提供能量，调节血脂"
+    },
+    "PWY-5677": {
+      "cn_name": "丙酸生成通路",
+      "category": "短链脂肪酸代谢",
+      "description": "产生丙酸",
+      "importance": "high",
+      "related_nutrients": ["膳食纤维"],
+      "health_impact": "调节血糖，抑制胆固醇合成"
+    },
+    "PWY-5678": {
+      "cn_name": "丁酸生成通路",
+      "category": "短链脂肪酸代谢",
+      "description": "产生丁酸",
+      "importance": "high",
+      "related_nutrients": ["抗性淀粉", "膳食纤维"],
+      "health_impact": "肠道上皮细胞主要能源，抗炎，预防结肠癌"
+    },
+    "TCA": {
+      "cn_name": "三羧酸循环",
+      "category": "能量代谢",
+      "description": "有氧呼吸的核心代谢通路",
+      "importance": "high",
+      "related_nutrients": ["碳水化合物", "脂肪", "蛋白质"],
+      "health_impact": "主要能量产生途径"
+    },
+    "GLYCOLYSIS": {
+      "cn_name": "糖酵解通路",
+      "category": "糖代谢",
+      "description": "葡萄糖分解产生丙酮酸",
+      "importance": "high",
+      "related_nutrients": ["葡萄糖"],
+      "health_impact": "快速产能，支持细胞代谢"
+    },
+    "GLUCONEOGENESIS": {
+      "cn_name": "糖异生通路",
+      "category": "糖代谢",
+      "description": "从非糖前体合成葡萄糖",
+      "importance": "medium",
+      "related_nutrients": ["氨基酸", "乳酸", "甘油"],
+      "health_impact": "维持血糖稳定"
+    },
+    "PENTOSE-PHOSPHATE": {
+      "cn_name": "戊糖磷酸通路",
+      "category": "糖代谢",
+      "description": "产生NADPH和核糖",
+      "importance": "medium",
+      "related_nutrients": ["葡萄糖"],
+      "health_impact": "提供还原力，支持核酸合成"
+    },
+    "FATTY-ACID-BETA-OXIDATION": {
+      "cn_name": "脂肪酸β氧化通路",
+      "category": "脂质代谢",
+      "description": "分解脂肪酸产生能量",
+      "importance": "high",
+      "related_nutrients": ["脂肪酸"],
+      "health_impact": "脂肪供能，影响体重管理"
+    },
+    "LIPID-SYNTHESIS": {
+      "cn_name": "脂质合成通路",
+      "category": "脂质代谢",
+      "description": "合成脂肪酸和脂质",
+      "importance": "medium",
+      "related_nutrients": ["乙酰辅酶A"],
+      "health_impact": "影响血脂水平"
+    },
+    "BILE-ACID-METABOLISM": {
+      "cn_name": "胆汁酸代谢通路",
+      "category": "脂质代谢",
+      "description": "胆汁酸的合成和转化",
+      "importance": "high",
+      "related_nutrients": ["胆固醇"],
+      "health_impact": "调节脂质吸收，影响肠道健康"
+    },
+    "TRYPTOPHAN-METABOLISM": {
+      "cn_name": "色氨酸代谢通路",
+      "category": "氨基酸代谢",
+      "description": "色氨酸分解和转化",
+      "importance": "high",
+      "related_nutrients": ["色氨酸"],
+      "health_impact": "产生5-羟色胺，影响情绪和睡眠"
+    },
+    "METHIONINE-METABOLISM": {
+      "cn_name": "甲硫氨酸代谢通路",
+      "category": "氨基酸代谢",
+      "description": "甲硫氨酸和半胱氨酸代谢",
+      "importance": "medium",
+      "related_nutrients": ["甲硫氨酸", "半胱氨酸"],
+      "health_impact": "提供甲基供体，支持解毒"
+    },
+    "GLUTAMATE-METABOLISM": {
+      "cn_name": "谷氨酸代谢通路",
+      "category": "氨基酸代谢",
+      "description": "谷氨酸合成和转化",
+      "importance": "high",
+      "related_nutrients": ["谷氨酸", "谷氨酰胺"],
+      "health_impact": "神经递质，氮代谢中心"
+    },
+    "HEME-BIOSYNTHESIS": {
+      "cn_name": "血红素生物合成通路",
+      "category": "辅因子代谢",
+      "description": "合成血红素",
+      "importance": "high",
+      "related_nutrients": ["铁", "甘氨酸"],
+      "health_impact": "支持血红蛋白合成，氧气运输"
+    },
+    "CAROTENOID-BIOSYNTHESIS": {
+      "cn_name": "类胡萝卜素生物合成通路",
+      "category": "色素代谢",
+      "description": "合成类胡萝卜素",
+      "importance": "medium",
+      "related_nutrients": ["维生素A前体"],
+      "health_impact": "抗氧化，维生素A合成"
+    },
+    "MELANIN-BIOSYNTHESIS": {
+      "cn_name": "黑色素生物合成通路",
+      "category": "色素代谢",
+      "description": "合成黑色素",
+      "importance": "low",
+      "related_nutrients": ["酪氨酸"],
+      "health_impact": "皮肤色素，抗氧化"
+    },
+    "PURINE-METABOLISM": {
+      "cn_name": "嘌呤代谢通路",
+      "category": "核苷酸代谢",
+      "description": "嘌呤核苷酸的合成和降解",
+      "importance": "high",
+      "related_nutrients": ["腺嘌呤", "鸟嘌呤"],
+      "health_impact": "DNA/RNA合成，能量代谢"
+    },
+    "PYRIMIDINE-METABOLISM": {
+      "cn_name": "嘧啶代谢通路",
+      "category": "核苷酸代谢",
+      "description": "嘧啶核苷酸的合成和降解",
+      "importance": "high",
+      "related_nutrients": ["胞嘧啶", "胸腺嘧啶", "尿嘧啶"],
+      "health_impact": "DNA/RNA合成"
+    },
+    "LACTOSE-FERMENTATION": {
+      "cn_name": "乳糖发酵通路",
+      "category": "糖代谢",
+      "description": "乳糖分解和发酵",
+      "importance": "medium",
+      "related_nutrients": ["乳糖"],
+      "health_impact": "乳糖消化，产生乳酸"
+    },
+    "STARCH-DEGRADATION": {
+      "cn_name": "淀粉降解通路",
+      "category": "糖代谢",
+      "description": "分解淀粉为单糖",
+      "importance": "high",
+      "related_nutrients": ["淀粉", "抗性淀粉"],
+      "health_impact": "提供葡萄糖，影响血糖"
+    },
+    "CELLULOSE-DEGRADATION": {
+      "cn_name": "纤维素降解通路",
+      "category": "多糖代谢",
+      "description": "分解纤维素",
+      "importance": "high",
+      "related_nutrients": ["膳食纤维"],
+      "health_impact": "产生短链脂肪酸，促进肠道健康"
+    },
+    "PECTIN-DEGRADATION": {
+      "cn_name": "果胶降解通路",
+      "category": "多糖代谢",
+      "description": "分解果胶",
+      "importance": "medium",
+      "related_nutrients": ["果胶"],
+      "health_impact": "促进肠道蠕动"
+    },
+    "MUCIN-DEGRADATION": {
+      "cn_name": "黏蛋白降解通路",
+      "category": "糖蛋白代谢",
+      "description": "分解肠道黏蛋白",
+      "importance": "medium",
+      "related_nutrients": [],
+      "health_impact": "维持肠道黏液层平衡"
+    },
+    "SULFATE-REDUCTION": {
+      "cn_name": "硫酸盐还原通路",
+      "category": "硫代谢",
+      "description": "还原硫酸盐产生硫化氢",
+      "importance": "medium",
+      "related_nutrients": ["硫酸盐"],
+      "health_impact": "产生硫化氢，影响肠道健康"
+    },
+    "METHANE-PRODUCTION": {
+      "cn_name": "甲烷生成通路",
+      "category": "甲烷代谢",
+      "description": "产生甲烷气体",
+      "importance": "low",
+      "related_nutrients": [],
+      "health_impact": "影响肠道气体产生"
+    },
+    "NITRATE-REDUCTION": {
+      "cn_name": "硝酸盐还原通路",
+      "category": "氮代谢",
+      "description": "还原硝酸盐",
+      "importance": "medium",
+      "related_nutrients": ["硝酸盐"],
+      "health_impact": "产生亚硝酸盐，影响血管功能"
+    },
+    "UREA-CYCLE": {
+      "cn_name": "尿素循环",
+      "category": "氮代谢",
+      "description": "处理氨，产生尿素",
+      "importance": "high",
+      "related_nutrients": ["蛋白质"],
+      "health_impact": "清除氨毒性"
+    }
+  }

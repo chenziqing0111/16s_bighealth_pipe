@@ -305,10 +305,38 @@ except:
             --input "$sample_dir/sample_asv.tsv" \
             --output "$sample_dir/functional_prediction" \
             >> "$sample_log" 2>&1 &
-        
+                
         # 等待所有分析完成
         wait
     }
+       
+    # 7. 中文注释（新增）
+    log "  运行中文注释..."
+    
+    # 检查注释脚本是否存在
+    if [ -f "$SCRIPT_DIR/scripts/analysis/7_cn_annotation.py" ]; then
+        # 检查中文注释数据库
+        local database_dir="${SCRIPT_DIR}/database"
+        
+        if [ -f "$database_dir/core_bacteria_annotations.json" ] && \
+           [ -f "$database_dir/core_pathway_translations.json" ] && \
+           [ -f "$database_dir/core_ec_translations.json" ]; then
+            
+            # 运行中文注释
+            python3 "$SCRIPT_DIR/scripts/analysis/7_cn_annotation.py" \
+                --sample-dir "$sample_dir" \
+                --database "$database_dir" \
+                >> "$sample_log" 2>&1
+            
+            if [ $? -eq 0 ]; then
+                log "  ✓ 中文注释完成"
+            else
+                warn "  中文注释执行出错，将使用英文信息"
+            fi
+        else
+            warn "  未找到完整的中文注释数据库"
+        fi
+    fi
     
     # 检查分析结果
     local success=true
@@ -327,13 +355,13 @@ except:
         
         if [ -f "$SCRIPT_DIR/scripts/report/generate_report.py" ]; then
             local report_cmd="python3 $SCRIPT_DIR/scripts/report/generate_report.py"
-            report_cmd="$report_cmd --sample_id $sample_id"
-            report_cmd="$report_cmd --results $sample_dir"
+            report_cmd="$report_cmd --sample-dir $sample_dir"  # 改这里：使用 --sample-dir
             report_cmd="$report_cmd --output $output_base/reports/${sample_id}_report.html"
             
-            if [ -n "$metadata_file" ] && [ -f "$metadata_file" ]; then
-                report_cmd="$report_cmd --metadata $metadata_file"
-            fi
+            # 注意：可能不需要 --metadata 参数了，先注释掉
+            # if [ -n "$metadata_file" ] && [ -f "$metadata_file" ]; then
+            #     report_cmd="$report_cmd --metadata $metadata_file"
+            # fi
             
             eval $report_cmd >> "$sample_log" 2>&1
             
@@ -440,15 +468,41 @@ main() {
     check_dependencies
     
     # 判断输入类型并处理
+    # 判断输入类型并处理
     if [ -d "$INPUT" ]; then
         # 输入是目录
-        if [ "$SKIP_PREPROCESSING" = "true" ]; then
-            error "目录输入需要预处理，不能使用--skip-preprocessing"
-            exit 1
-        fi
         
-        log "检测到FASTQ目录，开始预处理..."
-        run_preprocessing "$INPUT" "$OUTPUT_DIR"
+        # 检查是否是预处理输出目录（包含merged_asv_taxonomy_table.tsv）
+        if [ -f "$INPUT/merged_asv_taxonomy_table.tsv" ]; then
+            log "检测到预处理输出目录，使用其中的ASV表..."
+            ASV_TABLE="$INPUT/merged_asv_taxonomy_table.tsv"
+            PREPROCESSING_DIR="$INPUT"  # 保存预处理目录路径
+            info "✓ 找到ASV表: $ASV_TABLE"
+            
+            # 导出预处理目录供后续使用
+            export PREPROCESSING_DIR
+            
+        elif [ -f "$INPUT/preprocessing/merged_asv_taxonomy_table.tsv" ]; then
+            # 可能是完整的输出目录
+            log "检测到完整输出目录，使用预处理结果..."
+            ASV_TABLE="$INPUT/preprocessing/merged_asv_taxonomy_table.tsv"
+            PREPROCESSING_DIR="$INPUT/preprocessing"
+            info "✓ 找到ASV表: $ASV_TABLE"
+            
+            # 导出预处理目录供后续使用
+            export PREPROCESSING_DIR
+            
+        elif [ "$SKIP_PREPROCESSING" = "true" ]; then
+            error "目录中未找到ASV表，且指定了--skip-preprocessing"
+            exit 1
+            
+        else
+            # 是FASTQ目录，需要预处理
+            log "检测到FASTQ目录，开始预处理..."
+            run_preprocessing "$INPUT" "$OUTPUT_DIR"
+            PREPROCESSING_DIR="$OUTPUT_DIR/preprocessing"
+            export PREPROCESSING_DIR
+    fi
         
     elif [ -f "$INPUT" ]; then
         # 输入是文件

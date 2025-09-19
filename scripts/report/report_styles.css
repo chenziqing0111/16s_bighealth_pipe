@@ -1,290 +1,235 @@
+/* ============ 变量定义 ============ */
+:root {
+    --primary-color: #2E7D32;
+    --secondary-color: #66BB6A;
+    --accent-color: #FFC107;
+    --danger-color: #F44336;
+    --warning-color: #FF9800;
+    --info-color: #2196F3;
+    --success-color: #4CAF50;
+    --text-primary: #212121;
+    --text-secondary: #757575;
+    --bg-light: #F5F5F5;
+    --bg-section: #FFFFFF;
+    --border-color: #E0E0E0;
+}
+
 /* ============ 基础样式 ============ */
 * {
-*     margin: 0;
-*         padding: 0;
-*             box-sizing: border-box;
-*             }
-*
-*             body {
-*                 font-family: 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
-*                     line-height: 1.6;
-*                         color: #333;
-*                             background: #f5f7fa;
-*                             }
-*
-*/* ============ 头部样式 ============ */
-.report-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #F5F7FA 0%, #C3CFE2 100%);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* ============ 头部样式 ============ */
+.header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     color: white;
-    padding: 2rem;
+    padding: 3rem 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 60%;
+    height: 200%;
+    background: rgba(255,255,255,0.05);
+    transform: rotate(45deg);
+}
+
+.header-content {
+    position: relative;
+    z-index: 1;
     text-align: center;
 }
 
-.header-content h1 {
+.header h1 {
     font-size: 2.5rem;
+    font-weight: bold;
     margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
 
-.header-info {
-    font-size: 1.1rem;
-    opacity: 0.9;
+.header-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.95;
 }
 
-.header-info span {
-    margin: 0 1rem;
-}
-
-/* ============ 导航栏 ============ */
-.report-nav {
-    background: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    position: sticky;
+/* ============ 导航侧边栏 ============ */
+.nav-sidebar {
+    position: fixed;
+    left: 0;
     top: 0;
-    z-index: 100;
+    height: 100vh;
+    width: 260px;
+    background: white;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
 }
 
-.report-nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    padding: 1rem;
+.nav-sidebar.active {
+    transform: translateX(0);
 }
 
-.report-nav li {
-    margin: 0 1.5rem;
+.nav-toggle {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    z-index: 1001;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
 }
 
-.report-nav a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    transition: color 0.3s;
+.nav-toggle:hover {
+    background: var(--secondary-color);
+    transform: scale(1.1);
 }
 
-.report-nav a:hover {
-    color: #667eea;
+.nav-sidebar-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
-/* ============ 主体内容 ============ */
-.report-content {
+.nav-item {
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.nav-item:hover {
+    background: var(--bg-light);
+    border-left-color: var(--primary-color);
+}
+
+.nav-item.active {
+    background: #E8F5E9;
+    border-left-color: var(--primary-color);
+    font-weight: 600;
+}
+
+.nav-item i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+    color: var(--primary-color);
+}
+
+/* ============ 主内容区 ============ */
+.main-content {
     max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 2rem;
+    margin: 0 auto;
+    padding: 2rem;
+    transition: margin-left 0.3s ease;
 }
 
+.main-content.nav-active {
+    margin-left: 260px;
+}
+
+/* ============ 报告区块 ============ */
 .report-section {
     background: white;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 2rem;
     margin-bottom: 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.report-section h2 {
-    color: #333;
+.report-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+.section-title {
+    font-size: 1.8rem;
+    color: var(--primary-color);
     margin-bottom: 1.5rem;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid #667eea;
+    border-bottom: 3px solid var(--primary-color);
+    display: flex;
+    align-items: center;
 }
 
-.report-section h3 {
-    color: #555;
-    margin: 1.5rem 0 1rem;
+.section-title i {
+    margin-right: 10px;
+    font-size: 1.5rem;
 }
 
 /* ============ 信息卡片 ============ */
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
 .info-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    border-radius: 10px;
     padding: 1.5rem;
-    border-radius: 8px;
-    text-align: center;
+    color: white;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
 }
 
-.info-label {
+.info-card:hover {
+    transform: scale(1.02);
+}
+
+.gradient-purple {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.gradient-pink {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.gradient-blue {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.gradient-green {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.gradient-orange {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.info-card-title {
     font-size: 0.9rem;
     opacity: 0.9;
     margin-bottom: 0.5rem;
 }
 
-.info-value {
+.info-card-value {
     font-size: 1.8rem;
     font-weight: bold;
 }
 
-/* ============ AI文本区域 ============ */
-.ai-assessment,
-.ai-explanation,
-.personalized-advice {
-    background: #f8f9fa;
-    border-left: 4px solid #667eea;
-    padding: 1.5rem;
-    margin: 1.5rem 0;
-    border-radius: 4px;
-}
-
-.ai-assessment h3,
-.ai-explanation h3 {
-    color: #667eea;
-    margin-bottom: 1rem;
-}
-
-/* ============ 表格样式 ============ */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
-}
-
-th {
-    background: #667eea;
-    color: white;
-    padding: 0.75rem;
-    text-align: left;
-}
-
-td {
-    padding: 0.75rem;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-tr:hover {
-    background: #f8f9fa;
-}
-
-/* ============ 状态标签 ============ */
-.status-正常,
-.status-normal {
-    color: #4caf50;
-    font-weight: bold;
-}
-
-.status-偏低,
-.status-low {
-    color: #ff9800;
-    font-weight: bold;
-}
-
-.status-偏高,
-.status-high,
-.status-超标 {
-    color: #f44336;
-    font-weight: bold;
-}
-
-/* ============ 图表容器 ============ */
-.chart-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin: 2rem 0;
-}
-
-.chart-container {
-    position: relative;
-    height: 300px;
-}
-
-.composition-chart {
-    margin: 2rem 0;
-}
-
-.composition-chart canvas {
-    max-height: 400px;
-}
-
-/* ============ B/F比值显示 ============ */
-.bf-ratio-section {
-    background: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin: 2rem 0;
-}
-
-.bf-display {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    margin: 1rem 0;
-}
-
-.bf-value {
-    text-align: center;
-}
-
-.bf-value .value {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #667eea;
-    display: block;
-}
-
-.bf-value .label {
-    font-size: 0.9rem;
-    color: #666;
-    margin-top: 0.5rem;
-}
-
-.bf-status {
-    padding: 0.5rem 1.5rem;
-    border-radius: 20px;
-    font-weight: bold;
-}
-
-.bf-status.status-正常 {
-    background: #e8f5e9;
-    color: #4caf50;
-}
-
-.bf-note {
-    text-align: center;
-    color: #666;
-    font-size: 0.9rem;
-}
-
-/* ============ 肠型卡片 ============ */
-.enterotype-card {
-    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-    padding: 2rem;
-    border-radius: 8px;
-    margin: 1rem 0;
-}
-
-.enterotype-type {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 1rem;
-}
-
-.enterotype-desc {
-    color: #666;
-    margin-bottom: 1rem;
-}
-
-.key-genera h4 {
-    color: #555;
-    margin-bottom: 0.5rem;
-}
-
-.genus-badge {
-    display: inline-block;
-    background: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
-    margin: 0.3rem;
-    font-size: 0.9rem;
-}
-
-/* ============ 健康评分 ============ */
-.health-score {
+/* ============ 评分显示 ============ */
+.score-container {
     text-align: center;
     margin: 2rem 0;
 }
@@ -293,26 +238,17 @@ tr:hover {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-.score-circle.score-0,
-.score-circle.score-1,
-.score-circle.score-2 {
-    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-}
-
-.score-circle.score-3 {
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    margin: 0 auto;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .score-value {
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: bold;
     color: white;
 }
@@ -323,276 +259,283 @@ tr:hover {
     opacity: 0.9;
 }
 
-.score-grade {
-    font-size: 1.2rem;
+.score-good {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.score-warning {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.score-danger {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.score-status {
     margin-top: 1rem;
+}
+
+/* ============ 状态徽章 ============ */
+.status-badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-normal {
+    background: #E8F5E9;
+    color: var(--success-color);
+}
+
+.status-warning {
+    background: #FFF3E0;
+    color: var(--warning-color);
+}
+
+.status-danger {
+    background: #FFEBEE;
+    color: var(--danger-color);
+}
+
+.status-info {
+    background: #E3F2FD;
+    color: var(--info-color);
+}
+
+/* ============ 指标卡片 ============ */
+.metric-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    border: 2px solid var(--border-color);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.2);
+}
+
+.metric-icon {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.metric-value {
+    font-size: 1.8rem;
     font-weight: bold;
-    color: #667eea;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
 }
 
-/* ============ 细菌列表 ============ */
-.bacteria-list {
-    margin: 2rem 0;
+.metric-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
 }
 
-.bacteria-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
+/* ============ 细菌卡片 ============ */
 .bacteria-card {
     background: white;
-    border: 1px solid #e0e0e0;
     border-radius: 8px;
     padding: 1rem;
-    transition: transform 0.3s, box-shadow 0.3s;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--primary-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
 }
 
 .bacteria-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateX(5px);
 }
 
-.bacteria-card.status-normal {
-    border-left: 4px solid #4caf50;
-}
-
-.bacteria-card.status-low {
-    border-left: 4px solid #ff9800;
-}
-
-.bacteria-card.status-high {
-    border-left: 4px solid #f44336;
-}
-
-.bacteria-card h4 {
-    color: #333;
+.bacteria-name {
+    font-weight: 600;
+    color: var(--text-primary);
     margin-bottom: 0.5rem;
 }
 
-.bacteria-card .latin {
+.bacteria-latin {
+    color: var(--text-secondary);
     font-style: italic;
-    color: #666;
     font-size: 0.9rem;
 }
 
-.bacteria-card .value {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin: 0.5rem 0;
-}
-
-.bacteria-card .range {
+.bacteria-description {
+    color: var(--text-secondary);
     font-size: 0.85rem;
-    color: #999;
+    margin-top: 0.5rem;
+    line-height: 1.4;
 }
 
-/* ============ 疾病风险 ============ */
-.risk-overview {
-    display: flex;
-    justify-content: space-around;
-    background: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-}
-
-.risk-status,
-.risk-score {
-    text-align: center;
-}
-
-.risk-status {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #667eea;
-}
-
-.risk-score {
-    font-size: 1.1rem;
-    color: #666;
-}
-
-.prevention-advice {
-    margin-top: 2rem;
-}
-
-.advice-card {
-    background: #f8f9fa;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-}
-
-.advice-card h4 {
-    color: #667eea;
-    margin-bottom: 0.5rem;
-}
-
-.advice-card ul {
-    list-style: none;
-    padding-left: 0;
-}
-
-.advice-card li {
-    padding: 0.3rem 0;
-    color: #666;
-}
-
-/* ============ 年龄显示 ============ */
-.age-display {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+/* ============ 图表容器 ============ */
+.chart-container {
+    position: relative;
+    height: 300px;
     margin: 2rem 0;
 }
 
-.bio-age {
-    text-align: center;
-}
-
-.age-value {
-    font-size: 3rem;
-    font-weight: bold;
-    color: #667eea;
-    display: block;
-}
-
-.age-label {
-    font-size: 1rem;
-    color: #666;
-}
-
-.age-status {
-    background: #f8f9fa;
+.chart-card {
+    background: white;
+    border-radius: 10px;
     padding: 1.5rem;
-    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 
-.status-type {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
+/* ============ 进度条 ============ */
+.progress-container {
+    margin: 1rem 0;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 0.5rem;
+    font-size: 0.9rem;
 }
 
-.status-desc {
-    color: #666;
+.progress {
+    height: 25px;
+    border-radius: 12px;
+    background: var(--bg-light);
+    overflow: hidden;
 }
 
-.aging-rate {
-    background: #fff3e0;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-top: 2rem;
-}
-
-.rate-level {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #ff9800;
-    margin-bottom: 0.5rem;
-}
-
-/* ============ 食物推荐 ============ */
-.food-recommendations {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin-top: 1.5rem;
-}
-
-.food-good,
-.food-avoid {
-    padding: 1rem;
-    border-radius: 8px;
-}
-
-.food-good {
-    background: #e8f5e9;
-}
-
-.food-avoid {
-    background: #ffebee;
-}
-
-.food-good h4 {
-    color: #4caf50;
-}
-
-.food-avoid h4 {
-    color: #f44336;
-}
-
-.food-good ul,
-.food-avoid ul {
-    list-style: none;
-    padding-left: 0;
-    margin-top: 0.5rem;
-}
-
-.food-good li,
-.food-avoid li {
-    padding: 0.3rem 0;
-}
-
-/* ============ 页脚 ============ */
-.report-footer {
-    background: #333;
+.progress-bar {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: white;
+    font-weight: 600;
+    transition: width 1s ease;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
+/* ============ 推荐卡片 ============ */
+.recommendation-card {
+    background: #F0F7FF;
+    border-left: 4px solid var(--info-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+.recommendation-title {
+    color: var(--info-color);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.recommendation-title i {
+    margin-right: 10px;
+}
+
+/* ============ 免疫力显示 ============ */
+.immunity-display {
     text-align: center;
     padding: 2rem;
-    margin-top: 3rem;
 }
 
-.report-footer p {
-    margin: 0.5rem 0;
-    opacity: 0.9;
+.immunity-score-circle {
+    display: inline-block;
+    padding: 2rem;
+    border-radius: 10px;
+    background: rgba(76, 175, 80, 0.1);
+}
+
+/* ============ 浮动按钮 ============ */
+.fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+.fab:hover {
+    background: var(--secondary-color);
+    transform: scale(1.1);
+}
+
+/* ============ 表格样式 ============ */
+.table {
+    margin-top: 1rem;
+}
+
+.table thead {
+    background: var(--primary-color);
+    color: white;
+}
+
+.table thead th {
+    border: none;
+    padding: 1rem;
+}
+
+.table tbody tr:hover {
+    background: var(--bg-light);
 }
 
 /* ============ 响应式设计 ============ */
 @media (max-width: 768px) {
-    .report-nav ul {
-        flex-direction: column;
-        align-items: center;
+    .header h1 {
+        font-size: 1.8rem;
     }
     
-    .report-nav li {
-        margin: 0.5rem 0;
+    .main-content {
+        padding: 1rem;
     }
     
-    .info-grid {
-        grid-template-columns: 1fr;
+    .main-content.nav-active {
+        margin-left: 0;
     }
     
-    .chart-grid {
-        grid-template-columns: 1fr;
+    .nav-sidebar {
+        width: 100%;
     }
     
-    .food-recommendations {
-        grid-template-columns: 1fr;
-    }
-    
-    .age-display {
-        flex-direction: column;
+    .metric-card {
+        margin-bottom: 1rem;
     }
 }
 
 /* ============ 打印样式 ============ */
 @media print {
-    .report-nav {
-        display: none;
+    .nav-sidebar,
+    .nav-toggle,
+    .fab {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
     }
     
     .report-section {
         page-break-inside: avoid;
         box-shadow: none;
-        border: 1px solid #ddd;
-    }
-    
-    body {
-        background: white;
+        border: 1px solid var(--border-color);
     }
 }
