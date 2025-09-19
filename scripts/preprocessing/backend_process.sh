@@ -12,6 +12,7 @@
 THREADS=4
 PARALLEL_JOBS=1
 SILVA_DB=""  # 不设置默认值，必须用户提供或从环境变量获取
+SKIP_FUNCTIONAL=false # 控制是否跳过功能注释
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # 输出函数
@@ -45,6 +46,7 @@ usage() {
   -t, --threads N     每个样本的线程数 (默认: $THREADS)
   -j, --parallel N    并行处理的样本数 (默认: $PARALLEL_JOBS)
   --skip-taxonomy     跳过物种注释
+  --skip-functional   跳过功能注释（PICRUSt2）  
   -h, --help          显示帮助
 
 输出文件:
@@ -401,6 +403,344 @@ print(f"  处理统计保存到: {output_stats}")
 PYTHON
 }
 
+# 功能注释函数
+run_functional_annotation() {
+    log "Step 4: 执行功能注释（PICRUSt2）"
+    
+    # 检查是否跳过
+    if [ "$SKIP_FUNCTIONAL" = "true" ]; then
+        log "  跳过功能注释（--skip-functional）"
+        return 0
+    fi
+    
+    # 检查PICRUSt2是否安装
+    if ! command -v picrust2_pipeline.py &> /dev/null; then
+        warn "未找到PICRUSt2，跳过功能注释"
+        warn "安装方法: conda install -c bioconda -c conda-forge picrust2"
+        return 0
+    fi
+    
+    # 检查必要文件
+    local merged_table="$OUTPUT_DIR/merged_asv_taxonomy_table.tsv"
+    if [ ! -f "$merged_table" ]; then
+        error_exit "找不到合并的ASV表: $merged_table"
+    fi
+    
+    # 查找代表序列文件
+    log "  准备输入文件..."
+    local rep_seqs_file=""
+    local temp_dir="$OUTPUT_DIR/functional_temp"
+    mkdir -p "$temp_dir"
+    
+    # 合并所有样本的代表序列
+    local combined_seqs="$temp_dir/combined_rep_seqs.fasta"
+    > "$combined_seqs"  # 清空文件
+    
+    local seq_count=0
+    for sample_dir in "$OUTPUT_DIR"/single_samples/*/; do
+        sample_name=$(basename "$sample_dir")
+        rep_seq_qza="$sample_dir/rep_seqs.qza"
+        
+        if [ -f "$rep_seq_qza" ]; then
+            log "    处理样本: $sample_name"
+            # 导出序列
+            temp_export="$temp_dir/export_$sample_name"
+            mkdir -p "$temp_export"
+            
+            qiime tools export \
+                --input-path "$rep_seq_qza" \
+                --output-path "$temp_export" \
+                2>/dev/null
+            
+            if [ -f "$temp_export/dna-sequences.fasta" ]; then
+                cat "$temp_export/dna-sequences.fasta" >> "$combined_seqs"
+                seq_count=$((seq_count + 1))
+            fi
+            
+            rm -rf "$temp_export"
+        fi
+    done
+    
+    if [ $seq_count -eq 0 ]; then
+        warn "未找到任何代表序列文件，跳过功能注释"
+        rm -rf "$temp_dir"
+        return 0
+    fi
+    
+    log "  合并了 $seq_count 个样本的序列"
+    
+    # 去除重复序列
+    log "  去除重复序列..."
+    local unique_seqs="$temp_dir/unique_rep_seqs.fasta"
+
+    # 使用Python去重，但减少输出
+    unique_count=$(python3 << PYTHON 2>/dev/null
+from collections import OrderedDict
+
+sequences = OrderedDict()
+current_id = None
+current_seq = []
+
+with open('$combined_seqs', 'r') as f:
+    for line in f:
+        line = line.strip()
+        if line.startswith('>'):
+            if current_id and current_seq:
+                seq = ''.join(current_seq)
+                if seq not in sequences.values():
+                    sequences[current_id] = seq
+            current_id = line
+            current_seq = []
+        else:
+            current_seq.append(line)
+    
+    if current_id and current_seq:
+        seq = ''.join(current_seq)
+        if seq not in sequences.values():
+            sequences[current_id] = seq
+
+with open('$unique_seqs', 'w') as f:
+    for seq_id, seq in sequences.items():
+        f.write(f"{seq_id}\\n{seq}\\n")
+
+print(len(sequences))
+PYTHON
+)
+
+    log "    保留 $unique_count 条唯一序列"
+
+    # 准备PICRUSt2输入的特征表
+    log "  准备特征表..."
+    local feature_table="$temp_dir/feature_table.tsv"
+
+    # 简化输出
+    table_info=$(python3 << PYTHON 2>/dev/null
+import pandas as pd
+import sys
+
+df = pd.read_csv('$merged_table', sep='\t', index_col=0)
+
+sample_cols = []
+for col in df.columns:
+    if col not in ['Taxon', 'Confidence', 'Kingdom', 'Phylum', 'Class', 'Order', 'Family', 'Genus', 'Species', 'sequence']:
+        try:
+            pd.to_numeric(df[col])
+            sample_cols.append(col)
+        except:
+            pass
+
+if not sample_cols:
+    print("ERROR:0:0")
+    sys.exit(1)
+
+feature_df = df[sample_cols].copy()
+feature_df.index.name = '#OTU ID'
+feature_df = feature_df.fillna(0).astype(int)
+
+# 可选：过滤低丰度ASV（提高速度，减少噪音）
+# 您可以根据需要调整或注释掉这部分
+min_count = 10  # 至少在所有样本中总共有10个reads
+min_samples = 1  # 至少在1个样本中出现
+feature_df = feature_df[(feature_df.sum(axis=1) >= min_count) & ((feature_df > 0).sum(axis=1) >= min_samples)]
+
+feature_df.to_csv('$feature_table', sep='\t')
+
+print(f"OK:{len(feature_df)}:{len(sample_cols)}")
+PYTHON
+)
+
+    if [[ "$table_info" == "ERROR"* ]]; then
+        error_exit "未找到样本数据列"
+    fi
+
+    IFS=':' read -r status asv_count sample_count <<< "$table_info"
+    log "    特征表: ${asv_count} 个ASVs, ${sample_count} 个样本"
+
+    # 运行PICRUSt2
+    log "  运行PICRUSt2功能预测..."
+    local picrust2_output="$OUTPUT_DIR/functional_prediction"
+
+    # 设置线程数（使用全局THREADS变量）
+    local picrust2_threads=$THREADS
+
+    # PICRUSt2命令 - 将详细输出重定向到日志文件
+    local picrust2_log="$OUTPUT_DIR/logs/picrust2_$(date +%Y%m%d_%H%M%S).log"
+
+    log "  开始功能预测（详细日志: $picrust2_log）"
+
+    picrust2_pipeline.py \
+        -s "$unique_seqs" \
+        -i "$feature_table" \
+        -o "$picrust2_output" \
+        -p $picrust2_threads \
+        --stratified \
+        --verbose > "$picrust2_log" 2>&1
+
+    if [ $? -eq 0 ]; then
+        log "  ✓ PICRUSt2运行成功"
+        
+        # 从日志中提取关键信息
+        if [ -f "$picrust2_log" ]; then
+            # 提取运行时间
+            runtime=$(grep "Completed PICRUSt2 pipeline" "$picrust2_log" | sed 's/.*in \([0-9.]*\) seconds.*/\1/')
+            if [ -n "$runtime" ]; then
+                log "    运行时间: ${runtime}秒"
+            fi
+            
+            # 提取NSTI过滤信息
+            nsti_filter=$(grep "ASVs were above the max NSTI" "$picrust2_log" | head -1)
+            if [ -n "$nsti_filter" ]; then
+                log "    $nsti_filter"
+            fi
+        fi
+        
+        # 整理输出文件
+        log "  整理功能注释结果..."
+        
+        # 合并功能注释到一个表
+       python3 << PYTHON
+import pandas as pd
+import json
+from pathlib import Path
+import gzip
+
+output_dir = Path('$picrust2_output')
+merged_output = Path('$OUTPUT_DIR')
+
+results = {}
+
+# 读取KO预测（主要输出）
+ko_file = output_dir / 'KO_metagenome_out' / 'pred_metagenome_unstrat.tsv.gz'
+if ko_file.exists():
+    with gzip.open(ko_file, 'rt') as f:
+        ko_df = pd.read_csv(f, sep='\t', index_col=0)
+    results['KO'] = ko_df
+    print(f"  读取KO预测: {len(ko_df)} 个KO，{len(ko_df.columns)} 个样本")
+
+# 读取EC预测
+ec_file = output_dir / 'EC_metagenome_out' / 'pred_metagenome_unstrat.tsv.gz'
+if ec_file.exists():
+    with gzip.open(ec_file, 'rt') as f:
+        ec_df = pd.read_csv(f, sep='\t', index_col=0)
+    results['EC'] = ec_df
+    print(f"  读取EC预测: {len(ec_df)} 个EC，{len(ec_df.columns)} 个样本")
+
+# 读取通路预测
+pathway_file = output_dir / 'pathways_out' / 'path_abun_unstrat.tsv.gz'
+if pathway_file.exists():
+    with gzip.open(pathway_file, 'rt') as f:
+        pathway_df = pd.read_csv(f, sep='\t', index_col=0)
+    results['Pathway'] = pathway_df
+    print(f"  读取通路预测: {len(pathway_df)} 条通路，{len(pathway_df.columns)} 个样本")
+
+# 读取NSTI值（预测可靠性）
+nsti_file = output_dir / 'KO_metagenome_out' / 'weighted_nsti.tsv.gz'
+if nsti_file.exists():
+    with gzip.open(nsti_file, 'rt') as f:
+        nsti_df = pd.read_csv(f, sep='\t', index_col=0)
+    print(f"  NSTI值（预测可靠性）:")
+    for sample in nsti_df.columns:
+        print(f"    {sample}: {nsti_df[sample].iloc[0]:.3f}")
+
+if 'KO' in results:
+    # 保存KO表为主要功能注释
+    ko_df = results['KO']
+    ko_df.index.name = 'KO_id'
+    ko_df.to_csv(merged_output / 'merged_functional_annotation.tsv', sep='\t')
+    print(f"  功能注释表保存到: merged_functional_annotation.tsv")
+    
+    # 保存统计信息
+    stats = {
+        'total_kos': len(ko_df),
+        'total_samples': len(ko_df.columns),
+        'mean_kos_per_sample': float((ko_df > 0).sum(axis=0).mean()),
+        'total_abundance': float(ko_df.sum().sum()),
+        'samples': list(ko_df.columns)
+    }
+    
+    if 'EC' in results:
+        stats['total_ecs'] = len(results['EC'])
+        # 保存EC表作为补充
+        ec_df = results['EC']
+        ec_df.index.name = 'EC_id'
+        ec_df.to_csv(merged_output / 'functional_ec_annotation.tsv', sep='\t')
+        print(f"  EC注释表保存到: functional_ec_annotation.tsv")
+    
+    if 'Pathway' in results:
+        stats['total_pathways'] = len(results['Pathway'])
+        # 保存通路表作为补充
+        pathway_df = results['Pathway']
+        pathway_df.index.name = 'Pathway'
+        pathway_df.to_csv(merged_output / 'functional_pathway_annotation.tsv', sep='\t')
+        print(f"  通路注释表保存到: functional_pathway_annotation.tsv")
+    
+    with open(merged_output / 'functional_annotation_stats.json', 'w') as f:
+        json.dump(stats, f, indent=2)
+    
+    print("  功能注释统计：")
+    print(f"    - KO总数: {stats['total_kos']}")
+    print(f"    - 样本数: {stats['total_samples']}")
+    print(f"    - 每样本平均KO数: {stats['mean_kos_per_sample']:.1f}")
+    
+    # 生成功能摘要（关键功能的丰度）
+    print("  生成功能摘要...")
+    
+    # 定义关键KO
+    key_kos = {
+        'vitamin_B1': ['K00949', 'K00941', 'K00788', 'K00946', 'K22959'],
+        'vitamin_B2': ['K00793', 'K00794', 'K11753', 'K00861', 'K21063'], 
+        'vitamin_B6': ['K00831', 'K03474', 'K00097', 'K00868', 'K08681'],
+        'vitamin_B9': ['K00287', 'K11754', 'K01495', 'K00790', 'K01930'],
+        'vitamin_B12': ['K00798', 'K02232', 'K02225', 'K02227', 'K13542'],
+        'vitamin_K': ['K02552', 'K02551', 'K01661', 'K12073', 'K02548'],
+        'butyrate': ['K00248', 'K00239', 'K01034', 'K01035', 'K00929'],
+        'propionate': ['K00932', 'K01026', 'K00925', 'K01720', 'K01908'],
+        'acetate': ['K00625', 'K13788', 'K00925', 'K01512', 'K01895']
+    }
+    
+    summary = {}
+    for sample in ko_df.columns:
+        sample_summary = {}
+        for function, kos in key_kos.items():
+            # 计算该功能相关KO的总丰度
+            present_kos = [ko for ko in kos if ko in ko_df.index]
+            if present_kos:
+                abundance = ko_df.loc[present_kos, sample].sum()
+                sample_summary[function] = float(abundance)
+            else:
+                sample_summary[function] = 0.0
+        summary[sample] = sample_summary
+    
+    with open(merged_output / 'functional_summary.json', 'w') as f:
+        json.dump(summary, f, indent=2)
+    
+    print("  ✓ 功能摘要已生成")
+    
+    # 打印第一个样本的示例
+    if ko_df.columns.size > 0:
+        first_sample = ko_df.columns[0]
+        print(f"  示例 - {first_sample}的关键功能:")
+        for func, value in summary[first_sample].items():
+            if value > 0:
+                print(f"    {func}: {value:.0f}")
+
+else:
+    print("  错误：未找到KO预测结果文件")
+    print(f"  预期文件: {ko_file}")
+PYTHON
+        
+        
+    else
+        warn "PICRUSt2运行失败，功能注释未完成"
+    fi
+    
+    # 清理临时文件
+    log "  清理临时文件..."
+    rm -rf "$temp_dir"
+    
+    log "  ✓ 功能注释步骤完成"
+}
+
 # 并行处理
 run_parallel_processing() {
     local sample_list="$1"
@@ -565,14 +905,23 @@ main() {
     # Step 3: 合并结果
     log "Step 3: 合并所有样本结果"
     merge_asv_tables
+
+    # Step 4: 功能注释
+    run_functional_annotation
     
     log "========================================="
     log "后端处理完成!"
     log "输出文件:"
     log "  - 合并表: $OUTPUT_DIR/merged_asv_taxonomy_table.tsv"
+    if [ -f "$OUTPUT_DIR/merged_functional_annotation.tsv" ]; then
+        log "  - 功能注释: $OUTPUT_DIR/merged_functional_annotation.tsv"
+        log "  - 功能摘要: $OUTPUT_DIR/functional_summary.json"
+    fi
     log "  - 样本列表: $OUTPUT_DIR/sample_list.txt"
     log "  - 处理统计: $OUTPUT_DIR/processing_stats.json"
-    log "========================================="
+    log "========================================="  
+
+
     
     # 清理临时目录
     if [ -d "$OUTPUT_DIR/tmp" ]; then
