@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>肠道微生物检测报告 - Cd_1</title>
+    
+    <!-- 外部资源 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 自定义样式 -->
+    <style>
+/* ============ 变量定义 ============ */
+:root {
+    --primary-color: #2E7D32;
+    --secondary-color: #66BB6A;
+    --accent-color: #FFC107;
+    --danger-color: #F44336;
+    --warning-color: #FF9800;
+    --info-color: #2196F3;
+    --success-color: #4CAF50;
+    --text-primary: #212121;
+    --text-secondary: #757575;
+    --bg-light: #F5F5F5;
+    --bg-section: #FFFFFF;
+    --border-color: #E0E0E0;
+}
+
+/* ============ 基础样式 ============ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #F5F7FA 0%, #C3CFE2 100%);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* ============ 头部样式 ============ */
+.header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 3rem 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 60%;
+    height: 200%;
+    background: rgba(255,255,255,0.05);
+    transform: rotate(45deg);
+}
+
+.header-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.header-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.95;
+}
+
+/* ============ 导航侧边栏 ============ */
+.nav-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 260px;
+    background: white;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.nav-sidebar.active {
+    transform: translateX(0);
+}
+
+.nav-toggle {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    z-index: 1001;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.nav-toggle:hover {
+    background: var(--secondary-color);
+    transform: scale(1.1);
+}
+
+.nav-sidebar-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.nav-item {
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.nav-item:hover {
+    background: var(--bg-light);
+    border-left-color: var(--primary-color);
+}
+
+.nav-item.active {
+    background: #E8F5E9;
+    border-left-color: var(--primary-color);
+    font-weight: 600;
+}
+
+.nav-item i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+    color: var(--primary-color);
+}
+
+/* ============ 主内容区 ============ */
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    transition: margin-left 0.3s ease;
+}
+
+.main-content.nav-active {
+    margin-left: 260px;
+}
+
+/* ============ 报告区块 ============ */
+.report-section {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.report-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+.section-title {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid var(--primary-color);
+    display: flex;
+    align-items: center;
+}
+
+.section-title i {
+    margin-right: 10px;
+    font-size: 1.5rem;
+}
+
+/* ============ 信息卡片 ============ */
+.info-card {
+    border-radius: 10px;
+    padding: 1.5rem;
+    color: white;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.info-card:hover {
+    transform: scale(1.02);
+}
+
+.gradient-purple {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.gradient-pink {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.gradient-blue {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.gradient-green {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.gradient-orange {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.info-card-title {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+}
+
+.info-card-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+/* ============ 评分显示 ============ */
+.score-container {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.score-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.score-value {
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+}
+
+.score-label {
+    font-size: 0.9rem;
+    color: white;
+    opacity: 0.9;
+}
+
+.score-good {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.score-warning {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.score-danger {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.score-status {
+    margin-top: 1rem;
+}
+
+/* ============ 状态徽章 ============ */
+.status-badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-normal {
+    background: #E8F5E9;
+    color: var(--success-color);
+}
+
+.status-warning {
+    background: #FFF3E0;
+    color: var(--warning-color);
+}
+
+.status-danger {
+    background: #FFEBEE;
+    color: var(--danger-color);
+}
+
+.status-info {
+    background: #E3F2FD;
+    color: var(--info-color);
+}
+
+/* ============ 指标卡片 ============ */
+.metric-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    border: 2px solid var(--border-color);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.2);
+}
+
+.metric-icon {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.metric-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* ============ 细菌卡片 ============ */
+.bacteria-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--primary-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.bacteria-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateX(5px);
+}
+
+.bacteria-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.bacteria-latin {
+    color: var(--text-secondary);
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.bacteria-description {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    line-height: 1.4;
+}
+
+/* ============ 图表容器 ============ */
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin: 2rem 0;
+}
+
+.chart-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+/* ============ 进度条 ============ */
+.progress-container {
+    margin: 1rem 0;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.progress {
+    height: 25px;
+    border-radius: 12px;
+    background: var(--bg-light);
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    transition: width 1s ease;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
+/* ============ 推荐卡片 ============ */
+.recommendation-card {
+    background: #F0F7FF;
+    border-left: 4px solid var(--info-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+.recommendation-title {
+    color: var(--info-color);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.recommendation-title i {
+    margin-right: 10px;
+}
+
+/* ============ 免疫力显示 ============ */
+.immunity-display {
+    text-align: center;
+    padding: 2rem;
+}
+
+.immunity-score-circle {
+    display: inline-block;
+    padding: 2rem;
+    border-radius: 10px;
+    background: rgba(76, 175, 80, 0.1);
+}
+
+/* ============ 浮动按钮 ============ */
+.fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+.fab:hover {
+    background: var(--secondary-color);
+    transform: scale(1.1);
+}
+
+/* ============ 表格样式 ============ */
+.table {
+    margin-top: 1rem;
+}
+
+.table thead {
+    background: var(--primary-color);
+    color: white;
+}
+
+.table thead th {
+    border: none;
+    padding: 1rem;
+}
+
+.table tbody tr:hover {
+    background: var(--bg-light);
+}
+
+/* ============ 响应式设计 ============ */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .main-content {
+        padding: 1rem;
+    }
+    
+    .main-content.nav-active {
+        margin-left: 0;
+    }
+    
+    .nav-sidebar {
+        width: 100%;
+    }
+    
+    .metric-card {
+        margin-bottom: 1rem;
+    }
+}
+/* 附录部分的额外样式 */
+#appendix .accordion-button {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+#appendix .accordion-button:not(.collapsed) {
+    background-color: #e7f1ff;
+    color: #0c63e4;
+}
+
+#appendix .table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+#appendix .card {
+    border: 1px solid #dee2e6;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+#appendix .card-header {
+    font-weight: 600;
+}
+
+#appendix .alert {
+    border-left: 4px solid #ffc107;
+}
+
+/* 滚动条样式 */
+#appendix .card-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+#appendix .card-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#appendix .card-body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+#appendix .card-body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* ============ 打印样式 ============ */
+@media print {
+    .nav-sidebar,
+    .nav-toggle,
+    .fab {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+    }
+    
+    .report-section {
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid var(--border-color);
+    }
+}
+
+</style>
+</head>
+<body>
+    <!-- 导航切换按钮 -->
+    <button class="nav-toggle" onclick="toggleNav()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- 侧边导航栏 -->
+    <nav class="nav-sidebar" id="navSidebar">
+        <div class="nav-sidebar-header">
+            <i class="fas fa-dna"></i> 检测报告导航
+        </div>
+        <div class="nav-item active" onclick="scrollToSection('basic-info')">
+            <i class="fas fa-user"></i> 基本信息
+        </div>
+        <div class="nav-item" onclick="scrollToSection('overview')">
+            <i class="fas fa-chart-pie"></i> 菌群得分总览
+        </div>
+        <div class="nav-item" onclick="scrollToSection('diversity')">
+            <i class="fas fa-project-diagram"></i> 菌群多样性
+        </div>
+        <div class="nav-item" onclick="scrollToSection('bacteria-analysis')">
+            <i class="fas fa-microscope"></i> 细菌分析
+        </div>
+        <div class="nav-item" onclick="scrollToSection('nutrition')">
+            <i class="fas fa-apple-alt"></i> 营养代谢
+        </div>
+        <div class="nav-item" onclick="scrollToSection('disease-risk')">
+            <i class="fas fa-heartbeat"></i> 疾病风险
+        </div>
+        <div class="nav-item" onclick="scrollToSection('immunity')">
+            <i class="fas fa-shield-alt"></i> 免疫力评估
+        </div>
+        <div class="nav-item" onclick="scrollToSection('recommendations')">
+            <i class="fas fa-clipboard-list"></i> 饮食建议
+        </div>
+    </nav>
+
+    <!-- 头部 -->
+    <header class="header">
+        <div class="container header-content">
+            <h1><i class="fas fa-dna"></i> 16S肠道微生物检测报告</h1>
+            <p class="header-subtitle">专业的肠道菌群健康分析与个性化健康管理方案</p>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main-content" id="mainContent">
+        <!-- 基本信息 -->
+        <section class="report-section" id="basic-info">
+            <h2 class="section-title">
+                <i class="fas fa-user-circle"></i> 基本信息
+            </h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="info-card gradient-purple">
+                        <div class="info-card-title">样本编号</div>
+                        <div class="info-card-value">Cd_1</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card gradient-pink">
+                        <div class="info-card-title">检测日期</div>
+                        <div class="info-card-value">2025-09-19</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card gradient-blue">
+                        <div class="info-card-title">样本类型</div>
+                        <div class="info-card-value">粪便</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 菌群得分总览 -->
+        <section class="report-section" id="overview">
+            <h2 class="section-title">
+                <i class="fas fa-chart-pie"></i> 菌群得分总览
+            </h2>
+            <div class="score-container">
+                <div class="score-circle" id="overallScoreCircle">
+                    <div class="score-value">60.0</div>
+                    <div class="score-label">综合得分</div>
+                </div>
+                <div class="score-status">
+                    <span class="status-badge" id="overallGrade">C (亚健康)</span>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-smile"></i></div>
+                        <div class="metric-value">0.0</div>
+                        <div class="metric-label">有益菌评分</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="metric-value">100</div>
+                        <div class="metric-label">有害菌控制</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-balance-scale"></i></div>
+                        <div class="metric-value">6.38</div>
+                        <div class="metric-label">多样性指数</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 菌群多样性 -->
+        <section class="report-section" id="diversity">
+            <h2 class="section-title">
+                <i class="fas fa-project-diagram"></i> 菌群多样性
+            </h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>α多样性指标</h4>
+                    <div id="diversityMetrics"></div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <canvas id="diversityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 细菌分析 -->
+        <section class="report-section" id="bacteria-analysis">
+            <h2 class="section-title">
+                <i class="fas fa-microscope"></i> 细菌分析
+            </h2>
+            
+            <h4>有益菌评估</h4>
+            <div class="row" id="beneficialBacteriaCards"></div>
+            
+            <h4 class="mt-4">有害菌监测</h4>
+            <div class="table-responsive">
+                <table class="table table-striped" id="harmfulBacteriaTable">
+                    <thead>
+                        <tr>
+                            <th>细菌名称</th>
+                            <th>检出丰度</th>
+                            <th>参考范围</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 营养代谢 -->
+        <section class="report-section" id="nutrition">
+            <h2 class="section-title">
+                <i class="fas fa-apple-alt"></i> 营养代谢
+            </h2>
+            
+            <h4>维生素合成能力</h4>
+            <div class="row" id="vitaminSynthesis"></div>
+            
+            <h4 class="mt-4">短链脂肪酸产生</h4>
+            <div class="row" id="scfaProduction"></div>
+            
+            <h4 class="mt-4">主要代谢通路</h4>
+            <div class="table-responsive">
+                <table class="table table-striped" id="pathwaysTable">
+                    <thead>
+                        <tr>
+                            <th>通路名称</th>
+                            <th>类别</th>
+                            <th>丰度</th>
+                            <th>重要性</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 疾病风险 -->
+        <section class="report-section" id="disease-risk">
+            <h2 class="section-title">
+                <i class="fas fa-heartbeat"></i> 疾病风险评估
+            </h2>
+            <div class="row" id="diseaseRiskCards"></div>
+        </section>
+
+        <!-- 免疫力评估 -->
+        <section class="report-section" id="immunity">
+            <h2 class="section-title">
+                <i class="fas fa-shield-alt"></i> 免疫力评估
+            </h2>
+            <div class="immunity-display">
+                <div class="immunity-score-circle">
+                    <i class="fas fa-shield-alt fa-3x"></i>
+                    <h3 id="immunityScore">--</h3>
+                    <p id="immunityLevel">评估中</p>
+                </div>
+            </div>
+            <div id="immunityFactors"></div>
+        </section>
+
+        <!-- 饮食建议 -->
+        <section class="report-section" id="recommendations">
+            <h2 class="section-title">
+                <i class="fas fa-clipboard-list"></i> 个性化饮食建议
+            </h2>
+            <div class="row" id="dietRecommendations"></div>
+            
+            <div class="lifestyle-recommendations mt-4">
+                <h5>生活方式建议</h5>
+                <div id="lifestyleAdvice"></div>
+            </div>
+        </section>
+
+        <!-- 附录部分 - 添加到其他section后面，footer之前 -->
+<section class="report-section" id="appendix">
+    <h2 class="section-title">
+        <i class="fas fa-book"></i> 附录
+    </h2>
+    
+    <!-- 检测方法说明 -->
+    <div class="mb-4">
+        <h4 class="mb-3">一、检测方法说明</h4>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">16S rRNA 基因测序技术</h5>
+                <p class="card-text">
+                    本检测采用高通量16S rRNA基因测序技术，通过对肠道微生物中16S rRNA基因的V3-V4区进行扩增和测序，
+                    能够准确识别和定量分析肠道中的细菌组成。该技术具有高精度、高通量、成本效益高等特点。
+                </p>
+                <ul>
+                    <li><strong>测序平台：</strong>Illumina MiSeq/NovaSeq</li>
+                    <li><strong>测序深度：</strong>≥30,000 reads/样本</li>
+                    <li><strong>质量控制：</strong>Q30 ≥ 80%</li>
+                    <li><strong>数据库：</strong>SILVA 138、Greengenes2</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 指标说明 -->
+    <div class="mb-4">
+        <h4 class="mb-3">二、主要指标说明</h4>
+        <div class="accordion" id="indicatorAccordion">
+            <!-- 多样性指标 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingDiversity">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDiversity">
+                        <strong>多样性指标</strong>
+                    </button>
+                </h2>
+                <div id="collapseDiversity" class="accordion-collapse collapse show" data-bs-parent="#indicatorAccordion">
+                    <div class="accordion-body">
+                        <ul>
+                            <li><strong>Shannon指数：</strong>综合考虑物种丰富度和均匀度，值越高表示多样性越高。正常范围：2.5-4.5</li>
+                            <li><strong>Simpson指数：</strong>反映优势物种的集中程度，值越接近1表示多样性越高。正常范围：0.9-0.99</li>
+                            <li><strong>Chao1指数：</strong>估算物种总数，值越高表示物种越丰富。正常范围：200-800</li>
+                            <li><strong>观察到的ASVs：</strong>实际检测到的不同微生物序列数量</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- B/F比值 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingBF">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBF">
+                        <strong>B/F比值（拟杆菌门/厚壁菌门）</strong>
+                    </button>
+                </h2>
+                <div id="collapseBF" class="accordion-collapse collapse" data-bs-parent="#indicatorAccordion">
+                    <div class="accordion-body">
+                        <p>B/F比值是评估肠道菌群平衡的重要指标：</p>
+                        <ul>
+                            <li><strong>正常范围：</strong>0.84-4.94</li>
+                            <li><strong>偏低（&lt;0.84）：</strong>可能与肥胖、代谢综合征相关</li>
+                            <li><strong>偏高（&gt;4.94）：</strong>可能与营养不良、炎症性肠病相关</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 肠型分类 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingEnterotype">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEnterotype">
+                        <strong>肠型分类</strong>
+                    </button>
+                </h2>
+                <div id="collapseEnterotype" class="accordion-collapse collapse" data-bs-parent="#indicatorAccordion">
+                    <div class="accordion-body">
+                        <p>基于优势菌群，人类肠道微生物可分为三种肠型：</p>
+                        <ul>
+                            <li><strong>肠型I（拟杆菌型）：</strong>以拟杆菌属为主，常见于高蛋白、高脂肪饮食者</li>
+                            <li><strong>肠型II（普氏菌型）：</strong>以普氏菌属为主，常见于高碳水化合物、高纤维饮食者</li>
+                            <li><strong>肠型III（瘤胃球菌型）：</strong>以瘤胃球菌属为主，介于前两者之间</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 参考范围表 -->
+    <div class="mb-4">
+        <h4 class="mb-3">三、核心菌群参考范围</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>菌属名称</th>
+                        <th>中文名</th>
+                        <th>参考范围 (%)</th>
+                        <th>临床意义</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 有益菌 -->
+                    <tr class="table-success">
+                        <td colspan="4" class="text-center"><strong>核心有益菌</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Bifidobacterium</td>
+                        <td>双歧杆菌属</td>
+                        <td>0.18-14.6</td>
+                        <td>增强免疫、合成维生素、改善便秘</td>
+                    </tr>
+                    <tr>
+                        <td>Lactobacillus</td>
+                        <td>乳杆菌属</td>
+                        <td>0.008-0.03</td>
+                        <td>维持肠道pH、抑制有害菌</td>
+                    </tr>
+                    <tr>
+                        <td>Faecalibacterium</td>
+                        <td>普拉梭菌属</td>
+                        <td>0.64-10.97</td>
+                        <td>产生丁酸、抗炎、维持肠道屏障</td>
+                    </tr>
+                    <tr>
+                        <td>Akkermansia</td>
+                        <td>嗜黏蛋白阿克曼氏菌</td>
+                        <td>0.01-3.89</td>
+                        <td>改善代谢、控制体重</td>
+                    </tr>
+                    <tr>
+                        <td>Roseburia</td>
+                        <td>罗氏菌属</td>
+                        <td>0.1-5.0</td>
+                        <td>产生丁酸、改善肠道健康</td>
+                    </tr>
+                    
+                    <!-- 条件致病菌 -->
+                    <tr class="table-warning">
+                        <td colspan="4" class="text-center"><strong>条件致病菌（阈值）</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Escherichia</td>
+                        <td>埃希氏菌属</td>
+                        <td>&lt; 0.5</td>
+                        <td>过高可能引起肠道感染</td>
+                    </tr>
+                    <tr>
+                        <td>Streptococcus</td>
+                        <td>链球菌属</td>
+                        <td>&lt; 2.0</td>
+                        <td>过高可能引起炎症</td>
+                    </tr>
+                    <tr>
+                        <td>Klebsiella</td>
+                        <td>克雷伯氏菌属</td>
+                        <td>&lt; 0.11</td>
+                        <td>过高可能引起感染</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- 疾病关联说明 -->
+    <div class="mb-4">
+        <h4 class="mb-3">四、疾病风险评估说明</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-danger text-white">
+                        高风险（70-100分）
+                    </div>
+                    <div class="card-body">
+                        <p>菌群失衡程度严重，与该疾病相关的风险菌显著升高或保护菌显著降低。建议：</p>
+                        <ul>
+                            <li>及时就医进行详细检查</li>
+                            <li>调整饮食结构</li>
+                            <li>考虑益生菌干预</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-warning">
+                        中风险（40-70分）
+                    </div>
+                    <div class="card-body">
+                        <p>菌群存在一定程度失衡，需要关注。建议：</p>
+                        <ul>
+                            <li>定期监测菌群变化</li>
+                            <li>增加膳食纤维摄入</li>
+                            <li>保持健康生活方式</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 功能预测说明 -->
+    <div class="mb-4">
+        <h4 class="mb-3">五、功能预测分析</h4>
+        <div class="card">
+            <div class="card-body">
+                <h5>基于PICRUSt2的代谢功能预测</h5>
+                <p>通过16S序列预测微生物群落的功能潜力：</p>
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>维生素合成</h6>
+                        <ul>
+                            <li>维生素B族（B1, B2, B6, B9, B12）</li>
+                            <li>维生素K</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>短链脂肪酸产生</h6>
+                        <ul>
+                            <li>乙酸</li>
+                            <li>丙酸</li>
+                            <li>丁酸</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>代谢通路</h6>
+                        <ul>
+                            <li>碳水化合物代谢</li>
+                            <li>氨基酸代谢</li>
+                            <li>脂质代谢</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 参考文献 -->
+    <div class="mb-4">
+        <h4 class="mb-3">六、参考文献</h4>
+        <div class="card">
+            <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+                <ol style="font-size: 0.9rem;">
+                    <li>Arumugam M, et al. Enterotypes of the human gut microbiome. Nature. 2011;473(7346):174-180.</li>
+                    <li>Human Microbiome Project Consortium. Structure, function and diversity of the healthy human microbiome. Nature. 2012;486(7402):207-214.</li>
+                    <li>Qin J, et al. A human gut microbial gene catalogue established by metagenomic sequencing. Nature. 2010;464(7285):59-65.</li>
+                    <li>Le Chatelier E, et al. Richness of human gut microbiome correlates with metabolic markers. Nature. 2013;500(7464):541-546.</li>
+                    <li>Falony G, et al. Population-level analysis of gut microbiome variation. Science. 2016;352(6285):560-564.</li>
+                    <li>Zhernakova A, et al. Population-based metagenomics analysis reveals markers for gut microbiome composition and diversity. Science. 2016;352(6285):565-569.</li>
+                    <li>Rothschild D, et al. Environment dominates over host genetics in shaping human gut microbiota. Nature. 2018;555(7695):210-215.</li>
+                    <li>Galkin F, et al. Human Gut Microbiome Aging Clock Based on Taxonomic Profiling and Deep Learning. iScience. 2020;23(6):101199.</li>
+                    <li>Chen Y, et al. Human gut microbiome aging clocks based on taxonomic and functional signatures through multi-view learning. Gut Microbes. 2022;14(1):2025016.</li>
+                    <li>Douglas GM, et al. PICRUSt2 for prediction of metagenome functions. Nat Biotechnol. 2020;38(6):685-688.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 免责声明 -->
+    <div class="mb-4">
+        <h4 class="mb-3">七、免责声明</h4>
+        <div class="alert alert-warning">
+            <h5 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> 重要提示</h5>
+            <p>
+                1. 本检测报告基于16S rRNA基因测序技术分析，仅供健康管理参考，不能作为临床诊断依据。<br>
+                2. 肠道微生物组成受多种因素影响，包括饮食、药物、生活方式等，检测结果反映采样时的状态。<br>
+                3. 如有健康问题，请及时咨询专业医生，不要仅凭此报告自行用药或改变治疗方案。<br>
+                4. 本报告的解释权归检测机构所有。
+            </p>
+        </div>
+    </div>
+    
+    <!-- 联系信息 -->
+    <div class="mb-4">
+        <h4 class="mb-3">八、联系我们</h4>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>技术支持</h6>
+                        <p>
+                            <i class="fas fa-envelope"></i> support@microbiome-lab.com<br>
+                            <i class="fas fa-phone"></i> 400-XXX-XXXX<br>
+                            <i class="fas fa-clock"></i> 周一至周五 9:00-18:00
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>报告解读咨询</h6>
+                        <p>
+                            <i class="fas fa-user-md"></i> 专业营养师/医生在线咨询<br>
+                            <i class="fas fa-calendar"></i> 需提前预约<br>
+                            <i class="fas fa-globe"></i> www.microbiome-lab.com
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- 页脚 -->
+        <footer class="report-section">
+            <div class="text-center text-muted">
+                <p>
+                    <i class="fas fa-info-circle"></i> 
+                    本报告基于16S rRNA测序技术，仅供参考。如有健康问题，请咨询专业医生。
+                </p>
+                <p>报告生成日期：2025-09-19</p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- 浮动打印按钮 -->
+    <button class="fab" onclick="window.print()">
+        <i class="fas fa-print"></i>
+    </button>
+
+    <!-- 数据传递 -->
+    <script>
+        // 将Python生成的数据传递给JavaScript
+        const reportData = {"sample_id": "Cd_1", "report_date": "2025-09-19", "basic": {"alpha_diversity": {"shannon": 6.381749762792898, "simpson": 0.9949461190525901, "chao1": 1472.0602409638554, "observed_asvs": 1457, "evenness": 0.8761163724434614, "total_reads": 31256, "status": "偏高"}, "bf_ratio": {"value": null, "status": "无法计算"}, "composition": {}, "basic_stats": {"total_reads": 31256, "total_asvs": 1457, "singleton_asvs": 50, "mean_asv_abundance": 21.452299245024022, "max_asv_abundance": 1091}}, "diversity": {"alpha_diversity": {"shannon": 6.381749762792898, "simpson": 0.9949461190525901, "chao1": 1472.0602409638554, "observed_asvs": 1457, "evenness": 0.8761163724434614, "total_reads": 31256, "status": "偏高"}, "bf_ratio": {"value": null, "status": "无法计算"}, "composition": {}, "basic_stats": {"total_reads": 31256, "total_asvs": 1457, "singleton_asvs": 50, "mean_asv_abundance": 21.452299245024022, "max_asv_abundance": 1091}}, "enterotype": {"error": "缺少属水平分类信息"}, "bacteria": {"beneficial_bacteria": {"bacteria": {"Bifidobacterium": {"abundance": 0, "normal_range": [0.183, 14.6], "status": "偏低", "score": 0.0}, "Lactobacillus": {"abundance": 0, "normal_range": [0.008, 0.03], "status": "偏低", "score": 0.0}, "Faecalibacterium": {"abundance": 0, "normal_range": [0.636, 10.97], "status": "偏低", "score": 0.0}, "Akkermansia": {"abundance": 0, "normal_range": [0.01, 3.89], "status": "偏低", "score": 0.0}, "Prevotella": {"abundance": 0, "normal_range": [0.014, 66.13], "status": "偏低", "score": 0.0}, "Roseburia": {"abundance": 0, "normal_range": [0.1, 5.0], "status": "偏低", "score": 0.0}, "Coprococcus": {"abundance": 0, "normal_range": [0.009, 0.57], "status": "偏低", "score": 0.0}, "Butyricimonas": {"abundance": 0, "normal_range": [0.014, 0.86], "status": "偏低", "score": 0.0}, "Odoribacter": {"abundance": 0, "normal_range": [0.013, 0.61], "status": "偏低", "score": 0.0}, "Alistipes": {"abundance": 0, "normal_range": [0.01, 2.89], "status": "偏低", "score": 0.0}}, "overall_score": 0.0, "evaluation": "较差"}, "harmful_bacteria": {"bacteria": {"Escherichia": {"abundance": 0, "threshold": 0.5, "status": "正常", "penalty": 0}, "Shigella": {"abundance": 0, "threshold": 0.14, "status": "正常", "penalty": 0}, "Salmonella": {"abundance": 0, "threshold": 0.01, "status": "正常", "penalty": 0}, "Clostridium_difficile": {"abundance": 0, "threshold": 0.001, "status": "正常", "penalty": 0}, "Staphylococcus": {"abundance": 0, "threshold": 0.1, "status": "正常", "penalty": 0}, "Klebsiella": {"abundance": 0, "threshold": 0.11, "status": "正常", "penalty": 0}, "Enterococcus": {"abundance": 0, "threshold": 0.5, "status": "正常", "penalty": 0}, "Fusobacterium": {"abundance": 0, "threshold": 0.1, "status": "正常", "penalty": 0}, "Campylobacter": {"abundance": 0, "threshold": 0.01, "status": "正常", "penalty": 0}, "Helicobacter": {"abundance": 0, "threshold": 0.01, "status": "正常", "penalty": 0}}, "harm_score": 100, "risk_level": "低风险"}, "conditional_bacteria": {"bacteria": {"Veillonella": {"abundance": 0, "threshold": 0.22, "status": "正常"}, "Streptococcus": {"abundance": 0, "threshold": 2.0, "status": "正常"}, "Bacteroides": {"abundance": 0, "threshold": 30.0, "status": "正常"}, "Eggerthella": {"abundance": 0, "threshold": 0.1, "status": "正常"}, "Peptostreptococcus": {"abundance": 0, "threshold": 0.1, "status": "正常"}, "Haemophilus": {"abundance": 0, "threshold": 0.5, "status": "正常"}}, "warning_count": 0, "attention_needed": false}, "overall_health": {"score": 60.0, "grade": "C (亚健康)", "components": {"beneficial_contribution": 0.0, "harmful_contribution": 40.0, "conditional_contribution": 20.0}}, "recommendations": [{"category": "益生菌补充", "suggestion": "建议补充含双歧杆菌和乳酸杆菌的益生菌制剂", "foods": ["酸奶", "发酵食品", "泡菜", "味噌"]}]}, "disease": {"disease_risks": {"IBD": {"risk_score": 75.0, "risk_level": "高风险", "color": "red", "beneficial_score": 0, "harmful_score": 0, "key_findings": ["Faecalibacterium偏低 (0.00%)", "Akkermansia偏低 (0.00%)", "Coprococcus偏低 (0.00%)"]}, "IBS": {"risk_score": 60.0, "risk_level": "高风险", "color": "red", "beneficial_score": 0, "harmful_score": 0, "key_findings": ["Bifidobacterium偏低 (0.00%)", "Lactobacillus偏低 (0.00%)", "Faecalibacterium偏低 (0.00%)"]}, "Diabetes": {"risk_score": 65.0, "risk_level": "高风险", "color": "red", "beneficial_score": 0, "harmful_score": 0, "key_findings": ["Prevotella偏低 (0.00%)", "Roseburia偏低 (0.00%)", "Akkermansia偏低 (0.00%)"]}, "Obesity": {"risk_score": 60.0, "risk_level": "高风险", "color": "red", "beneficial_score": 0, "harmful_score": 0, "key_findings": ["Akkermansia偏低 (0.00%)", "Bacteroides偏低 (0.00%)", "Prevotella偏低 (0.00%)"]}, "CRC": {"risk_score": 90.0, "risk_level": "高风险", "color": "red", "beneficial_score": 0, "harmful_score": 0, "key_findings": ["Bifidobacterium偏低 (0.00%)", "Lactobacillus偏低 (0.00%)", "Faecalibacterium偏低 (0.00%)"]}, "Liver": {"risk_score": 70.0, "risk_level": "高风险", "color": "red", "beneficial_score": 0, "harmful_score": 0, "key_findings": ["Ruminococcus偏低 (0.00%)", "Akkermansia偏低 (0.00%)", "Faecalibacterium偏低 (0.00%)"]}, "CVD": {"risk_score": 65.0, "risk_level": "高风险", "color": "red", "beneficial_score": 0, "harmful_score": 0, "key_findings": ["Prevotella偏低 (0.00%)", "Roseburia偏低 (0.00%)", "Faecalibacterium偏低 (0.00%)"]}, "Hypertension": {"risk_score": 55.0, "risk_level": "中风险", "color": "yellow", "beneficial_score": 0, "harmful_score": 0, "key_findings": ["Butyricimonas偏低 (0.00%)", "Akkermansia偏低 (0.00%)", "Faecalibacterium偏低 (0.00%)"]}, "Depression": {"risk_score": 60.0, "risk_level": "高风险", "color": "red", "beneficial_score": 0, "harmful_score": 0, "key_findings": ["Bifidobacterium偏低 (0.00%)", "Lactobacillus偏低 (0.00%)", "Faecalibacterium偏低 (0.00%)"]}, "Alzheimer": {"risk_score": 75.0, "risk_level": "高风险", "color": "red", "beneficial_score": 0, "harmful_score": 0, "key_findings": ["Bifidobacterium偏低 (0.00%)", "Odoribacter偏低 (0.00%)", "Faecalibacterium偏低 (0.00%)"]}, "Constipation": {"risk_score": 50.0, "risk_level": "中风险", "color": "yellow", "beneficial_score": 0, "harmful_score": 0, "key_findings": ["Lactobacillus偏低 (0.00%)", "Bifidobacterium偏低 (0.00%)", "Prevotella偏低 (0.00%)"]}, "Polyps": {"risk_score": 65.0, "risk_level": "高风险", "color": "red", "beneficial_score": 0, "harmful_score": 0, "key_findings": ["Bifidobacterium偏低 (0.00%)", "Lactobacillus偏低 (0.00%)"]}, "Gout": {"risk_score": 55.0, "risk_level": "中风险", "color": "yellow", "beneficial_score": 0, "harmful_score": 0, "key_findings": ["Faecalibacterium偏低 (0.00%)", "Bifidobacterium偏低 (0.00%)", "Roseburia偏低 (0.00%)"]}, "Eczema": {"risk_score": 50.0, "risk_level": "中风险", "color": "yellow", "beneficial_score": 0, "harmful_score": 0, "key_findings": ["Bifidobacterium偏低 (0.00%)", "Lactobacillus偏低 (0.00%)", "Ruminococcus偏低 (0.00%)"]}}, "overall_risk": {"average_risk_score": 63.9, "high_risk_diseases": 10, "health_status": "需关注"}, "prevention_advice": {"IBD": {"diet": "增加膳食纤维，避免辛辣刺激食物", "lifestyle": "规律作息，适度运动，管理压力", "supplements": "益生菌、益生元、Omega-3脂肪酸"}, "IBS": {"diet": "均衡饮食，增加膳食纤维", "lifestyle": "规律作息，适度运动", "supplements": "益生菌、益生元"}, "Diabetes": {"diet": "低糖低脂饮食，增加全谷物摄入", "lifestyle": "规律运动，控制体重", "supplements": "膳食纤维、益生菌"}, "Obesity": {"diet": "均衡饮食，增加膳食纤维", "lifestyle": "规律作息，适度运动", "supplements": "益生菌、益生元"}, "CRC": {"diet": "增加蔬果摄入，减少红肉和加工肉类", "lifestyle": "定期筛查，戒烟限酒", "supplements": "膳食纤维、益生菌、维生素D"}, "Liver": {"diet": "均衡饮食，增加膳食纤维", "lifestyle": "规律作息，适度运动", "supplements": "益生菌、益生元"}, "CVD": {"diet": "低盐低脂饮食，增加蔬果和全谷物", "lifestyle": "规律运动，控制血压和血脂", "supplements": "膳食纤维、Omega-3、辅酶Q10"}, "Hypertension": {"diet": "均衡饮食，增加膳食纤维", "lifestyle": "规律作息，适度运动", "supplements": "益生菌、益生元"}, "Depression": {"diet": "地中海饮食，富含Omega-3的食物", "lifestyle": "规律运动，充足睡眠，社交活动", "supplements": "益生菌、B族维生素、Omega-3"}, "Alzheimer": {"diet": "均衡饮食，增加膳食纤维", "lifestyle": "规律作息，适度运动", "supplements": "益生菌、益生元"}, "Constipation": {"diet": "均衡饮食，增加膳食纤维", "lifestyle": "规律作息，适度运动", "supplements": "益生菌、益生元"}, "Polyps": {"diet": "均衡饮食，增加膳食纤维", "lifestyle": "规律作息，适度运动", "supplements": "益生菌、益生元"}, "Gout": {"diet": "均衡饮食，增加膳食纤维", "lifestyle": "规律作息，适度运动", "supplements": "益生菌、益生元"}, "Eczema": {"diet": "均衡饮食，增加膳食纤维", "lifestyle": "规律作息，适度运动", "supplements": "益生菌、益生元"}}}, "age": {"age_prediction": {"biological_age": 40.0, "baseline_age": 40, "age_adjustment": 0.0, "youth_score": 0.0, "aging_score": 0.0, "marker_details": {"Bifidobacterium": {"abundance": 0, "optimal_range": [5, 15], "status": "偏低", "contribution": -0.0}, "Lactobacillus": {"abundance": 0, "optimal_range": [0.5, 3], "status": "偏低", "contribution": -0.0}, "Prevotella": {"abundance": 0, "optimal_range": [10, 40], "status": "偏低", "contribution": -0.0}, "Faecalibacterium": {"abundance": 0, "optimal_range": [5, 15], "status": "偏低", "contribution": -0.0}, "Akkermansia": {"abundance": 0, "optimal_range": [1, 5], "status": "偏低", "contribution": -0.0}, "Escherichia": {"abundance": 0, "threshold": 1.0, "status": "正常", "contribution": 0.0}, "Enterococcus": {"abundance": 0, "threshold": 0.5, "status": "正常", "contribution": 0.0}, "Streptococcus": {"abundance": 0, "threshold": 2.0, "status": "正常", "contribution": 0.0}, "Clostridium": {"abundance": 0, "threshold": 3.0, "status": "正常", "contribution": 0.0}, "Staphylococcus": {"abundance": 0, "threshold": 0.1, "status": "正常", "contribution": 0.0}, "Klebsiella": {"abundance": 0, "threshold": 0.5, "status": "正常", "contribution": 0.0}}}, "age_status": {"biological_age": 40.0, "status": "中年型", "description": "肠道微生物组呈现中年型特征"}, "aging_rate": {"rate_score": 0.0, "rate_level": "缓慢", "description": "肠道微生物衰老速度较慢，保持良好"}, "rejuvenation_advice": {"dietary": ["增加酸奶、发酵乳制品摄入", "增加泡菜、酸菜等发酵蔬菜", "增加全谷物、豆类摄入", "增加膳食纤维、抗性淀粉", "地中海饮食模式"], "lifestyle": ["管理压力，练习冥想或瑜伽", "保持社交活动"], "supplements": ["补充双歧杆菌益生菌", "补充乳酸菌益生菌", "补充益生元（菊粉、低聚果糖）"]}}, "functional": {"sample_id": "Cd_1", "method": "preprocessed_picrust2", "source": "backend_output/preprocessing", "vitamin_synthesis": {"B1": {"synthesis_potential": 93689.03, "status": "高"}, "B2": {"synthesis_potential": 86790.25, "status": "高"}, "B6": {"synthesis_potential": 73721.23, "status": "高"}, "B9": {"synthesis_potential": 107049.56, "status": "高"}, "B12": {"synthesis_potential": 65298.90000000001, "status": "高"}, "K": {"synthesis_potential": 35767.340000000004, "status": "高"}}, "scfa_production": {"丁酸": {"production_potential": 46750.14, "status": "强"}, "丙酸": {"production_potential": 28927.61, "status": "强"}, "乙酸": {"production_potential": 93260.40000000001, "status": "强"}}, "ko_abundances": {"total_abundance": 41486221.9, "total_kos": 6395, "top_kos": {"K03088": 204561.77, "K01990": 187832.79, "K01992": 167743.78, "K00059": 140706.6, "K06147": 120342.23, "K02004": 119876.03, "K02003": 102900.45, "K02035": 96438.39, "K07090": 91340.87, "K02034": 85446.91, "K02033": 83140.20000000001, "K00626": 81092.0, "K02032": 77390.19, "K03704": 76422.37, "K01952": 75287.63, "K02014": 75158.75, "K02529": 71609.97, "K01897": 70586.65000000001, "K02015": 68420.51, "K08884": 67496.51000000001}}, "pathway_abundances": {"total_pathways": 401, "top_pathways": {"PWY-3781": 90373.74266013298, "PWY-7111": 48542.17417116133, "PWY-5101": 48489.83141472452, "ILEUSYN-PWY": 46719.68008796129, "VALSYN-PWY": 46719.68008796129, "BRANCHED-CHAIN-AA-SYN-PWY": 42417.37151667562, "NONOXIPENT-PWY": 39506.178373389375, "PWY-5973": 39048.83082182102, "PWY-7663": 38163.33956506576, "TCA": 38150.32609325431, "PWY-5103": 37955.90655325218, "PWY-5667": 37877.91816641888, "PWY0-1319": 37877.91816641888, "PHOSLIPSYN-PWY": 37713.60936968194, "PWY-6969": 37693.63784298868, "FASYN-ELONG-PWY": 37503.99908811122, "PWY-7229": 36044.35531278662, "PWY-7208": 35899.59501585236, "PWY4FS-7": 35851.76092513072, "PWY4FS-8": 35851.76092513072}}, "ec_abundances": {"total_ecs": 2065, "top_ecs": {"EC:2.7.7.7": 276034.81, "EC:1.6.5.3": 255931.3, "EC:3.6.4.12": 252222.8, "EC:2.7.13.3": 206741.26, "EC:1.1.1.100": 142258.6, "EC:5.2.1.8": 139664.59000000003, "EC:2.7.11.1": 124251.59, "EC:1.9.3.1": 119587.95, "EC:2.7.7.6": 111656.32, "EC:6.3.5.7": 101675.04, "EC:6.3.5.6": 101500.04, "EC:6.4.1.2": 89905.12, "EC:2.3.1.9": 81092.0, "EC:2.2.1.6": 80004.72, "EC:1.2.4.1": 78889.88, "EC:4.2.99.18": 78483.53, "EC:3.6.3.14": 75423.79000000001, "EC:6.3.5.3": 75287.63, "EC:2.8.1.7": 73133.98999999999, "EC:3.6.4.13": 72507.41}}, "key_functions": ["能量代谢", "氨基酸代谢", "碳水化合物代谢"]}, "cn_annotations": {"bacteria": {"beneficial_bacteria": {"bacteria": {"Bifidobacterium": {"abundance": 0, "normal_range": [0.183, 14.6], "status": "偏低", "score": 0.0, "cn_name": "双歧杆菌属", "description": "重要的肠道益生菌，是人体肠道正常菌群的重要成员", "functions": ["合成维生素B族（B1、B2、B6、B12）", "产生乳酸维持肠道酸性环境", "抑制有害菌生长", "增强肠道屏障功能", "调节免疫系统"], "health_impact": "缺乏可能导致便秘、免疫力下降、肠道菌群失调", "food_sources": ["酸奶", "发酵乳制品", "益生菌补充剂"]}, "Lactobacillus": {"abundance": 0, "normal_range": [0.008, 0.03], "status": "偏低", "score": 0.0, "cn_name": "乳杆菌属", "description": "广泛存在的益生菌，乳酸发酵的主要细菌", "functions": ["乳酸发酵", "产生抗菌物质（细菌素）", "维持阴道和肠道pH平衡", "促进营养物质吸收", "降低胆固醇"], "health_impact": "维持肠道健康，预防腹泻，增强免疫", "food_sources": ["泡菜", "酸菜", "味噌", "酸奶"]}, "Faecalibacterium": {"abundance": 0, "normal_range": [0.636, 10.97], "status": "偏低", "score": 0.0, "cn_name": "普拉梭菌属", "description": "重要的产丁酸菌，肠道健康的关键指标", "functions": ["产生丁酸（主要的短链脂肪酸）", "抗炎作用", "维持肠道屏障完整性", "为肠道上皮细胞提供能量", "调节肠道免疫"], "health_impact": "缺乏与炎症性肠病、克罗恩病相关", "food_sources": ["全谷物", "抗性淀粉", "菊粉"]}, "Akkermansia": {"abundance": 0, "normal_range": [0.01, 3.89], "status": "偏低", "score": 0.0, "cn_name": "嗜黏蛋白阿克曼氏菌属", "description": "黏蛋白降解菌，与代谢健康密切相关", "functions": ["降解肠道黏蛋白", "改善代谢综合征", "调节血糖和血脂", "增强肠道屏障", "抗肥胖作用"], "health_impact": "丰度低与肥胖、糖尿病、代谢综合征相关", "food_sources": ["石榴", "葡萄", "绿茶多酚", "蔓越莓"]}, "Prevotella": {"abundance": 0, "normal_range": [0.014, 66.13], "status": "偏低", "score": 0.0, "cn_name": "普雷沃氏菌属", "description": "纤维降解优势菌，素食者肠道常见", "functions": ["降解植物纤维和多糖", "产生短链脂肪酸", "合成维生素B1", "参与蛋白质代谢"], "health_impact": "与高纤维饮食相关，可改善葡萄糖代谢", "food_sources": ["全谷物", "豆类", "蔬菜", "水果"]}, "Roseburia": {"abundance": 0, "normal_range": [0.1, 5.0], "status": "偏低", "score": 0.0, "cn_name": "罗氏菌属", "description": "重要的产丁酸菌，肠道健康标志", "functions": ["产生丁酸", "抗炎作用", "改善肠道通透性", "调节肠道运动"], "health_impact": "缺乏与肠易激综合征、炎症性肠病相关", "food_sources": ["抗性淀粉", "全麦", "燕麦"]}, "Coprococcus": {"abundance": 0, "normal_range": [0.009, 0.57], "status": "偏低", "score": 0.0, "cn_name": "粪球菌属", "description": "产丁酸菌，与心理健康相关", "functions": ["产生丁酸", "可能产生多巴胺代谢物", "与抑郁症负相关"], "health_impact": "缺乏可能与抑郁症相关", "food_sources": ["益生元食物", "发酵食品"]}, "Butyricimonas": {"abundance": 0, "normal_range": [0.014, 0.86], "status": "偏低", "score": 0.0, "cn_name": "产丁酸单胞菌属", "description": "产丁酸菌，参与脂质代谢", "functions": ["产生丁酸", "参与脂质代谢", "抗炎作用"], "health_impact": "有助于维持肠道健康", "food_sources": ["高纤维食物"]}, "Odoribacter": {"abundance": 0, "normal_range": [0.013, 0.61], "status": "偏低", "score": 0.0, "cn_name": "臭杆菌属", "description": "产短链脂肪酸菌", "functions": ["产生短链脂肪酸", "参与氨基酸代谢"], "health_impact": "维持肠道微环境平衡", "food_sources": ["发酵食品"]}, "Alistipes": {"abundance": 0, "normal_range": [0.01, 2.89], "status": "偏低", "score": 0.0, "cn_name": "另枝菌属", "description": "肠道常见菌，功能多样", "functions": ["产生短链脂肪酸", "参与胆汁酸代谢", "可能的抗炎作用"], "health_impact": "与保护肠道健康相关", "food_sources": ["高纤维食物", "发酵食品"]}}, "overall_score": 0.0, "evaluation": "较差"}, "harmful_bacteria": {"bacteria": {"Escherichia": {"abundance": 0, "threshold": 0.5, "status": "正常", "penalty": 0, "cn_name": "埃希氏菌属", "description": "条件致病菌，包括大肠杆菌", "functions": ["合成维生素K", "竞争性抑制致病菌", "过度增殖可能致病"], "health_impact": "正常水平有益，过高可能引起肠道感染、腹泻", "risk_factors": ["抗生素使用", "免疫力低下"]}, "Shigella": {"abundance": 0, "threshold": 0.14, "status": "正常", "penalty": 0, "cn_name": "志贺氏菌属", "description": "肠道致病菌，引起细菌性痢疾", "functions": ["产生志贺毒素", "侵袭肠道上皮细胞"], "health_impact": "可引起腹泻、痢疾、发热", "risk_factors": ["卫生条件差", "污染食物或水"]}, "Salmonella": {"abundance": 0, "threshold": 0.01, "status": "正常", "penalty": 0, "cn_name": "沙门氏菌属", "description": "食源性致病菌", "functions": ["引起食物中毒", "产生内毒素"], "health_impact": "引起急性胃肠炎、伤寒", "risk_factors": ["生食或未充分加热的肉蛋"]}, "Clostridium_difficile": {"abundance": 0, "threshold": 0.001, "status": "正常", "penalty": 0, "cn_name": "艰难梭菌", "description": "产芽孢厌氧菌，抗生素相关腹泻主因", "functions": ["产生毒素A和B", "引起伪膜性结肠炎"], "health_impact": "引起抗生素相关性腹泻、结肠炎", "risk_factors": ["长期使用抗生素", "住院", "老年"]}, "Staphylococcus": {"abundance": 0, "threshold": 0.1, "status": "正常", "penalty": 0, "cn_name": "葡萄球菌属", "description": "条件致病菌，皮肤常见菌", "functions": ["部分种为正常菌群", "金黄色葡萄球菌可致病"], "health_impact": "过度增殖可引起感染", "risk_factors": ["免疫力低下", "皮肤破损"]}, "Klebsiella": {"abundance": 0, "threshold": 0.11, "status": "正常", "penalty": 0, "cn_name": "克雷伯氏菌属", "description": "条件致病菌，可产生多重耐药性", "functions": ["正常情况下参与维生素合成", "致病时引起肺炎、尿路感染"], "health_impact": "院内感染常见病原体", "risk_factors": ["住院", "使用导管", "免疫抑制"]}, "Enterococcus": {"abundance": 0, "threshold": 0.5, "status": "正常", "penalty": 0, "cn_name": "肠球菌属", "description": "肠道正常菌群，可成为条件致病菌", "functions": ["参与碳水化合物发酵", "可能引起尿路感染、心内膜炎"], "health_impact": "正常水平无害，过高可能致病", "risk_factors": ["长期抗生素治疗", "免疫缺陷"]}, "Fusobacterium": {"abundance": 0, "threshold": 0.1, "status": "正常", "penalty": 0, "cn_name": "梭杆菌属", "description": "厌氧菌，与结肠癌相关", "functions": ["产生丁酸（少量）", "与结肠癌发生相关", "引起口腔感染"], "health_impact": "高水平与结直肠癌风险相关", "risk_factors": ["口腔卫生差", "吸烟"]}, "Campylobacter": {"abundance": 0, "threshold": 0.01, "status": "正常", "penalty": 0, "cn_name": "弯曲杆菌属", "description": "食源性致病菌", "functions": ["引起细菌性腹泻", "可能触发格林-巴利综合征"], "health_impact": "引起急性肠胃炎", "risk_factors": ["未煮熟的禽肉", "生奶"]}, "Helicobacter": {"abundance": 0, "threshold": 0.01, "status": "正常", "penalty": 0, "cn_name": "螺杆菌属", "description": "胃部致病菌，幽门螺杆菌最常见", "functions": ["产生尿素酶", "引起胃炎、溃疡", "胃癌风险因子"], "health_impact": "引起慢性胃炎、消化性溃疡、胃癌", "risk_factors": ["家族感染", "不洁饮食"]}}, "harm_score": 100, "risk_level": "低风险"}, "conditional_bacteria": {"bacteria": {"Veillonella": {"abundance": 0, "threshold": 0.22, "status": "正常", "cn_name": "韦荣氏菌属", "description": "乳酸利用菌", "category": "commensal"}, "Streptococcus": {"abundance": 0, "threshold": 2.0, "status": "正常", "cn_name": "链球菌属", "description": "口腔和肠道常见菌", "category": "conditional"}, "Bacteroides": {"abundance": 0, "threshold": 30.0, "status": "正常", "cn_name": "拟杆菌属", "description": "肠道优势菌群，重要的多糖降解菌", "category": "commensal"}, "Eggerthella": {"abundance": 0, "threshold": 0.1, "status": "正常", "cn_name": "Eggerthella", "description": "条件致病菌", "category": "conditional"}, "Peptostreptococcus": {"abundance": 0, "threshold": 0.1, "status": "正常", "cn_name": "Peptostreptococcus", "description": "条件致病菌", "category": "conditional"}, "Haemophilus": {"abundance": 0, "threshold": 0.5, "status": "正常", "cn_name": "Haemophilus", "description": "条件致病菌", "category": "conditional"}}, "warning_count": 0, "attention_needed": false}, "overall_health": {"score": 60.0, "grade": "C (亚健康)", "components": {"beneficial_contribution": 0.0, "harmful_contribution": 40.0, "conditional_contribution": 20.0}}, "recommendations": [{"category": "益生菌补充", "suggestion": "建议补充含双歧杆菌和乳酸杆菌的益生菌制剂", "foods": ["酸奶", "发酵食品", "泡菜", "味噌"]}]}, "pathways": {"PWY-3781": {"id": "PWY-3781", "cn_name": "通路-3781", "category": "其他", "description": "", "importance": "low", "abundance": 90373.74266013298}, "PWY-7111": {"id": "PWY-7111", "cn_name": "通路-7111", "category": "其他", "description": "", "importance": "low", "abundance": 48542.17417116133}, "PWY-5101": {"id": "PWY-5101", "cn_name": "通路-5101", "category": "其他", "description": "", "importance": "low", "abundance": 48489.83141472452}, "ILEUSYN-PWY": {"id": "ILEUSYN-PWY", "cn_name": "ILEU合成-通路", "category": "其他", "description": "", "importance": "low", "abundance": 46719.68008796129}, "VALSYN-PWY": {"id": "VALSYN-PWY", "cn_name": "VAL合成-通路", "category": "其他", "description": "", "importance": "low", "abundance": 46719.68008796129}, "BRANCHED-CHAIN-AA-SYN-PWY": {"id": "BRANCHED-CHAIN-AA-SYN-PWY", "cn_name": "BRANCHED-CHAIN-AA-合成-通路", "category": "其他", "description": "", "importance": "low", "abundance": 42417.37151667562}, "NONOXIPENT-PWY": {"id": "NONOXIPENT-PWY", "cn_name": "NONOXIPENT-通路", "category": "其他", "description": "", "importance": "low", "abundance": 39506.178373389375}, "PWY-5973": {"id": "PWY-5973", "cn_name": "通路-5973", "category": "其他", "description": "", "importance": "low", "abundance": 39048.83082182102}, "PWY-7663": {"id": "PWY-7663", "cn_name": "通路-7663", "category": "其他", "description": "", "importance": "low", "abundance": 38163.33956506576}, "TCA": {"id": "TCA", "cn_name": "三羧酸循环", "category": "能量代谢", "description": "有氧呼吸的核心代谢通路", "importance": "high", "related_nutrients": ["碳水化合物", "脂肪", "蛋白质"], "health_impact": "主要能量产生途径", "abundance": 38150.32609325431}, "PWY-5103": {"id": "PWY-5103", "cn_name": "通路-5103", "category": "其他", "description": "", "importance": "low", "abundance": 37955.90655325218}, "PWY-5667": {"id": "PWY-5667", "cn_name": "通路-5667", "category": "其他", "description": "", "importance": "low", "abundance": 37877.91816641888}, "PWY0-1319": {"id": "PWY0-1319", "cn_name": "通路0-1319", "category": "其他", "description": "", "importance": "low", "abundance": 37877.91816641888}, "PHOSLIPSYN-PWY": {"id": "PHOSLIPSYN-PWY", "cn_name": "PHOSLIP合成-通路", "category": "其他", "description": "", "importance": "low", "abundance": 37713.60936968194}, "PWY-6969": {"id": "PWY-6969", "cn_name": "通路-6969", "category": "其他", "description": "", "importance": "low", "abundance": 37693.63784298868}, "FASYN-ELONG-PWY": {"id": "FASYN-ELONG-PWY", "cn_name": "FA合成-ELONG-通路", "category": "其他", "description": "", "importance": "low", "abundance": 37503.99908811122}, "PWY-7229": {"id": "PWY-7229", "cn_name": "通路-7229", "category": "其他", "description": "", "importance": "low", "abundance": 36044.35531278662}, "PWY-7208": {"id": "PWY-7208", "cn_name": "通路-7208", "category": "其他", "description": "", "importance": "low", "abundance": 35899.59501585236}, "PWY4FS-7": {"id": "PWY4FS-7", "cn_name": "通路4FS-7", "category": "其他", "description": "", "importance": "low", "abundance": 35851.76092513072}, "PWY4FS-8": {"id": "PWY4FS-8", "cn_name": "通路4FS-8", "category": "其他", "description": "", "importance": "low", "abundance": 35851.76092513072}}, "ecs": {"EC:2.7.7.7": {"id": "EC:2.7.7.7", "cn_name": "EC:2.7.7.7", "category": "转移酶", "function": "", "importance": "low", "abundance": 276034.81}, "EC:1.6.5.3": {"id": "EC:1.6.5.3", "cn_name": "EC:1.6.5.3", "category": "氧化还原酶", "function": "", "importance": "low", "abundance": 255931.3}, "EC:3.6.4.12": {"id": "EC:3.6.4.12", "cn_name": "EC:3.6.4.12", "category": "水解酶", "function": "", "importance": "low", "abundance": 252222.8}, "EC:2.7.13.3": {"id": "EC:2.7.13.3", "cn_name": "EC:2.7.13.3", "category": "转移酶", "function": "", "importance": "low", "abundance": 206741.26}, "EC:1.1.1.100": {"id": "EC:1.1.1.100", "cn_name": "3-羟基丁酸脱氢酶", "category": "氧化还原酶", "function": "催化3-羟基丁酸与乙酰乙酸的相互转化", "importance": "high", "health_relevance": "酮体代谢，能量供应", "abundance": 142258.6}, "EC:5.2.1.8": {"id": "EC:5.2.1.8", "cn_name": "EC:5.2.1.8", "category": "异构酶", "function": "", "importance": "low", "abundance": 139664.59000000003}, "EC:2.7.11.1": {"id": "EC:2.7.11.1", "cn_name": "EC:2.7.11.1", "category": "转移酶", "function": "", "importance": "low", "abundance": 124251.59}, "EC:1.9.3.1": {"id": "EC:1.9.3.1", "cn_name": "EC:1.9.3.1", "category": "氧化还原酶", "function": "", "importance": "low", "abundance": 119587.95}, "EC:2.7.7.6": {"id": "EC:2.7.7.6", "cn_name": "EC:2.7.7.6", "category": "转移酶", "function": "", "importance": "low", "abundance": 111656.32}, "EC:6.3.5.7": {"id": "EC:6.3.5.7", "cn_name": "EC:6.3.5.7", "category": "连接酶", "function": "", "importance": "low", "abundance": 101675.04}, "EC:6.3.5.6": {"id": "EC:6.3.5.6", "cn_name": "EC:6.3.5.6", "category": "连接酶", "function": "", "importance": "low", "abundance": 101500.04}, "EC:6.4.1.2": {"id": "EC:6.4.1.2", "cn_name": "乙酰辅酶A羧化酶", "category": "连接酶", "function": "脂肪酸合成第一步", "importance": "high", "health_relevance": "脂肪酸合成", "abundance": 89905.12}, "EC:2.3.1.9": {"id": "EC:2.3.1.9", "cn_name": "乙酰辅酶A转移酶", "category": "转移酶", "function": "转移乙酰基", "importance": "high", "health_relevance": "乙酸利用，短链脂肪酸代谢", "abundance": 81092.0}, "EC:2.2.1.6": {"id": "EC:2.2.1.6", "cn_name": "EC:2.2.1.6", "category": "转移酶", "function": "", "importance": "low", "abundance": 80004.72}, "EC:1.2.4.1": {"id": "EC:1.2.4.1", "cn_name": "EC:1.2.4.1", "category": "氧化还原酶", "function": "", "importance": "low", "abundance": 78889.88}, "EC:4.2.99.18": {"id": "EC:4.2.99.18", "cn_name": "EC:4.2.99.18", "category": "裂解酶", "function": "", "importance": "low", "abundance": 78483.53}, "EC:3.6.3.14": {"id": "EC:3.6.3.14", "cn_name": "EC:3.6.3.14", "category": "水解酶", "function": "", "importance": "low", "abundance": 75423.79000000001}, "EC:6.3.5.3": {"id": "EC:6.3.5.3", "cn_name": "EC:6.3.5.3", "category": "连接酶", "function": "", "importance": "low", "abundance": 75287.63}, "EC:2.8.1.7": {"id": "EC:2.8.1.7", "cn_name": "EC:2.8.1.7", "category": "转移酶", "function": "", "importance": "low", "abundance": 73133.98999999999}, "EC:3.6.4.13": {"id": "EC:3.6.4.13", "cn_name": "EC:3.6.4.13", "category": "水解酶", "function": "", "importance": "low", "abundance": 72507.41}}}, "composition": {}};
+    </script>
+    
+    <!-- 自定义脚本 -->
+    <script>
+// ============ 导航功能 ============
+function toggleNav() {
+    const sidebar = document.getElementById('navSidebar');
+    const mainContent = document.getElementById('mainContent');
+    sidebar.classList.toggle('active');
+    mainContent.classList.toggle('nav-active');
+}
+
+function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // 更新活动导航项
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        event.target.classList.add('active');
+    }
+}
+
+// ============ 数据渲染 ============
+document.addEventListener('DOMContentLoaded', function() {
+    // 渲染综合评分
+    renderOverallScore();
+    
+    // 渲染多样性数据
+    renderDiversity();
+    
+    // 渲染细菌分析（使用中文注释）
+    renderBacteriaAnalysis();
+    
+    // 渲染营养代谢（使用中文注释）
+    renderNutritionMetabolism();
+    
+    // 渲染疾病风险
+    renderDiseaseRisk();
+    
+    // 渲染免疫力评估
+    renderImmunity();
+    
+    // 渲染饮食建议
+    renderRecommendations();
+    
+    // 初始化图表
+    initCharts();
+});
+
+// 渲染综合评分
+function renderOverallScore() {
+    const score = reportData.bacteria?.overall_health?.score || 0;
+    const grade = reportData.bacteria?.overall_health?.grade || '未评估';
+    
+    // 设置评分圆圈颜色
+    const scoreCircle = document.getElementById('overallScoreCircle');
+    if (scoreCircle) {
+        if (score >= 80) {
+            scoreCircle.className = 'score-circle score-good';
+        } else if (score >= 60) {
+            scoreCircle.className = 'score-circle score-warning';
+        } else {
+            scoreCircle.className = 'score-circle score-danger';
+        }
+    }
+    
+    // 设置健康等级徽章
+    const gradeElement = document.getElementById('overallGrade');
+    if (gradeElement) {
+        gradeElement.textContent = grade;
+        if (grade.includes('优秀') || grade.includes('良好')) {
+            gradeElement.className = 'status-badge status-normal';
+        } else if (grade.includes('亚健康')) {
+            gradeElement.className = 'status-badge status-warning';
+        } else {
+            gradeElement.className = 'status-badge status-danger';
+        }
+    }
+}
+
+// 渲染多样性数据
+function renderDiversity() {
+    const diversity = reportData.diversity?.alpha_diversity || {};
+    
+    // 创建多样性指标表格
+    const metricsHtml = `
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td>Shannon指数</td>
+                    <td>${(diversity.shannon || 0).toFixed(3)}</td>
+                    <td><span class="status-badge status-normal">正常</span></td>
+                </tr>
+                <tr>
+                    <td>Simpson指数</td>
+                    <td>${(diversity.simpson || 0).toFixed(3)}</td>
+                    <td><span class="status-badge status-normal">正常</span></td>
+                </tr>
+                <tr>
+                    <td>Chao1估计</td>
+                    <td>${(diversity.chao1 || 0).toFixed(1)}</td>
+                    <td><span class="status-badge status-normal">正常</span></td>
+                </tr>
+                <tr>
+                    <td>观察到的ASVs</td>
+                    <td>${diversity.observed_asvs || 0}</td>
+                    <td><span class="status-badge ${diversity.status === '正常' ? 'status-normal' : 'status-warning'}">${diversity.status || '正常'}</span></td>
+                </tr>
+            </tbody>
+        </table>
+    `;
+    
+    const metricsDiv = document.getElementById('diversityMetrics');
+    if (metricsDiv) {
+        metricsDiv.innerHTML = metricsHtml;
+    }
+}
+
+// 渲染细菌分析（使用中文注释）
+function renderBacteriaAnalysis() {
+    // 优先使用中文注释数据
+    const bacteria = reportData.cn_annotations?.bacteria || reportData.bacteria || {};
+    
+    // 渲染有益菌卡片
+    const beneficial = bacteria.beneficial_bacteria?.bacteria || {};
+    const beneficialCards = document.getElementById('beneficialBacteriaCards');
+    if (beneficialCards) {
+        let cardsHtml = '';
+        Object.entries(beneficial).slice(0, 6).forEach(([name, info]) => {
+            const cnName = info.cn_name || name;
+            const description = info.description || '益生菌';
+            const abundance = info.abundance || 0;
+            const status = info.status || '未知';
+            const statusClass = status === '正常' ? 'status-normal' : 'status-warning';
+            
+            cardsHtml += `
+                <div class="col-md-6">
+                    <div class="bacteria-card">
+                        <h5 class="bacteria-name">${cnName}</h5>
+                        <p class="bacteria-latin">${name}</p>
+                        <p class="bacteria-description">${description}</p>
+                        <div class="d-flex justify-content-between mt-2">
+                            <span>丰度: ${abundance.toFixed(3)}%</span>
+                            <span class="status-badge ${statusClass}">${status}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        beneficialCards.innerHTML = cardsHtml;
+    }
+    
+    // 渲染有害菌表格
+    const harmful = bacteria.harmful_bacteria?.bacteria || {};
+    const harmfulTable = document.querySelector('#harmfulBacteriaTable tbody');
+    if (harmfulTable) {
+        let tableHtml = '';
+        Object.entries(harmful).forEach(([name, info]) => {
+            const cnName = info.cn_name || name;
+            const abundance = info.abundance || 0;
+            const threshold = info.threshold || 0.5;
+            const status = info.status || '未知';
+            const statusClass = status === '正常' ? 'status-normal' : 'status-danger';
+            
+            tableHtml += `
+                <tr>
+                    <td>
+                        ${cnName}
+                        <br><small class="text-muted">${name}</small>
+                    </td>
+                    <td>${abundance.toFixed(4)}%</td>
+                    <td>&lt; ${threshold}%</td>
+                    <td><span class="status-badge ${statusClass}">${status}</span></td>
+                </tr>
+            `;
+        });
+        harmfulTable.innerHTML = tableHtml;
+    }
+}
+
+// 渲染营养代谢（使用中文注释）
+function renderNutritionMetabolism() {
+    const nutrition = reportData.cn_annotations?.nutrition || reportData.functional || {};
+    const pathways = reportData.cn_annotations?.pathways || {};
+    
+    // 渲染维生素合成
+    const vitamins = nutrition.vitamin_synthesis || {};
+    const vitaminDiv = document.getElementById('vitaminSynthesis');
+    if (vitaminDiv) {
+        let vitaminHtml = '';
+        Object.entries(vitamins).forEach(([vitamin, info]) => {
+            const cnName = info.cn_name || `维生素${vitamin}`;
+            const potential = info.synthesis_potential || 0;
+            const status = info.status || '未知';
+            const color = status === '高' ? '#4CAF50' : status === '中等' ? '#FF9800' : '#F44336';
+            
+            vitaminHtml += `
+                <div class="col-md-4">
+                    <div class="metric-card">
+                        <h6>${cnName}</h6>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: ${Math.min(100, potential * 10)}%; background: ${color}">
+                                ${potential.toFixed(1)}
+                            </div>
+                        </div>
+                        <small>${status}合成能力</small>
+                    </div>
+                </div>
+            `;
+        });
+        vitaminDiv.innerHTML = vitaminHtml;
+    }
+    
+    // 渲染短链脂肪酸
+    const scfa = nutrition.scfa_production || {};
+    const scfaDiv = document.getElementById('scfaProduction');
+    if (scfaDiv) {
+        let scfaHtml = '';
+        Object.entries(scfa).forEach(([name, info]) => {
+            const cnName = info.cn_name || name;
+            const potential = info.production_potential || 0;
+            const status = info.status || '未知';
+            
+            scfaHtml += `
+                <div class="col-md-4">
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-flask"></i></div>
+                        <h6>${cnName}</h6>
+                        <div class="metric-value">${potential.toFixed(1)}</div>
+                        <div class="metric-label">${status}产生能力</div>
+                    </div>
+                </div>
+            `;
+        });
+        scfaDiv.innerHTML = scfaHtml;
+    }
+    
+    // 渲染代谢通路表格
+    const pathwaysTable = document.querySelector('#pathwaysTable tbody');
+    if (pathwaysTable && pathways) {
+        let tableHtml = '';
+        const sortedPathways = Object.entries(pathways)
+            .sort((a, b) => (b[1].abundance || 0) - (a[1].abundance || 0))
+            .slice(0, 5);
+        
+        sortedPathways.forEach(([id, info]) => {
+            const cnName = info.cn_name || id;
+            const category = info.category || '其他';
+            const abundance = info.abundance || 0;
+            const importance = info.importance || 'medium';
+            const importanceClass = importance === 'high' ? 'status-danger' : 
+                                   importance === 'medium' ? 'status-warning' : 'status-info';
+            
+            tableHtml += `
+                <tr>
+                    <td>
+                        ${cnName}
+                        <br><small class="text-muted">${id}</small>
+                    </td>
+                    <td>${category}</td>
+                    <td>${abundance.toFixed(0)}</td>
+                    <td><span class="status-badge ${importanceClass}">${importance}</span></td>
+                </tr>
+            `;
+        });
+        pathwaysTable.innerHTML = tableHtml;
+    }
+}
+
+// 渲染疾病风险 - 最终简化版
+// 渲染疾病风险
+function renderDiseaseRisk() {
+    // 使用实际的 disease_risks 字段
+    const diseaseData = reportData.disease || {};
+    const diseaseRisks = diseaseData.disease_risks || {};
+    
+    const diseaseCards = document.getElementById('diseaseRiskCards');
+    
+    if (!diseaseCards) {
+        console.error('未找到 diseaseRiskCards 元素');
+        return;
+    }
+    
+    let cardsHtml = '';
+    
+    // 疾病中文名映射
+    const diseaseNameMap = {
+        'IBD': '炎症性肠病',
+        'IBS': '肠易激综合征',
+        'Diabetes': '糖尿病',
+        'Obesity': '肥胖/代谢综合征',
+        'CVD': '心血管疾病',
+        'CRC': '结直肠癌',
+        'Depression': '抑郁症',
+        'Gout': '痛风',
+        'Eczema': '湿疹',
+        'Liver': '肝脏疾病',
+        'Hypertension': '高血压',
+        'Alzheimer': '阿尔茨海默病',
+        'Constipation': '便秘',
+        'Polyps': '息肉'
+    };
+    
+    // 检查是否有数据
+    if (Object.keys(diseaseRisks).length > 0) {
+        Object.entries(diseaseRisks).forEach(([key, info]) => {
+            const displayName = diseaseNameMap[key] || key;
+            const riskScore = info.risk_score || 0;
+            const riskLevel = info.risk_level || '未知';
+            const keyFindings = info.key_findings || [];
+            
+            // 根据风险等级设置样式
+            let color, icon, bgClass;
+            if (riskLevel.includes('低')) {
+                color = '#4CAF50';
+                icon = 'fa-check-circle';
+                bgClass = 'bg-success';
+            } else if (riskLevel.includes('中')) {
+                color = '#FF9800';
+                icon = 'fa-exclamation-triangle';
+                bgClass = 'bg-warning';
+            } else {
+                color = '#F44336';
+                icon = 'fa-times-circle';
+                bgClass = 'bg-danger';
+            }
+            
+            // 生成疾病卡片
+            cardsHtml += `
+                <div class="col-md-6 mb-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-header ${bgClass} text-white">
+                            <h5 class="mb-0">
+                                <i class="fas ${icon}"></i> ${displayName}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h2 class="mb-0" style="color: ${color};">${riskScore.toFixed(1)}分</h2>
+                                <span class="badge ${bgClass} p-2">${riskLevel}</span>
+                            </div>
+                            
+                            ${keyFindings.length > 0 ? `
+                                <div class="mt-3">
+                                    <strong class="d-block mb-2">关键发现：</strong>
+                                    <ul class="small mb-0 list-unstyled">
+                                        ${keyFindings.map(f => `
+                                            <li class="mb-1">
+                                                <i class="fas fa-circle text-muted" style="font-size: 6px;"></i> 
+                                                ${f}
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+    
+    // 如果没有数据，显示提示
+    if (cardsHtml === '') {
+        cardsHtml = `
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> 暂无疾病风险评估数据
+                </div>
+            </div>
+        `;
+    }
+    
+    diseaseCards.innerHTML = cardsHtml;
+}
+
+// 确保在页面加载时调用 - 必须保留！
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('开始渲染报告...');
+    
+    // 渲染各个部分
+    renderOverview();
+    renderDiversity();
+    renderBacteriaAnalysis();
+    renderNutritionMetabolism();
+    renderDiseaseRisk();  // 确保这个被调用
+    renderImmunity();
+    renderRecommendations();
+    
+    console.log('报告渲染完成');
+});
+
+// 渲染免疫力评估
+function renderImmunity() {
+    const beneficialScore = reportData.bacteria?.beneficial_bacteria?.overall_score || 0;
+    const immunityScore = Math.min(100, beneficialScore * 1.2);
+    
+    let immunityLevel, color;
+    if (immunityScore >= 80) {
+        immunityLevel = '优秀';
+        color = '#4CAF50';
+    } else if (immunityScore >= 60) {
+        immunityLevel = '良好';
+        color = '#66BB6A';
+    } else if (immunityScore >= 40) {
+        immunityLevel = '一般';
+        color = '#FF9800';
+    } else {
+        immunityLevel = '较弱';
+        color = '#F44336';
+    }
+    
+    const scoreElement = document.getElementById('immunityScore');
+    const levelElement = document.getElementById('immunityLevel');
+    
+    if (scoreElement) scoreElement.textContent = immunityScore.toFixed(0) + '分';
+    if (levelElement) {
+        levelElement.textContent = `免疫力水平: ${immunityLevel}`;
+        levelElement.style.color = color;
+    }
+    
+    // 渲染影响因素
+    const factorsDiv = document.getElementById('immunityFactors');
+    if (factorsDiv) {
+        factorsDiv.innerHTML = `
+            <h5>影响因素分析</h5>
+            <ul>
+                <li>有益菌水平: ${beneficialScore.toFixed(1)}分</li>
+                <li>菌群多样性: ${reportData.diversity?.alpha_diversity?.status || '正常'}</li>
+                <li>代谢功能: 正常</li>
+            </ul>
+        `;
+    }
+}
+
+// 渲染饮食建议
+function renderRecommendations() {
+    const recommendations = reportData.bacteria?.recommendations || [];
+    
+    // 基于分析结果生成个性化建议
+    const dietRecommendations = [
+        {
+            category: '增加摄入',
+            items: ['酸奶', '发酵食品', '全谷物', '豆类', '新鲜蔬菜'],
+            reason: '促进有益菌生长',
+            color: '#4CAF50'
+        },
+        {
+            category: '适量摄入',
+            items: ['瘦肉', '鸡蛋', '坚果', '水果'],
+            reason: '平衡营养',
+            color: '#FF9800'
+        },
+        {
+            category: '减少摄入',
+            items: ['高脂食物', '精制糖', '加工食品', '酒精'],
+            reason: '减少有害菌滋生',
+            color: '#F44336'
+        }
+    ];
+    
+    const dietDiv = document.getElementById('dietRecommendations');
+    if (dietDiv) {
+        let html = '';
+        dietRecommendations.forEach(rec => {
+            const itemsList = rec.items.map(item => `<li>${item}</li>`).join('');
+            html += `
+                <div class="col-md-4">
+                    <div class="recommendation-card" style="border-left-color: ${rec.color}">
+                        <h5 style="color: ${rec.color}">${rec.category}</h5>
+                        <ul style="list-style: none; padding-left: 0;">
+                            ${itemsList}
+                        </ul>
+                        <small class="text-muted">${rec.reason}</small>
+                    </div>
+                </div>
+            `;
+        });
+        dietDiv.innerHTML = html;
+    }
+    
+    // 生活方式建议
+    const lifestyleDiv = document.getElementById('lifestyleAdvice');
+    if (lifestyleDiv) {
+        lifestyleDiv.innerHTML = `
+            <ul>
+                <li>保持规律作息，每天睡眠7-8小时</li>
+                <li>适量运动，每周至少150分钟中等强度运动</li>
+                <li>管理压力，可尝试冥想或瑜伽</li>
+                <li>定期复查，监测肠道健康状况</li>
+                <li>避免滥用抗生素，保护肠道菌群</li>
+            </ul>
+        `;
+    }
+}
+
+// 初始化图表
+function initCharts() {
+    // 多样性雷达图
+    const diversityCtx = document.getElementById('diversityChart');
+    if (diversityCtx && typeof Chart !== 'undefined') {
+        const diversity = reportData.diversity?.alpha_diversity || {};
+        
+        new Chart(diversityCtx.getContext('2d'), {
+            type: 'radar',
+            data: {
+                labels: ['Shannon', 'Simpson', 'Chao1', 'ASVs', 'Evenness'],
+                datasets: [{
+                    label: '多样性指标',
+                    data: [
+                        (diversity.shannon || 0) / 10 * 100,
+                        (diversity.simpson || 0) * 100,
+                        (diversity.chao1 || 0) / 2000 * 100,
+                        (diversity.observed_asvs || 0) / 2000 * 100,
+                        (diversity.evenness || 0.5) * 100
+                    ],
+                    backgroundColor: 'rgba(102, 187, 106, 0.2)',
+                    borderColor: 'rgba(102, 187, 106, 1)',
+                    pointBackgroundColor: 'rgba(102, 187, 106, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(102, 187, 106, 1)'
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            stepSize: 20
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+}
+
+// 自动调整导航栏高亮
+window.addEventListener('scroll', function() {
+    const sections = document.querySelectorAll('.report-section');
+    const navItems = document.querySelectorAll('.nav-item');
+    
+    let current = '';
+    sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 100 && rect.bottom >= 100) {
+            current = section.getAttribute('id');
+        }
+    });
+    
+    navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('onclick')?.includes(current)) {
+            item.classList.add('active');
+        }
+    });
+});
+</script>
+</body>
+</html>
