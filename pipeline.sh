@@ -173,7 +173,7 @@ process_sample() {
     
     # 创建样本输出目录
     local sample_dir="$output_base/analysis_results/$sample_id"
-    mkdir -p "$sample_dir"/{diversity,composition,enterotype,bacteria_scores,disease_risk,age_prediction}
+    mkdir -p "$sample_dir"/{diversity,enterotype,bacteria_scores,disease_risk,age_prediction}
     
     # 创建样本日志
     local sample_log="$output_base/logs/${sample_id}.log"

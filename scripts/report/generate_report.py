@@ -12,7 +12,7 @@ from datetime import datetime
 import sys
 
 class ReportGenerator:
-    def __init__(self, template_dir='scripts/report_generation'):
+    def __init__(self, template_dir='scripts/report'):
         """
         初始化报告生成器
         
@@ -32,15 +32,14 @@ class ReportGenerator:
         
         # 加载各个分析模块的结果
         files_to_load = {
-            'basic': 'basic_stats/basic_analysis.json',
-            'diversity': 'diversity/alpha_diversity.json',
-            'composition': 'composition/composition_analysis.json',
+            'basic': 'diversity/basic_analysis.json',
+            'diversity': 'diversity/basic_analysis.json',
             'enterotype': 'enterotype/enterotype_analysis.json',
             'bacteria': 'bacteria_scores/bacteria_evaluation.json',
             'disease': 'disease_risk/disease_risk_assessment.json',
             'age': 'age_prediction/age_prediction.json',
-            'functional': 'functional/functional_prediction.json',
-            'cn_annotations': 'cn_annotations.json'  # 中文注释（如果存在）
+            'functional': 'functional_prediction/functional_prediction.json',
+            'cn_annotations': 'cn_annotations.json'
         }
         
         for key, filepath in files_to_load.items():
@@ -48,10 +47,15 @@ class ReportGenerator:
             if file_path.exists():
                 with open(file_path, 'r', encoding='utf-8') as f:
                     data[key] = json.load(f)
+                    print(f"  ✓ 加载 {key}: {filepath}")
             else:
-                if key != 'cn_annotations':  # 中文注释是可选的
-                    print(f"警告: 未找到 {filepath}")
+                if key not in ['cn_annotations']:
+                    print(f"  ⚠ 未找到 {filepath}")
                 data[key] = {}
+        
+        # 从 basic 中提取 composition 数据
+        if 'basic' in data and 'composition' in data['basic']:
+            data['composition'] = data['basic']['composition']
         
         return data
     
@@ -96,7 +100,7 @@ class ReportGenerator:
             # 各项评分
             'beneficial_score': data.get('bacteria', {}).get('beneficial_bacteria', {}).get('overall_score', 0),
             'harmful_score': data.get('bacteria', {}).get('harmful_bacteria', {}).get('harm_score', 0),
-            'diversity_score': data.get('diversity', {}).get('alpha_diversity', {}).get('shannon', 0),
+            'diversity_score': data.get('basic', {}).get('alpha_diversity', {}).get('shannon', 0),
             
             # 将完整数据转换为JSON传递给JavaScript
             'report_data_json': json.dumps(data, ensure_ascii=False)
@@ -107,13 +111,6 @@ class ReportGenerator:
     def generate_html(self, sample_data, embed_resources=True):
         """
         生成HTML报告
-        
-        Args:
-            sample_data: 样本数据
-            embed_resources: 是否嵌入CSS和JS（True为单文件，False为外部引用）
-        
-        Returns:
-            HTML内容
         """
         # 加载模板
         template = self.load_template()
@@ -159,17 +156,21 @@ class ReportGenerator:
     def generate_report(self, sample_dir, output_path, embed_resources=True):
         """
         完整的报告生成流程
-        
-        Args:
-            sample_dir: 样本数据目录
-            output_path: 输出文件路径
-            embed_resources: 是否生成单文件报告
-        
-        Returns:
-            生成的报告路径
         """
+        print(f"\n开始生成报告...")
+        print(f"  样本目录: {sample_dir}")
+        
         # 加载数据
         sample_data = self.load_sample_data(sample_dir)
+        
+        # 检查疾病风险数据
+        if 'disease' in sample_data and sample_data['disease']:
+            print(f"  ✓ 疾病风险数据已加载")
+            if 'detailed_analysis' in sample_data['disease']:
+                disease_count = len(sample_data['disease']['detailed_analysis'])
+                print(f"    包含 {disease_count} 种疾病的详细分析")
+        else:
+            print(f"  ⚠ 疾病风险数据为空")
         
         # 生成HTML
         html_content = self.generate_html(sample_data, embed_resources)
@@ -191,8 +192,8 @@ class ReportGenerator:
             'overall_score': sample_data.get('bacteria', {}).get('overall_health', {}).get('score', 0),
             'health_grade': sample_data.get('bacteria', {}).get('overall_health', {}).get('grade', '未评估'),
             'diversity': {
-                'shannon': sample_data.get('diversity', {}).get('alpha_diversity', {}).get('shannon', 0),
-                'observed_asvs': sample_data.get('diversity', {}).get('alpha_diversity', {}).get('observed_asvs', 0)
+                'shannon': sample_data.get('basic', {}).get('alpha_diversity', {}).get('shannon', 0),
+                'observed_asvs': sample_data.get('basic', {}).get('alpha_diversity', {}).get('observed_asvs', 0)
             },
             'bacteria_scores': {
                 'beneficial': sample_data.get('bacteria', {}).get('beneficial_bacteria', {}).get('overall_score', 0),
@@ -203,10 +204,11 @@ class ReportGenerator:
         }
         
         # 提取高风险疾病
-        disease_risks = sample_data.get('disease', {}).get('risk_assessment', {})
-        high_risk = [name for name, info in disease_risks.items() 
-                    if info.get('risk_level') == '高风险']
-        summary['high_risk_diseases'] = high_risk
+        if 'disease' in sample_data and 'risk_assessment' in sample_data['disease']:
+            disease_risks = sample_data['disease']['risk_assessment']
+            high_risk = [info.get('disease_name', name) for name, info in disease_risks.items() 
+                        if info.get('risk_level') == '高风险']
+            summary['high_risk_diseases'] = high_risk
         
         # 保存摘要
         summary_path = Path(report_path).with_suffix('.summary.json')
@@ -222,7 +224,7 @@ def main():
                        help='样本分析结果目录')
     parser.add_argument('--output', '-o', required=True,
                        help='输出HTML文件路径')
-    parser.add_argument('--template-dir', '-t', default='scripts/report_generation',
+    parser.add_argument('--template-dir', '-t', default='scripts/report',
                        help='模板文件目录')
     parser.add_argument('--no-embed', action='store_true',
                        help='不嵌入CSS/JS，使用外部文件引用')
@@ -251,6 +253,8 @@ def main():
         
     except Exception as e:
         print(f"错误: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc()
         sys.exit(1)
 
 if __name__ == '__main__':

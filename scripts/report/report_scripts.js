@@ -267,44 +267,111 @@ function renderNutritionMetabolism() {
 }
 
 // 渲染疾病风险
+// 渲染疾病风险 - 修改这个函数
 function renderDiseaseRisk() {
+    // 同时支持旧格式和新格式
     const disease = reportData.disease?.risk_assessment || {};
+    const detailedAnalysis = reportData.disease?.detailed_analysis || {};
     const diseaseCards = document.getElementById('diseaseRiskCards');
     
     if (diseaseCards) {
         let cardsHtml = '';
-        Object.entries(disease).forEach(([name, info]) => {
-            const riskScore = info.risk_score || 0;
-            const riskLevel = info.risk_level || '未知';
+        
+        // 优先使用 detailed_analysis（新格式）
+        const dataToRender = Object.keys(detailedAnalysis).length > 0 ? detailedAnalysis : disease;
+        
+        Object.entries(dataToRender).forEach(([key, info]) => {
+            // 兼容新旧格式
+            const name = info.disease_name || info.name || key;
+            const riskScore = info.risk_score || info.score || 0;
+            const riskLevel = info.risk_level || info.level || '未知';
+            const description = info.description || '';
+            const keyFindings = info.key_findings || [];
+            const suggestions = info.suggestions || [];
             
-            let color, icon;
-            if (riskLevel === '低风险') {
+            let color, icon, bgClass;
+            if (riskLevel.includes('低')) {
                 color = '#4CAF50';
                 icon = 'fa-check-circle';
-            } else if (riskLevel === '中风险') {
+                bgClass = 'bg-success';
+            } else if (riskLevel.includes('中')) {
                 color = '#FF9800';
                 icon = 'fa-exclamation-triangle';
+                bgClass = 'bg-warning';
             } else {
                 color = '#F44336';
                 icon = 'fa-times-circle';
+                bgClass = 'bg-danger';
             }
             
+            // 生成更详细的卡片
             cardsHtml += `
-                <div class="col-md-4">
-                    <div class="metric-card" style="border-color: ${color}">
-                        <i class="fas ${icon}" style="color: ${color}; font-size: 2rem;"></i>
-                        <h6 class="mt-2">${name}</h6>
-                        <div style="color: ${color}; font-size: 1.5rem; font-weight: bold;">
-                            ${riskScore.toFixed(1)}%
+                <div class="col-md-6 mb-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-header ${bgClass} text-white">
+                            <h5 class="mb-0">
+                                <i class="fas ${icon}"></i> ${name}
+                            </h5>
                         </div>
-                        <small>${riskLevel}</small>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h2 class="mb-0" style="color: ${color};">${riskScore.toFixed(1)}分</h2>
+                                <span class="badge ${bgClass} p-2">${riskLevel}</span>
+                            </div>
+                            ${description ? `<p class="text-muted small">${description}</p>` : ''}
+                            
+                            ${keyFindings.length > 0 ? `
+                                <div class="mb-2">
+                                    <strong>关键发现：</strong>
+                                    <ul class="small mb-0">
+                                        ${keyFindings.map(f => `<li>${f}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                            
+                            ${suggestions.length > 0 ? `
+                                <div class="mt-2">
+                                    <strong>建议：</strong>
+                                    <ul class="small mb-0">
+                                        ${suggestions.slice(0, 3).map(s => `<li>${s}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                        </div>
                     </div>
                 </div>
             `;
         });
+        
+        // 如果没有数据，显示提示
+        if (cardsHtml === '') {
+            cardsHtml = `
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> 暂无疾病风险评估数据
+                    </div>
+                </div>
+            `;
+        }
+        
         diseaseCards.innerHTML = cardsHtml;
     }
 }
+
+// 确保在页面加载时调用
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('开始渲染报告...');
+    console.log('疾病数据:', reportData.disease);
+    
+    // 渲染各个部分
+    renderOverview();
+    renderDiversity();
+    renderBacteriaAnalysis();
+    renderNutritionMetabolism();
+    renderDiseaseRisk();  // 确保这个被调用
+    renderImmunity();
+    renderRecommendations();
+});
 
 // 渲染免疫力评估
 function renderImmunity() {
