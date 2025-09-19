@@ -114,8 +114,7 @@ conda install -c bioconda -c conda-forge picrust2=2.5.2
 # mv silva-138-99-nb-classifier.qza database/
 
 # 下载gutMDisorder疾病关联数据库
-wget http://bio-annotation.cn/gutMDisorder/download/gutMDisorder.csv
-mv gutMDisorder.csv database/
+https://bio-computing.hrbmu.edu.cn/gutMDisorder/browse.dhtml
 ```
 
 ### 使用方法
@@ -132,16 +131,13 @@ mv gutMDisorder.csv database/
 ./pipeline.sh /path/to/fastq_dir /path/to/output -m metadata.tsv -d database/silva_138_99_16S_338f_806r_classifier.qza
 ```
 
-#### 方式2: 从ASV表开始（跳过预处理）
+#### 方式2: 跳过预处理
 ```bash
-# 如果你已有ASV表（例如来自其他软件）
-./pipeline.sh merged_asv_table.tsv /path/to/output --skip-preprocessing
-
 # 批量分析多个样本
-./pipeline.sh merged_asv_table.tsv /path/to/output --skip-preprocessing -j 4
+./pipeline.sh  /path/to/preprocessing /path/to/output --skip-preprocessing -j 4
 ```
 
-### 输入文件格式
+### 文件格式
 
 #### FASTQ文件命名规范
 ```
@@ -288,32 +284,6 @@ output/
    - `core_ec_translations.json`: EC酶中文翻译
    - `core_pathway_translations.json`: KEGG通路中文翻译
 
-## 🐛 故障排除
-
-### 常见问题
-
-1. **内存不足错误**
-   - 减少并行任务数: `-j 2`
-   - 分批处理样本
-
-2. **QIIME2未找到**
-   - 确保已激活conda环境: `conda activate qiime2-amplicon-2023.9`
-   - 检查环境变量设置
-
-3. **PICRUSt2功能预测失败**
-   - 确保已安装PICRUSt2: `conda install -c bioconda picrust2`
-   - 检查ASV表格式是否正确
-   - 确保有代表序列文件
-
-4. **物种注释失败**
-   - 检查SILVA数据库文件是否存在
-   - 确保文件格式为.qza
-   - 验证数据库文件完整性
-
-5. **报告生成失败**
-   - 检查所有分析模块是否完成
-   - 查看日志文件获取详细错误信息
-   - 确保中文字体支持
 
 ### 获取帮助
 ```bash
@@ -336,20 +306,7 @@ python scripts/analysis/1_basic_analysis.py --help
 5. Galkin F, et al. Human Gut Microbiome Aging Clock Based on Taxonomic Profiling and Deep Learning. iScience. 2020
 6. Douglas GM, et al. PICRUSt2 for prediction of metagenome functions. Nat Biotechnol. 2020
 
-## 📄 许可证
 
-本项目采用MIT许可证。详见[LICENSE](LICENSE)文件。
-
-## 👥 贡献
-
-欢迎提交Issue和Pull Request！
-
-项目地址：[https://github.com/chenziqing0111/16s_bighealth_pipe](https://github.com/chenziqing0111/16s_bighealth_pipe)
-
-## 📧 联系方式
-
-如有问题或建议，请通过以下方式联系：
-- GitHub Issues: [项目Issues页面](https://github.com/chenziqing0111/16s_bighealth_pipe/issues)
 
 ## 🙏 致谢
 
@@ -360,4 +317,5 @@ python scripts/analysis/1_basic_analysis.py --help
 - 所有开源贡献者
 
 ---
-**最后更新**: 2024年12月
+**最后更新**: 2025年9月
+
